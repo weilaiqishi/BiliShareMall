@@ -7,11 +7,6 @@ run:
 	@echo "Running..."
 	go run .
 
-.PHONY: clean
-clean:
-	@echo "Cleaning..."
-	rm -rf ./Chapar.app
-
 .PHONY: install_deps
 install_deps:
 	go install gioui.org/cmd/gogio@latest
