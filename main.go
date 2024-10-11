@@ -2,29 +2,16 @@ package main
 
 import (
 	"flag"
-	"log"
-	"net/http"
-	_ "net/http/pprof"
-	"os"
-
 	"gioui.org/app"
 	"gioui.org/unit"
-
 	mainApp "github.com/mikumifa/BiliShareMail/ui/app"
-)
-
-var (
-	enablePprof = flag.Bool("pprof", false, "enable pprof")
+	log "github.com/rs/zerolog/log"
+	_ "net/http/pprof"
+	"os"
 )
 
 func main() {
 	flag.Parse()
-
-	if *enablePprof {
-		go func() {
-			log.Println(http.ListenAndServe("localhost:6060", nil))
-		}()
-	}
 
 	go func() {
 		var w app.Window
@@ -32,10 +19,10 @@ func main() {
 
 		mainUI, err := mainApp.New(&w)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal().AnErr("Failed to Create", err)
 		}
 		if err := mainUI.Run(); err != nil {
-			log.Fatal(err)
+			log.Fatal().AnErr("Failed to Run", err)
 		}
 		os.Exit(0)
 	}()
