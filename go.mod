@@ -1,4 +1,4 @@
-module BiliShareMail
+module github.com/mikumifa/BiliShareMail
 
 go 1.23
 

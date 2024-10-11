@@ -9,7 +9,6 @@ type UI struct {
 	window *app.Window
 }
 
-// New creates a new UI using ............
 func New(w *app.Window) (*UI, error) {
 	u := &UI{
 		window: w,

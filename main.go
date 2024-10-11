@@ -10,12 +10,11 @@ import (
 	"gioui.org/app"
 	"gioui.org/unit"
 
-	mainApp "BiliShareMail/ui/app"
+	mainApp "github.com/mikumifa/BiliShareMail/ui/app"
 )
 
 var (
-	serviceVersion = ""
-	enablePprof    = flag.Bool("pprof", false, "enable pprof")
+	enablePprof = flag.Bool("pprof", false, "enable pprof")
 )
 
 func main() {
