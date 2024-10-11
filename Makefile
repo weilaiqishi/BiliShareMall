@@ -1,62 +1,59 @@
+TAG_NAME?=$(shell git describe --tags)
+APP_NAME="Chapar"
 
 
-CWD := $(shell pwd)
-DIST := ${CWD}/dist
-DIST_JS := ${DIST}/js
-DIST_ANDROID := ${DIST}/android
-DIST_IOS := ${DIST}/ios
-.PHONY:  test dist wasm deploy android ios
+.PHONY: build_windows
+build_windows:
+	@echo "Building Windows..."
+	cp build\appicon.png .
+	gogio -ldflags="-X main.serviceVersion=${TAG_NAME}" -target=windows -arch=amd64 -o "dist\amd64\Chapar.exe" .
+	gogio -ldflags="-X main.serviceVersion=${TAG_NAME}" -target=windows -arch=386 -o "dist\i386\Chapar.exe" .
+	gogio -ldflags="-X main.serviceVersion=${TAG_NAME}" -target=windows -arch=arm64 -o "dist\arm64\Chapar.exe" .
+	rm *.syso
+	powershell -Command "Compress-Archive -Path dist\amd64\Chapar.exe -Destination dist\chapar-windows-${TAG_NAME}-amd64.zip"
+	powershell -Command "Compress-Archive -Path dist\i386\Chapar.exe -Destination dist\chapar-windows-${TAG_NAME}-i386.zip"
+	powershell -Command "Compress-Archive -Path dist\arm64\Chapar.exe -Destination dist\chapar-windows-${TAG_NAME}-arm64.zip"
+	rm -rf .\dist\amd64
+	rm -rf .\dist\i386
+	rm -rf .\dist\arm64
 
-test: 
-	echo "not supported"
+.PHONY: build_linux
+build_linux:
+	@echo "Building Linux amd64..."
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-X main.serviceVersion=$(TAG_NAME)" -o ./dist/amd64/chapar .
+	cp ./build/install-linux.sh ./dist/amd64
+	cp ./build/appicon.png ./dist/amd64
+	cp ./LICENSE ./dist/amd64
+	cp -r ./build/desktop-assets ./dist/amd64
+	tar -cJf ./dist/chapar-linux-$(TAG_NAME)-amd64.tar.xz --directory=./dist/amd64 chapar desktop-assets install-linux.sh appicon.png ./LICENSE
+	rm -rf ./dist/amd64
 
-android: 
-	rm -rf ${DIST_ANDROID}
+.PHONY: run
+run:
+	@echo "Running..."
+	go run .
+
+.PHONY: clean
+clean:
+	@echo "Cleaning..."
+	rm -rf ./Chapar.app
+
+.PHONY: install_deps
+install_deps:
 	go install gioui.org/cmd/gogio@latest
-	gogio -target android ${CWD}/cmd
-	# mkdir -p ${DIST_ANDROID}
-	# mv ${CWD}/cmd/index.html ${DIST_ANDROID}/index.html 
-	# mv ${CWD}/cmd/main.wasm ${DIST_ANDROID}/main.wasm 
-	# mv ${CWD}/cmd/wasm.js ${DIST_ANDROID}/wasm.js
 
-ios: 
-	rm -rf ${DIST_ANDROID}
-	go install gioui.org/cmd/gogio@latest
-	gogio -target ios -appid "tmp1234" ${CWD}/cmd
-	# mkdir -p ${DIST_ANDROID}
-	# mv ${CWD}/cmd/index.html ${DIST_ANDROID}/index.html 
-	# mv ${CWD}/cmd/main.wasm ${DIST_ANDROID}/main.wasm 
-	# mv ${CWD}/cmd/wasm.js ${DIST_ANDROID}/wasm.js
+.PHONY: lint
+lint:
+	docker run --rm \
+		-e CGO_ENABLED=1 \
+		-v $(PWD):/app \
+		-w /app chapar/builder:0.1.3 \
+		 golangci-lint -c .golangci-lint.yaml run --timeout 5m
 
-js: 
-	rm -rf ${DIST_JS}
-	go install gioui.org/cmd/gogio@latest
-	gogio -target js ${CWD}/cmd
-	mkdir -p ${DIST_JS}
-	mv ${CWD}/cmd/index.html ${DIST_JS}/index.html 
-	mv ${CWD}/cmd/main.wasm ${DIST_JS}/main.wasm 
-	mv ${CWD}/cmd/wasm.js ${DIST_JS}/wasm.js
-
-dist: 
-	rm -rf ${CWD}/dist
-	go install gioui.org/cmd/gogio@latest
-	echo ${CWD}
-	gogio -target js ${CWD}/cmd
-	mkdir  ${CWD}/dist
-	mv ${CWD}/cmd/index.html ${CWD}/dist/index.html 
-	mv ${CWD}/cmd/main.wasm ${CWD}/dist/main.wasm 
-	mv ${CWD}/cmd/wasm.js ${CWD}/dist/wasm.js
-
-wasm: js
-	go install github.com/shurcooL/goexec@latest
-	go get github.com/shurcooL/go-goon
-	goexec 'http.ListenAndServe(":8080", http.FileServer(http.Dir("${DIST_JS}")))'
-
-deploy-web: js
-	-rm -rf tmp
-	git clone https://github.com/inqizit-public/gioui-template.git tmp
-	cd tmp; git checkout gh-pages; rm -rf *; cp ${DIST_JS}/* .; git add .; git commit -m "deploy"; git push
-	-rm -rf tmp
-
-run: 
-	go run cmd/main.go
+.PHONY: test
+test:
+	docker run --rm \
+		-e CGO_ENABLED=1 \
+		-v $(PWD):/app \
+		-w /app chapar/builder:0.1.3 \
+		go test -v ./...
