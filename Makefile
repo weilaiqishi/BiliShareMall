@@ -2,11 +2,11 @@ TAG_NAME?=$(shell git describe --tags)
 APP_NAME="Chapar"
 
 
-.PHONY: run
+.PHONY: run,embed
 run:
 	@echo "Running..."
-	go run .
+	wails dev
 
 .PHONY: install_deps
-install_deps:
-	go install gioui.org/cmd/gogio@latest
+embed:
+	go:embed all:frontend/dist
