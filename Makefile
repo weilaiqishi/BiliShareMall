@@ -18,3 +18,6 @@ tidy:
 .PHONY: build
 build:
 	 wails build
+.PHONY: autotag
+autotag:
+	@bash -c "bin/autotag"
