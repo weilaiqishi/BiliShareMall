@@ -21,7 +21,3 @@ build:
 .PHONY: autotag
 autotag:
 	@bash -c "bin/autotag"
-
-.PHONY: release
-release:
-	@bash -c "bin/release.sh"
