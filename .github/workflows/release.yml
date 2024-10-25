@@ -26,3 +26,5 @@ jobs:
           node-version: 18.x
           build-name: ${{ matrix.build.name }}_${{ github.ref_name }}
           build-platform: ${{ matrix.build.platform }}
+          package: true
+
