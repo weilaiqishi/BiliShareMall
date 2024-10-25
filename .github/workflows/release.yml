@@ -10,8 +10,8 @@ jobs:
       fail-fast: false
       matrix:
         build: [
-          {name: biliShareMail_linux_amd64, platform: linux/amd64, os: ubuntu-latest},
-          {name: biliShareMail_windows_amd64, platform: windows/amd64, os: windows-latest}
+          { name: biliShareMail_linux_amd64, platform: linux/amd64, os: ubuntu-latest,end: "" },
+          { name: biliShareMail_windows_amd64, platform: windows/amd64, os: windows-latest,end: ".exe" }
         ]
     runs-on: ${{ matrix.build.os }}
     steps:
@@ -24,7 +24,7 @@ jobs:
       - uses: dAppServer/wails-build-action@v2.2
         with:
           node-version: 18.x
-          build-name: ${{ matrix.build.name }}_${{ github.ref_name }}
+          build-name: ${{ matrix.build.name }}_${{ github.ref_name }}${{ matrix.build.end }}
           build-platform: ${{ matrix.build.platform }}
           package: true
 
