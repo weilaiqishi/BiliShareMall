@@ -11,8 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         build: [
-          {name: wailsTest, platform: linux/amd64, os: ubuntu-latest},
-          {name: wailsTest, platform: windows/amd64, os: windows-latest}
+          {name: biliShareMail, platform: linux/amd64, os: ubuntu-latest},
+          {name: biliShareMail, platform: windows/amd64, os: windows-latest}
         ]
     runs-on: ${{ matrix.build.os }}
     steps:
@@ -22,9 +22,8 @@ jobs:
       - name: Install pnpm
         run: |
           npm install -g pnpm
-
       - uses: dAppServer/wails-build-action@v2.2
         with:
           node-version: 18.x
-          build-name: ${{ matrix.build.name }}
+          build-name: ${{ matrix.build.name }}_}__${{ matrix.build.platform }}_${{ github.ref_name }}
           build-platform: ${{ matrix.build.platform }}
