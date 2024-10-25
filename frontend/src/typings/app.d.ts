@@ -415,34 +415,7 @@ declare namespace App {
             loginSuccess: string;
             welcomeBack: string;
           };
-          pwdLogin: {
-            title: string;
-            rememberMe: string;
-            forgetPassword: string;
-            register: string;
-            otherAccountLogin: string;
-            otherLoginMode: string;
-            superAdmin: string;
-            admin: string;
-            user: string;
-          };
-          codeLogin: {
-            title: string;
-            getCode: string;
-            reGetCode: string;
-            sendCodeSuccess: string;
-            imageCodePlaceholder: string;
-          };
-          register: {
-            title: string;
-            agreement: string;
-            protocol: string;
-            policy: string;
-          };
-          resetPwd: {
-            title: string;
-          };
-          bindWeChat: {
+          biliQrlogin: {
             title: string;
           };
         };

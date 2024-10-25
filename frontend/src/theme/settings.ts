@@ -4,7 +4,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
   grayscale: false,
   colourWeakness: false,
   recommendColor: false,
-  themeColor: '#646cff',
+  themeColor: '#FB7299',
   otherColor: {
     info: '#2080f0',
     success: '#52c41a',
@@ -52,7 +52,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
   },
   watermark: {
     visible: false,
-    text: 'SoybeanAdmin'
+    text: 'BiliShareMail'
   },
   tokens: {
     light: {
@@ -87,6 +87,6 @@ export const overrideThemeSettings: Partial<App.Theme.ThemeSetting> = {
   resetCacheStrategy: 'close',
   watermark: {
     visible: false,
-    text: 'SoybeanAdmin'
+    text: 'BiliShareMail'
   }
 };

@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'SoybeanAdmin',
+    title: 'BiliShareMail',
     updateTitle: 'System Version Update Notification',
     updateContent: 'A new version of the system has been detected. Do you want to refresh the page immediately?',
     updateConfirm: 'Refresh immediately',
@@ -177,34 +177,7 @@ const local: App.I18n.Schema = {
         loginSuccess: 'Login successfully',
         welcomeBack: 'Welcome back, {userName} !'
       },
-      pwdLogin: {
-        title: 'Password Login',
-        rememberMe: 'Remember me',
-        forgetPassword: 'Forget password?',
-        register: 'Register',
-        otherAccountLogin: 'Other Account Login',
-        otherLoginMode: 'Other Login Mode',
-        superAdmin: 'Super Admin',
-        admin: 'Admin',
-        user: 'User'
-      },
-      codeLogin: {
-        title: 'Verification Code Login',
-        getCode: 'Get verification code',
-        reGetCode: 'Reacquire after {time}s',
-        sendCodeSuccess: 'Verification code sent successfully',
-        imageCodePlaceholder: 'Please enter image verification code'
-      },
-      register: {
-        title: 'Register',
-        agreement: 'I have read and agree to',
-        protocol: '《User Agreement》',
-        policy: '《Privacy Policy》'
-      },
-      resetPwd: {
-        title: 'Reset Password'
-      },
-      bindWeChat: {
+      biliQrlogin: {
         title: 'Bind WeChat'
       }
     },

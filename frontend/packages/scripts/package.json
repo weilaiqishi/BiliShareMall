@@ -9,7 +9,9 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["./src/*"]
+      "*": [
+        "./src/*"
+      ]
     }
   },
   "devDependencies": {
@@ -23,5 +25,8 @@
     "kolorist": "1.8.0",
     "npm-check-updates": "17.1.4",
     "rimraf": "6.0.1"
+  },
+  "dependencies": {
+    "@sa/scripts": "file:"
   }
 }

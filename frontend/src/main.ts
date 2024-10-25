@@ -23,7 +23,7 @@ async function setupApp() {
 
   setupI18n(app);
 
-  setupAppVersionNotification();
+  // setupAppVersionNotification();
 
   app.mount('#app');
 }

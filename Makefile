@@ -5,8 +5,16 @@ APP_NAME="Chapar"
 .PHONY: run,embed
 run:
 	@echo "Running..."
-	wails dev
+	wails dev -loglevel Info
 
 .PHONY: install_deps
 embed:
 	go:embed all:frontend/dist
+
+.PHONY: tidy
+tidy:
+	go mod tidy
+
+.PHONY: build
+build:
+	 wails build

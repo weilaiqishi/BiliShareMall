@@ -6,10 +6,13 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["./src/*"]
+      "*": [
+        "./src/*"
+      ]
     }
   },
   "dependencies": {
+    "@sa/fetch": "file:",
     "ofetch": "1.4.1"
   }
 }

@@ -4,6 +4,7 @@ go 1.23
 
 require (
 	github.com/rs/zerolog v1.33.0
+	github.com/tidwall/gjson v1.9.3
 	github.com/wailsapp/wails/v2 v2.8.1
 )
 
@@ -25,6 +26,8 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/samber/lo v1.38.1 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tkrajina/go-reflector v0.5.6 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect

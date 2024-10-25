@@ -6,7 +6,12 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["./src/*"]
+      "*": [
+        "./src/*"
+      ]
     }
+  },
+  "dependencies": {
+    "@sa/uno-preset": "file:"
   }
 }
