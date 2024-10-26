@@ -447,6 +447,11 @@ declare namespace App {
           };
           creativity: string;
         };
+        screpy: {
+          common: {
+            price: string;
+          };
+        };
       };
       form: {
         required: string;

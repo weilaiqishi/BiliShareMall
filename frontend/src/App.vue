@@ -25,7 +25,7 @@ const naiveDateLocale = computed(() => {
 
 const watermarkProps = computed<WatermarkProps>(() => {
   return {
-    content: themeStore.watermark?.text || 'BiliShareMail',
+    content: themeStore.watermark?.text || 'BiliShareMall',
     cross: true,
     fullscreen: true,
     fontSize: 16,

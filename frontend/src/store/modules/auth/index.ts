@@ -30,7 +30,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
       await toLogin();
     }
 
-    tabStore.clearTabs();
+    tabStore.cacheTabs();
     routeStore.resetStore();
   }
 
@@ -45,6 +45,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
         content: $t('page.login.common.welcomeBack'),
         duration: 4500
       });
+      tabStore.clearTabs();
     }
   }
   return {

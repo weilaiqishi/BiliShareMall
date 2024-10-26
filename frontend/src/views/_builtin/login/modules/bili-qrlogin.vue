@@ -25,7 +25,6 @@ function startLoginCheck() {
   if (checkInterval) {
     clearInterval(checkInterval); // 清除之前的定时器
   }
-
   checkInterval = setInterval(async () => {
     VerifyLogin(loginKey).then(ret => {
       if (ret.cookies !== null) {

@@ -26,7 +26,7 @@ defineProps<Props>();
 
 const appStore = useAppStore();
 const themeStore = useThemeStore();
-const { isFullscreen, toggle } = useFullscreen();
+// const { isFullscreen, toggle } = useFullscreen();
 </script>
 
 <template>
@@ -39,7 +39,7 @@ const { isFullscreen, toggle } = useFullscreen();
     </div>
     <div class="h-full flex-y-center justify-end">
       <GlobalSearch />
-      <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
+      <!-- <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" /> -->
       <LangSwitch :lang="appStore.locale" :lang-options="appStore.localeOptions" @change-lang="appStore.changeLocale" />
       <ThemeSchemaSwitch
         :theme-schema="themeStore.themeScheme"

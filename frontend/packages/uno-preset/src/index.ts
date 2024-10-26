@@ -3,7 +3,7 @@
 import type { Preset } from '@unocss/core';
 import type { Theme } from '@unocss/preset-uno';
 
-export function presetBiliShareMail(): Preset<Theme> {
+export function presetBiliShareMall(): Preset<Theme> {
   const preset: Preset<Theme> = {
     name: 'preset-soybean-admin',
     shortcuts: [
@@ -52,4 +52,4 @@ export function presetBiliShareMail(): Preset<Theme> {
   return preset;
 }
 
-export default presetBiliShareMail;
+export default presetBiliShareMall;

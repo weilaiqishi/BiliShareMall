@@ -74,5 +74,14 @@ export const generatedRoutes: GeneratedRoute[] = [
       constant: true,
       hideInMenu: true
     }
+  },
+  {
+    name: 'scrapy',
+    path: '/scrapy',
+    component: 'layout.base$view.scrapy',
+    meta: {
+      title: 'scrapy',
+      i18nKey: 'route.scrapy'
+    }
   }
 ];
