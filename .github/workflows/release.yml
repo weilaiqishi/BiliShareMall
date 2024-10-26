@@ -10,8 +10,8 @@ jobs:
       fail-fast: false
       matrix:
         build: [
-          { name: BiliShareMail_linux_amd64, platform: linux/amd64, os: ubuntu-latest,end: "" },
-          { name: BiliShareMail_windows_amd64, platform: windows/amd64, os: windows-latest,end: ".exe" }
+          { name: BiliShareMall_linux_amd64, platform: linux/amd64, os: ubuntu-latest,end: "" },
+          { name: BiliShareMall_windows_amd64, platform: windows/amd64, os: windows-latest,end: ".exe" }
         ]
     runs-on: ${{ matrix.build.os }}
     steps:

@@ -1,7 +1,7 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "BiliShareMail",
-  "outputfilename": "BiliShareMail",
+  "name": "BiliShareMall",
+  "outputfilename": "BiliShareMall",
   "frontend:install": "pnpm install",
   "frontend:build": "pnpm run build",
   "frontend:dev:watcher": "pnpm dev",

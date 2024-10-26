@@ -2,7 +2,7 @@ package main
 
 import (
 	"embed"
-	app2 "github.com/mikumifa/BiliShareMail/internal/app"
+	app2 "github.com/mikumifa/BiliShareMall/internal/app"
 	"github.com/rs/zerolog/log"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -18,7 +18,7 @@ func main() {
 	log.Info().Msg("Creating app")
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "BiliShareMail",
+		Title:  "BiliShareMall",
 		Width:  1024,
 		Height: 768,
 		AssetServer: &assetserver.Options{

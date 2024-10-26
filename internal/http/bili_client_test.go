@@ -1,8 +1,8 @@
 package http
 
 import (
-	"github.com/mikumifa/BiliShareMail/internal/domain"
-	"github.com/mikumifa/BiliShareMail/internal/util"
+	"github.com/mikumifa/BiliShareMall/internal/domain"
+	"github.com/mikumifa/BiliShareMall/internal/util"
 	"testing"
 )
 

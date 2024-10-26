@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/mikumifa/BiliShareMail/internal/http"
+	"github.com/mikumifa/BiliShareMall/internal/http"
 )
 
 type LoginInfo struct {
