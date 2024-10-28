@@ -5,7 +5,7 @@ APP_NAME="Chapar"
 .PHONY: run,embed
 run:
 	@echo "Running..."
-	wails dev -loglevel Info
+	wails dev -loglevel Info -tags fts5
 
 .PHONY: install_deps
 embed:
@@ -17,7 +17,7 @@ tidy:
 
 .PHONY: build
 build:
-	 wails build
+	 wails build -tags fts5
 .PHONY: autotag
 autotag:
 	@bash -c "bin/autotag"

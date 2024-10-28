@@ -4,15 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/rs/zerolog/log"
 	"io"
 	"net/http"
-	"net/http/cookiejar"
 )
 
 type BiliClient struct {
 	httpClient *http.Client
-	Jar        *cookiejar.Jar
 	headers    map[string]string
 }
 
@@ -22,10 +19,6 @@ const (
 )
 
 func NewBiliClient() (*BiliClient, error) {
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		return nil, err
-	}
 	headers := map[string]string{
 		"Content-Type": "application/json",
 	}
@@ -35,7 +28,6 @@ func NewBiliClient() (*BiliClient, error) {
 	}
 
 	return &BiliClient{
-		Jar:        jar,
 		httpClient: &http.Client{Transport: transport},
 		headers:    headers,
 	}, nil
@@ -54,7 +46,7 @@ func (t *HeaderTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 }
 
 // SendRequest body json
-func (c *BiliClient) SendRequest(method, url string, data map[string]interface{}, respObj interface{}) error {
+func (c *BiliClient) SendRequest(method, url string, data map[string]interface{}, respObjRef any) error {
 	dataStr, _ := json.Marshal(data)
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(dataStr))
 	if err != nil {
@@ -67,11 +59,11 @@ func (c *BiliClient) SendRequest(method, url string, data map[string]interface{}
 		return fmt.Errorf("request failed: %w", err)
 	}
 	resp, err := io.ReadAll(res.Body)
-	err = json.Unmarshal(resp, &respObj)
+	//log.Info().Str("text", string(resp)).Msg("request text")
+	err = json.Unmarshal(resp, respObjRef)
 	if err != nil {
 		return fmt.Errorf("failed to read response: %w", err)
 	}
-	log.Info().Str("response", string(resp)).Msg("bili client send request successfully")
 	return nil
 }
 func (c *BiliClient) StoreHeader(key, value string) {

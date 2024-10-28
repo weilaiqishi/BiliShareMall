@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/mikumifa/BiliShareMall/internal/http"
+	"github.com/rs/zerolog/log"
 )
 
 type LoginInfo struct {
@@ -20,11 +21,15 @@ func (a *App) GetLoginKeyAndUrl() LoginInfo {
 
 // VerifyLoginResponse 封装登录验证响应的结构体
 type VerifyLoginResponse struct {
-	CookieStr map[string]string `json:"cookies"`
+	CookieStr string `json:"cookies"`
 }
 
 func (a *App) VerifyLogin(loginKey string) VerifyLoginResponse {
-	str := http.VerifyLogin(loginKey)
+	str, err := http.VerifyLogin(loginKey)
+	if err != nil {
+		log.Error().Err(err).Msg("VerifyLogin error")
+		return VerifyLoginResponse{}
+	}
 	ret := VerifyLoginResponse{
 		CookieStr: str,
 	}

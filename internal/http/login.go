@@ -1,6 +1,7 @@
 package http
 
 import (
+	"errors"
 	"github.com/rs/zerolog/log"
 	gjson "github.com/tidwall/gjson"
 	"io"
@@ -28,7 +29,7 @@ func GetLoginKeyAndUrl() (loginKey string, loginUrl string) {
 	return
 }
 
-func VerifyLogin(loginKey string) map[string]string {
+func VerifyLogin(loginKey string) (string, error) {
 	url := "https://passport.bilibili.com/x/passport-login/web/qrcode/poll"
 	client := http.Client{}
 	url += "?" + "qrcode_key=" + loginKey
@@ -36,21 +37,23 @@ func VerifyLogin(loginKey string) map[string]string {
 	req.Header.Set("User-Agent", user_agent)
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil
+		return "", err
 	}
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
 	data := gjson.ParseBytes(body)
 	log.Info().Msg("check login")
 	if data.Get("data.url").String() != "" {
-		cookie := make(map[string]string)
+		var sb strings.Builder
+
 		for _, v := range resp.Header["Set-Cookie"] {
-			kv := strings.Split(v, ";")[0]
-			kvArr := strings.Split(kv, "=")
-			cookie[kvArr[0]] = kvArr[1]
+			pair := strings.Split(v, ";")
+			sb.WriteString(pair[0])
+			sb.WriteString(";")
 		}
-		return cookie
+		log.Info().Str("cookies", sb.String()).Msg("cookies created")
+		return sb.String(), nil
 
 	}
-	return nil
+	return "", errors.New("cookies not found")
 }

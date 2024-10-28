@@ -3,11 +3,8 @@ package dao
 import (
 	"context"
 	"database/sql"
-	_ "modernc.org/sqlite"
-)
-
-const (
-	DBPATH = "bsm.db"
+	"github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Database struct {
@@ -15,7 +12,14 @@ type Database struct {
 }
 
 func NewDatabase(dbPath string) (*Database, error) {
-	db, err := sql.Open("sqlite", dbPath)
+	sql.Register("sqlite3_simple",
+		&sqlite3.SQLiteDriver{
+			Extensions: []string{
+				"lib/libsimple-windows-x64/simple",
+			},
+		})
+
+	db, err := sql.Open("sqlite3_simple", dbPath)
 	if err != nil {
 		return nil, err
 	}
