@@ -27,7 +27,7 @@ function startLoginCheck() {
   }
   checkInterval = setInterval(async () => {
     VerifyLogin(loginKey).then(ret => {
-      if (ret.cookies !== null) {
+      if (ret.cookies !== '') {
         authStore.setCookies(ret.cookies);
         clearInterval(checkInterval!);
       }

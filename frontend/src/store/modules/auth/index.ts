@@ -34,7 +34,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     routeStore.resetStore();
   }
 
-  async function setCookies(cookies: any = {}, redirect = true) {
+  async function setCookies(cookies: string, redirect = true) {
     localStg.set('cookies', cookies);
     token.value = cookies;
     await routeStore.initAuthRoute();
