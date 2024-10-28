@@ -85,60 +85,62 @@ onMounted(() => {
 </script>
 
 <template>
-  <NCard class="card-wrapper" title="添加爬取类型">
-    <template #header-extra>
-      <NButton @click="search">
-        <template #icon>
-          <icon-ic-round-plus />
-        </template>
-        搜索
-      </NButton>
-    </template>
-    <NCollapse default-expanded-names="3">
-      <NCollapseItem title="时间">
-        <NDatePicker v-model:value="timeRange" type="datetimerange" clearable />
-        <template #header-extra>
-          <NSpace>
-            <NSwitch v-model:value="timeRangeEnable" />
-          </NSpace>
-        </template>
-      </NCollapseItem>
-      <NCollapseItem title="价格">
-        <NFlex>
-          <NInputNumber v-model:value="priceRange[0]" :precision="2">
-            <template #suffix>元</template>
-          </NInputNumber>
-          <NInputNumber v-model:value="priceRange[1]" :precision="2">
-            <template #suffix>元</template>
-          </NInputNumber>
-        </NFlex>
-        <template #header-extra>
-          <NSwitch v-model:value="priceRangeEnable" />
-        </template>
-      </NCollapseItem>
-      <NCollapseItem title="类型" name="3">
-        <NFlex>
-          <NRadioGroup v-model:value="sortOpt" name="productType">
-            <NRadioButton
-              v-for="product in sortways"
-              :key="product.value"
-              :value="product.value"
-              :label="product.label"
-            />
-          </NRadioGroup>
-        </NFlex>
-      </NCollapseItem>
-    </NCollapse>
-  </NCard>
+  <NSpace>
+    <NCard class="card-wrapper" title="添加爬取类型">
+      <template #header-extra>
+        <NButton @click="search">
+          <template #icon>
+            <icon-ic-round-plus />
+          </template>
+          搜索
+        </NButton>
+      </template>
+      <NCollapse default-expanded-names="3">
+        <NCollapseItem title="时间">
+          <NDatePicker v-model:value="timeRange" type="datetimerange" clearable />
+          <template #header-extra>
+            <NSpace>
+              <NSwitch v-model:value="timeRangeEnable" />
+            </NSpace>
+          </template>
+        </NCollapseItem>
+        <NCollapseItem title="价格">
+          <NFlex>
+            <NInputNumber v-model:value="priceRange[0]" :precision="2">
+              <template #suffix>元</template>
+            </NInputNumber>
+            <NInputNumber v-model:value="priceRange[1]" :precision="2">
+              <template #suffix>元</template>
+            </NInputNumber>
+          </NFlex>
+          <template #header-extra>
+            <NSwitch v-model:value="priceRangeEnable" />
+          </template>
+        </NCollapseItem>
+        <NCollapseItem title="类型" name="3">
+          <NFlex>
+            <NRadioGroup v-model:value="sortOpt" name="productType">
+              <NRadioButton
+                v-for="product in sortways"
+                :key="product.value"
+                :value="product.value"
+                :label="product.label"
+              />
+            </NRadioGroup>
+          </NFlex>
+        </NCollapseItem>
+      </NCollapse>
+    </NCard>
 
-  <NDataTable
-    remote
-    :data="data"
-    :columns="columns"
-    :loading="loading"
-    :pagination="pagination"
-    @update:page="search"
-  />
+    <NDataTable
+      remote
+      :data="data"
+      :columns="columns"
+      :loading="loading"
+      :pagination="pagination"
+      @update:page="search"
+    />
+  </NSpace>
 </template>
 
 <style scoped></style>
