@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/mikumifa/BiliShareMall" target="_blank">
-    <img width="160" src="assets/icon.ico" alt="logo">
+    <img width="200" src="build/appicon.png" alt="logo">
   </a>
   <h1 id="koishi">BiliShareMall</h1>
 
