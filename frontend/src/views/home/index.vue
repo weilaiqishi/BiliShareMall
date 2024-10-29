@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Search, SearchCircle, SearchCircleOutline } from '@vicons/ionicons5';
 import { useMessage } from 'naive-ui';
 import { onMounted, ref } from 'vue';
 import { ListC2CItem } from '~/wailsjs/go/app/App';
@@ -80,17 +81,17 @@ function search() {
     });
 }
 onMounted(() => {
-  // search();
+  search();
 });
 </script>
 
 <template>
-  <NSpace>
-    <NCard class="card-wrapper" title="添加爬取类型">
+  <NFlex>
+    <NCard class="card-wrapper" title="搜索">
       <template #header-extra>
         <NButton @click="search">
           <template #icon>
-            <icon-ic-round-plus />
+            <Search></Search>
           </template>
           搜索
         </NButton>
@@ -117,7 +118,7 @@ onMounted(() => {
             <NSwitch v-model:value="priceRangeEnable" />
           </template>
         </NCollapseItem>
-        <NCollapseItem title="类型" name="3">
+        <NCollapseItem title="排序" name="3">
           <NFlex>
             <NRadioGroup v-model:value="sortOpt" name="productType">
               <NRadioButton
@@ -131,7 +132,6 @@ onMounted(() => {
         </NCollapseItem>
       </NCollapse>
     </NCard>
-
     <NDataTable
       remote
       :data="data"
@@ -140,7 +140,7 @@ onMounted(() => {
       :pagination="pagination"
       @update:page="search"
     />
-  </NSpace>
+  </NFlex>
 </template>
 
 <style scoped></style>
