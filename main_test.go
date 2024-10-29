@@ -347,7 +347,7 @@ func Test_simple_list(t *testing.T) {
 	sql.Register("sqlite3_simple",
 		&sqlite3.SQLiteDriver{
 			Extensions: []string{
-				"dist/libsimple-windows-x64/simple",
+				"dict/libsimple-windows-x64/simple",
 			},
 		})
 

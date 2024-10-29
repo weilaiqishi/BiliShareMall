@@ -89,12 +89,19 @@ onMounted(() => {
   <NFlex>
     <NCard class="card-wrapper" title="搜索">
       <template #header-extra>
-        <NButton @click="search">
-          <template #icon>
-            <Search></Search>
-          </template>
-          搜索
-        </NButton>
+        <NSpace size="large">
+          <NInput v-model:value="searchText" clearable :placeholder="$t('common.keywordSearch')">
+            <template #prefix>
+              <icon-uil-search class="text-15px text-#c2c2c2" />
+            </template>
+          </NInput>
+          <NButton @click="search">
+            <template #icon>
+              <Search></Search>
+            </template>
+            搜索
+          </NButton>
+        </NSpace>
       </template>
       <NCollapse default-expanded-names="3">
         <NCollapseItem title="时间">
