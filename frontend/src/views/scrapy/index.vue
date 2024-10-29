@@ -3,7 +3,14 @@ import { type Ref, onMounted, ref } from 'vue';
 import { useLoadingBar, useMessage } from 'naive-ui';
 import { Play, StopSharp } from '@vicons/ionicons5';
 import ScopeChoose from '@/views/scrapy/modules/scope-choose.vue';
-import { CreateScrapyItem, DeleteScrapyItem, DoneTask, ReadAllScrapyItems, StartTask } from '~/wailsjs/go/app/App';
+import {
+  CreateScrapyItem,
+  DeleteScrapyItem,
+  DoneTask,
+  GetNowRunTaskId,
+  ReadAllScrapyItems,
+  StartTask
+} from '~/wailsjs/go/app/App';
 import { dao } from '~/wailsjs/go/models';
 import { getToken } from '@/store/modules/auth/shared';
 import { EventsOn } from '~/wailsjs/runtime/runtime';
@@ -133,7 +140,15 @@ EventsOn('scrapy_finished', c => {
   nowIdx.value = -1;
 });
 onMounted(async () => {
+  loadingBar.start();
   scrapyList.value = await getAllItems();
+  const nowRunTaskId = await GetNowRunTaskId();
+  scrapyList.value.forEach((item, index) => {
+    if (item.id === nowRunTaskId) {
+      nowIdx.value = index;
+    }
+  });
+  loadingBar.finish();
 });
 </script>
 

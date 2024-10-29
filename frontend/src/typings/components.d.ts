@@ -16,8 +16,6 @@ declare module 'vue' {
     FullScreen: typeof import('./../components/common/full-screen.vue')['default']
     IconAntDesignEnterOutlined: typeof import('~icons/ant-design/enter-outlined')['default']
     IconAntDesignReloadOutlined: typeof import('~icons/ant-design/reload-outlined')['default']
-    IconGridiconsFullscreen: typeof import('~icons/gridicons/fullscreen')['default']
-    IconGridiconsFullscreenExit: typeof import('~icons/gridicons/fullscreen-exit')['default']
     IconIcRoundPlus: typeof import('~icons/ic/round-plus')['default']
     IconLocalLogo: typeof import('~icons/local/logo')['default']
     IconMdiArrowDownThin: typeof import('~icons/mdi/arrow-down-thin')['default']

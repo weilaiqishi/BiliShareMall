@@ -9,14 +9,13 @@ import (
 func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOption int, startTime, endTime *time.Time, fromPrice, toPrice int) ([]CSCItem, int, error) {
 	offset := (page - 1) * pageSize
 
-	// 查询总记录数
-	var totalCount int
 	// 设置查询语句
-	query := `SELECT 
-				c2c_items_id, type, c2c_items.c2c_items_name, total_items_count, 
-				price, show_price, show_market_price, uid, 
-				payment_time, is_my_publish, uface, uname ,COUNT(*) AS _count
-			  FROM c2c_fts
+	queryStart := `SELECT
+					c2c_items_id, type, c2c_items.c2c_items_name, total_items_count ,price, show_price, show_market_price, uid,
+					payment_time, is_my_publish, uface, uname `
+	countStart := `SELECT
+					COUNT(*) `
+	query := ` FROM c2c_fts
 			  LEFT JOIN c2c_items ON c2c_items.c2c_items_id = c2c_fts.rowid`
 
 	// 动态构建WHERE条件
@@ -53,8 +52,6 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 		query += " WHERE " + strings.Join(conditions, " AND ")
 	}
 
-	query += " GROUP BY c2c_items.c2c_items_id"
-
 	switch sortOption {
 	case 1:
 		query += " ORDER BY updated_at DESC"
@@ -67,12 +64,18 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 		query += " ORDER BY updated_at DESC"
 	}
 
-	// 添加分页控制
-	query += " LIMIT ? OFFSET ?"
-	args = append(args, pageSize, offset)
+	// 查询总记录数
+	var totalCount int
+	err := d.db.QueryRowContext(context.Background(), countStart+query, args...).Scan(&totalCount)
+	if err != nil {
+		return nil, 0, err
+	}
 
+	// 添加分页控制
+	args = append(args, pageSize, offset)
+	query += " LIMIT ? OFFSET ?"
 	// 执行查询
-	rows, err := d.db.QueryContext(context.Background(), query, args...)
+	rows, err := d.db.QueryContext(context.Background(), queryStart+query, args...)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -95,7 +98,6 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 			&item.IsMyPublish,
 			&item.Uface,
 			&item.Uname,
-			&totalCount,
 		); err != nil {
 			return nil, 0, err
 		}

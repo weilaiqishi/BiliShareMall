@@ -334,7 +334,6 @@ func Test_list(t *testing.T) {
 	if err != nil {
 		log.Error().Err(err).Msg("ReadCSCItems")
 	}
-
 	println(total)
 	for idx, item := range items {
 		log.Info().Any(strconv.Itoa(idx), item).Msg("list")

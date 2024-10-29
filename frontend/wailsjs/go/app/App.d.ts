@@ -11,6 +11,8 @@ export function DoneTask(arg1:number):Promise<void>;
 
 export function GetLoginKeyAndUrl():Promise<app.LoginInfo>;
 
+export function GetNowRunTaskId():Promise<number>;
+
 export function Greet(arg1:string):Promise<string>;
 
 export function ListC2CItem(arg1:number,arg2:number,arg3:string,arg4:number,arg5:number,arg6:number,arg7:number,arg8:number):Promise<app.C2CItemListVO>;

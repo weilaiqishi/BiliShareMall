@@ -68,7 +68,9 @@ func (a *App) DoneTask(taskId int) error {
 	doneChan <- struct{}{}
 	return nil
 }
-
+func (a *App) GetNowRunTaskId() int {
+	return taskRequest.taskId
+}
 func (a *App) scrapyRunTimeWork() {
 	log.Info().Msg("scrapy runtime started")
 	for {

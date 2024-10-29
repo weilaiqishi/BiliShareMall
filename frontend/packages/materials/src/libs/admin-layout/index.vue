@@ -9,7 +9,7 @@ defineOptions({
 });
 
 const props = withDefaults(defineProps<AdminLayoutProps>(), {
-  mode: 'vertical',
+  mode: 'horizontal',
   scrollMode: 'content',
   scrollElId: LAYOUT_SCROLL_EL_ID,
   commonClass: 'transition-all-300',

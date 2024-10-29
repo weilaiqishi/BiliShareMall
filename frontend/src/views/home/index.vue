@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Search, SearchCircle, SearchCircleOutline } from '@vicons/ionicons5';
-import { useMessage } from 'naive-ui';
-import { onMounted, ref } from 'vue';
+import { Search } from '@vicons/ionicons5';
+import { useClipboard } from '@vueuse/core';
+import { NButton, useMessage } from 'naive-ui';
+import { h, onMounted, ref } from 'vue';
 import { ListC2CItem } from '~/wailsjs/go/app/App';
 import type { app } from '~/wailsjs/go/models';
 const loading = ref(false);
@@ -12,6 +13,18 @@ interface SortWay {
   value: number;
   /** The token */
   label: string;
+}
+
+const { copy, isSupported } = useClipboard();
+
+async function handleCopy(item: app.C2CItemVO) {
+  const copy_str = `https://mall.bilibili.com/neul-next/index.html?page=magic-market_detail&noTitleBar=1&itemsId=${item.c2cItemsId}`;
+  if (!isSupported) {
+    message.error(`复制失败，请自行复制链接：${copy_str}`);
+    return;
+  }
+  await copy(copy_str);
+  message.success('复制成功！');
 }
 
 const sortways = ref<SortWay[]>([
@@ -42,6 +55,21 @@ const columns = [
     title: '价格',
     key: 'price',
     width: 100
+  },
+  {
+    title: '链接',
+    key: 'c2cItemsId',
+    render(row: app.C2CItemVO) {
+      return h(
+        NButton,
+        {
+          size: 'small',
+          onClick: () => handleCopy(row)
+        },
+        { default: () => '复制' }
+      );
+    },
+    width: 80
   }
 ];
 const timeRange = ref<[number, number]>([1183135260000, Date.now()]);

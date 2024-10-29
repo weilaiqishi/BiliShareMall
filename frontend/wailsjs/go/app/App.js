@@ -18,6 +18,10 @@ export function GetLoginKeyAndUrl() {
   return window['go']['app']['App']['GetLoginKeyAndUrl']();
 }
 
+export function GetNowRunTaskId() {
+  return window['go']['app']['App']['GetNowRunTaskId']();
+}
+
 export function Greet(arg1) {
   return window['go']['app']['App']['Greet'](arg1);
 }
