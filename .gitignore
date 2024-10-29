@@ -105,3 +105,4 @@ go.work
 ../build/bin
 node_modules
 frontend/dist
+!simple.dll

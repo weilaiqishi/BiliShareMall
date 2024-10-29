@@ -10,7 +10,7 @@ import (
 
 const (
 	DBPATH   = "bsm.db"
-	INIT_SQL = "init.sql"
+	INIT_SQL = "dict/init.sql"
 )
 
 // App struct
