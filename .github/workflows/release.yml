@@ -20,10 +20,12 @@ jobs:
       - name: Install pnpm
         run: |
           npm install -g pnpm
-      - uses: dAppServer/wails-build-action@v2.2
+      - uses: dAppServer/wails-build-action@869d13b213afde171d7223ee5cb31a7b313d15a3
         with:
           node-version: 18.x
           build-name: ${{ matrix.build.name }}_${{ github.ref_name }}${{ matrix.build.end }}
           build-platform: ${{ matrix.build.platform }}
           package: true
+          build-tags: fts5
+
 

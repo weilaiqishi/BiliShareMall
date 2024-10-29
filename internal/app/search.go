@@ -35,7 +35,7 @@ func (a *App) ListC2CItem(page, pageSize int, filterName string, sortOption int,
 	if err != nil {
 		return C2CItemListVO{}, err
 	}
-	var result []C2CItemVO
+	result := make([]C2CItemVO, 0)
 	for _, item := range items {
 		vo := C2CItemVO{
 			C2CItemsID:      item.C2CItemsID,

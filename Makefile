@@ -17,7 +17,7 @@ tidy:
 
 .PHONY: build
 build:
-	 wails build -tags fts5
+	 wails build  -nsis -tags fts5
 .PHONY: autotag
 autotag:
 	@bash -c "bin/autotag"

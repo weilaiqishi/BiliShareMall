@@ -84,6 +84,11 @@ Section
 
     !insertmacro wails.webview2runtime
 
+    
+    SetOutPath "$INSTDIR\dict"
+    File /r "..\..\..\dict\*.*"
+
+
     SetOutPath $INSTDIR
 
     !insertmacro wails.files

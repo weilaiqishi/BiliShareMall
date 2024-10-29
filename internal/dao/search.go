@@ -39,11 +39,6 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 		args = append(args, *endTime)
 	}
 
-	if len(conditions) > 0 {
-		query += " WHERE " + strings.Join(conditions, " AND ")
-	}
-	//price
-	conditions = make([]string, 0)
 	if fromPrice != -1 {
 		conditions = append(conditions, "price >= ?")
 		args = append(args, fromPrice*100)
@@ -84,7 +79,7 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 	defer rows.Close()
 
 	// 解析结果
-	var items []CSCItem
+	items := make([]CSCItem, 0)
 	for rows.Next() {
 		var item CSCItem
 		if err := rows.Scan(

@@ -330,7 +330,7 @@ func Test_list(t *testing.T) {
 		log.Error().Err(err).Msg("Init")
 		return
 	}
-	items, total, err := d.ReadCSCItems(1, 10, "", 1, nil, nil, -1, -1)
+	items, total, err := d.ReadCSCItems(1, 10, "", 1, nil, nil, 800, 900)
 	if err != nil {
 		log.Error().Err(err).Msg("ReadCSCItems")
 	}
@@ -347,7 +347,7 @@ func Test_simple_list(t *testing.T) {
 	sql.Register("sqlite3_simple",
 		&sqlite3.SQLiteDriver{
 			Extensions: []string{
-				"lib/libsimple-windows-x64/simple",
+				"dist/libsimple-windows-x64/simple",
 			},
 		})
 

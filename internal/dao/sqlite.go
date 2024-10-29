@@ -15,7 +15,7 @@ func NewDatabase(dbPath string) (*Database, error) {
 	sql.Register("sqlite3_simple",
 		&sqlite3.SQLiteDriver{
 			Extensions: []string{
-				"lib/libsimple-windows-x64/simple",
+				"dict/libsimple-windows-x64/simple",
 			},
 		})
 
