@@ -17,6 +17,7 @@
 ## 快速安装
 
 下载最新的release文件 (根据系统的版本下载) [下载链接](https://github.com/mikumifa/BiliShareMall/releases)
+installer.exe结尾的
 
 ## 使用说明书
 
