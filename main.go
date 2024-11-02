@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	app2 "github.com/mikumifa/BiliShareMall/internal/app"
+	"github.com/mikumifa/BiliShareMall/internal/util"
 	"github.com/rs/zerolog/log"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -16,8 +17,12 @@ func main() {
 	// Create an instance of the app structure
 	app := app2.NewApp()
 	log.Info().Msg("Creating app")
+	err := util.FileLogger()
+	if err != nil {
+		panic(err)
+	}
 	// Create application with options
-	err := wails.Run(&options.App{
+	err = wails.Run(&options.App{
 		Title:  "BiliShareMall",
 		Width:  1024,
 		Height: 768,

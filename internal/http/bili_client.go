@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"io"
 	"net/http"
 )
@@ -21,6 +22,7 @@ const (
 func NewBiliClient() (*BiliClient, error) {
 	headers := map[string]string{
 		"Content-Type": "application/json",
+		"user-agent":   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0",
 	}
 	transport := &HeaderTransport{
 		headers: headers,
@@ -52,14 +54,13 @@ func (c *BiliClient) SendRequest(method, url string, data map[string]interface{}
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
-
 	res, err := c.httpClient.Do(req)
 	defer res.Body.Close()
 	if err != nil {
 		return fmt.Errorf("request failed: %w", err)
 	}
 	resp, err := io.ReadAll(res.Body)
-	//log.Info().Str("text", string(resp)).Msg("request text")
+	log.Info().Str("text", string(resp)).Msg("response text")
 	err = json.Unmarshal(resp, respObjRef)
 	if err != nil {
 		return fmt.Errorf("failed to read response: %w", err)

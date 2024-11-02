@@ -1,6 +1,7 @@
 package http
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/rs/zerolog/log"
 	gjson "github.com/tidwall/gjson"
@@ -45,15 +46,52 @@ func VerifyLogin(loginKey string) (string, error) {
 	log.Info().Msg("check login")
 	if data.Get("data.url").String() != "" {
 		var sb strings.Builder
-
+		buvid3, err := getBuvid3()
+		if err != nil {
+			return "", err
+		}
+		sb.WriteString("buvid3=")
+		sb.WriteString(buvid3)
+		sb.WriteString(";")
 		for _, v := range resp.Header["Set-Cookie"] {
 			pair := strings.Split(v, ";")
 			sb.WriteString(pair[0])
 			sb.WriteString(";")
 		}
-		log.Info().Str("cookies", sb.String()).Msg("cookies created")
 		return sb.String(), nil
 
 	}
 	return "", errors.New("cookies not found")
+}
+
+type Buvid3Reponse struct {
+	Code int `json:"code"`
+	Data struct {
+		B3 string `json:"b_3"`
+		B4 string `json:"b_4"`
+	} `json:"data"`
+	Message string `json:"message"`
+}
+
+func getBuvid3() (string, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "https://api.bilibili.com/x/frontend/finger/spi", nil)
+	if err != nil {
+		return "", err
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	var response Buvid3Reponse
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return "", err
+	}
+
+	if response.Code != 0 {
+		return "", errors.New(response.Message)
+	}
+
+	return response.Data.B3, nil
 }

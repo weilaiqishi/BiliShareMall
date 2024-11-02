@@ -136,7 +136,6 @@ func (a *App) scrapyTask(item *dao.ScrapyItem, cookiesStr string) error {
 		"categoryFilter":  item.Product,
 	}
 	var resp domain.MailListResponse
-	//log.Info().Any("data", data).Str("cookie", cookiesStr).Msg("scrapy a data")
 	err = client.SendRequest(http.POST, "https://mall.bilibili.com/mall-magic-c/internet/c2c/v2/list", data, &resp)
 	log.Info().Any("resp", resp).Msg("list")
 	if err != nil {

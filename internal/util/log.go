@@ -21,5 +21,18 @@ func PrettyLogger() {
 		return strings.ToUpper(fmt.Sprintf("%s", i))
 	}
 	log.Logger = log.Output(output)
+}
 
+func FileLogger() error {
+	runLogFile, err := os.OpenFile(
+		"app.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
+		0664,
+	)
+	if err != nil {
+		return err
+	}
+	multi := zerolog.MultiLevelWriter(os.Stdout, runLogFile)
+	log.Logger = zerolog.New(multi).With().Timestamp().Logger()
+	return nil
 }
