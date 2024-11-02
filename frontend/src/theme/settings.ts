@@ -88,5 +88,10 @@ export const overrideThemeSettings: Partial<App.Theme.ThemeSetting> = {
   watermark: {
     visible: false,
     text: 'BiliShareMall'
+  },
+  layout: {
+    mode: 'horizontal',
+    scrollMode: 'content',
+    reverseHorizontalMix: false
   }
 };
