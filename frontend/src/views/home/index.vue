@@ -173,7 +173,12 @@ onMounted(() => {
       :columns="columns"
       :loading="loading"
       :pagination="pagination"
-      @update:page="search"
+      @update:page="
+        page => {
+          pagination.page = page;
+          search();
+        }
+      "
     />
   </NFlex>
 </template>
