@@ -5,6 +5,7 @@ import { NButton, useMessage } from 'naive-ui';
 import { h, onMounted, ref } from 'vue';
 import { ListC2CItem } from '~/wailsjs/go/app/App';
 import type { app } from '~/wailsjs/go/models';
+import { getToken } from '@/store/modules/auth/shared';
 const loading = ref(false);
 const message = useMessage();
 const searchText = ref('');
@@ -75,6 +76,7 @@ const columns = [
 const timeRange = ref<[number, number]>([1183135260000, Date.now()]);
 const timeRangeEnable = ref(false);
 const priceRangeEnable = ref(false);
+const used = ref(false);
 
 const priceRange = ref([0, 9999]);
 const sortOpt = ref(1);
@@ -96,7 +98,9 @@ function search() {
     timeRangeEnable.value ? timeRange.value[0] : -1,
     timeRangeEnable.value ? timeRange.value[1] : -1,
     priceRangeEnable.value ? priceRange.value[0] : -1,
-    priceRangeEnable.value ? priceRange.value[1] : -1
+    priceRangeEnable.value ? priceRange.value[1] : -1,
+    used.value,
+    getToken()
   )
     .then(result => {
       pagination.value.page = result.currentPage;
@@ -115,7 +119,7 @@ onMounted(() => {
 
 <template>
   <NFlex>
-    <NCard class="card-wrapper" title="搜索">
+    <NCard class="card-wrapper" title="数据库">
       <template #header-extra>
         <NSpace size="large">
           <NInput v-model:value="searchText" clearable :placeholder="$t('common.keywordSearch')">
@@ -164,6 +168,22 @@ onMounted(() => {
               />
             </NRadioGroup>
           </NFlex>
+        </NCollapseItem>
+        <NCollapseItem title="过滤下架商品">
+          <NAlert title="注意" type="info">
+            1. 开启这个开关后，每一次搜索都会检验商品在当前时间是否可以购买。
+            <br />
+            2. 这个操作会减慢速度，因为会挨个检查是否可以购买
+            <br />
+            3. 检测到过期的商品都会删除
+            <br />
+            4. 为了防止检测过于频繁，5分钟内商品不会重复检测。但是这样会导致极少数情况下商品下架的情况
+          </NAlert>
+          <template #header-extra>
+            <NSpace>
+              <NSwitch v-model:value="used"></NSwitch>
+            </NSpace>
+          </template>
         </NCollapseItem>
       </NCollapse>
     </NCard>

@@ -321,7 +321,7 @@ func TestMailListResponse(t *testing.T) {
 func Test_list(t *testing.T) {
 	util.PrettyLogger()
 	d, _ := dao.NewDatabase("bsm.db")
-	content, err := os.ReadFile("init.sql")
+	content, err := os.ReadFile("dict/init.sql")
 	if err != nil {
 		panic(err)
 	}
@@ -357,7 +357,6 @@ func Test_simple_list(t *testing.T) {
 	defer db.Close()
 
 	// db.Exec("create virtual table repo using github(id, full_name, description, html_url)")
-
 	rows, err := db.Query(`select simple_query('pinyin')`)
 	if err != nil {
 		log.Error().Err(err).Msg("Query")

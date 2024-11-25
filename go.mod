@@ -4,6 +4,7 @@ go 1.23
 
 require (
 	github.com/mattn/go-sqlite3 v1.14.24
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/rs/zerolog v1.33.0
 	github.com/tidwall/gjson v1.9.3
 	github.com/wailsapp/wails/v2 v2.9.2

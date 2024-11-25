@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/mikumifa/BiliShareMall/internal/dao"
+	cache "github.com/patrickmn/go-cache"
 	"github.com/rs/zerolog/log"
 	"os"
+	"time"
 )
 
 const (
@@ -17,6 +19,7 @@ const (
 type App struct {
 	ctx context.Context
 	d   *dao.Database
+	c   *cache.Cache
 }
 
 // NewApp creates a new App application struct
@@ -42,6 +45,8 @@ func (a *App) Startup(ctx context.Context) {
 		log.Error().Err(err).Msg("NewApp Error")
 		panic(err)
 	}
+	// 设置超时时间和清理时间
+	a.c = cache.New(5*time.Minute, 10*time.Minute)
 	go a.scrapyRunTimeWork()
 }
 

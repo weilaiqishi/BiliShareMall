@@ -109,3 +109,30 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 
 	return items, totalCount, nil
 }
+
+// DeleteCSCItem 删除商品记录
+func (d *Database) DeleteCSCItem(c2cItemsID int64) error {
+	_, err := d.db.ExecContext(context.Background(),
+		"DELETE FROM c2c_items WHERE c2c_items_id = ?", c2cItemsID)
+	return err
+}
+
+// GetPagedItems 分页查询商品
+func (d *Database) GetPagedItems(limit, offset int) ([]CSCItem, error) {
+	rows, err := d.db.QueryContext(context.Background(),
+		"SELECT c2c_items_id, type, c2c_items_name, total_items_count, price, show_price, show_market_price, uid, payment_time, is_my_publish, uface, uname FROM c2c_items LIMIT ? OFFSET ?",
+		limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []CSCItem
+	for rows.Next() {
+		var item CSCItem
+		if err := rows.Scan(&item.C2CItemsID, &item.Type, &item.C2CItemsName, &item.TotalItemsCount, &item.Price, &item.ShowPrice, &item.ShowMarketPrice, &item.UID, &item.PaymentTime, &item.IsMyPublish, &item.Uface, &item.Uname); err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+	return items, nil
+}

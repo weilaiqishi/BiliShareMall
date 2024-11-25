@@ -35,3 +35,8 @@ type MailListResponse struct {
 	} `json:"data"`
 	Errtag int `json:"errtag"`
 }
+
+type CheckResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}

@@ -159,7 +159,7 @@ const local: App.I18n.Schema = {
     404: '页面不存在',
     500: '服务器错误',
     'iframe-page': '外链页面',
-    home: '查询',
+    home: '数据库',
     scrapy: '爬取数据'
   },
   page: {

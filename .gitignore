@@ -107,3 +107,4 @@ go.work
 node_modules
 frontend/dist
 !simple.dll
+main_local_test.go

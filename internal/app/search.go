@@ -1,7 +1,11 @@
 package app
 
 import (
+	"fmt"
+	"github.com/mikumifa/BiliShareMall/internal/domain"
+	"github.com/mikumifa/BiliShareMall/internal/http"
 	"github.com/mikumifa/BiliShareMall/internal/util"
+	"github.com/patrickmn/go-cache"
 	"github.com/rs/zerolog/log"
 )
 
@@ -20,7 +24,7 @@ type C2CItemVO struct {
 	ShowPrice       string  `json:"showPrice"`
 }
 
-func (a *App) ListC2CItem(page, pageSize int, filterName string, sortOption int, startTime, endTime int64, fromPrice, toPrice int) (C2CItemListVO, error) {
+func (a *App) ListC2CItem(page, pageSize int, filterName string, sortOption int, startTime, endTime int64, fromPrice, toPrice int, used bool, cookieStr string) (C2CItemListVO, error) {
 	log.Info().
 		Int("page", page).
 		Int("pageSize", pageSize).
@@ -46,10 +50,54 @@ func (a *App) ListC2CItem(page, pageSize int, filterName string, sortOption int,
 		}
 		result = append(result, vo)
 	}
+	if used {
+		if a.RemoveErrorItem(result, cookieStr) {
+			return a.ListC2CItem(page, pageSize, filterName, sortOption, startTime, endTime, fromPrice, toPrice, used, cookieStr)
+		}
+	}
 	return C2CItemListVO{
 		Items:       result,
 		Total:       total,
 		TotalPages:  total/pageSize + 1,
 		CurrentPage: page,
 	}, nil
+}
+func (a *App) RemoveErrorItem(items []C2CItemVO, cookieStr string) bool {
+	remove := false
+	for _, item := range items {
+		canBuy, err := a.CheckItemStatus(item.C2CItemsID, cookieStr)
+		if err != nil {
+			log.Printf("Failed to check item %d: %v", item.C2CItemsID, err)
+			continue
+		}
+		if !canBuy {
+			err = a.d.DeleteCSCItem(item.C2CItemsID)
+			if err != nil {
+				log.Printf("Failed to delete item %d: %v", item.C2CItemsID, err)
+				continue
+			}
+			remove = true
+		} else {
+		}
+	}
+
+	return remove
+}
+
+func (a *App) CheckItemStatus(id int64, cookiesStr string) (bool, error) {
+	if result, found := a.c.Get(fmt.Sprintf("check:%d", id)); found {
+		return result.(bool), nil
+	}
+	client, err := http.NewBiliClient()
+	if err != nil {
+		return false, err
+	}
+	client.StoreHeader("cookie", cookiesStr)
+	data := map[string]interface{}{"items": map[string]any{
+		"c2cItemsId": id, "price": 0,
+	}}
+	var resp domain.CheckResponse
+	err = client.SendRequest(http.POST, "https://mall.bilibili.com/magic-c/c2c/order/info?platform=h5", data, &resp)
+	a.c.Set(fmt.Sprintf("check:%d", id), resp.Code != 60000002, cache.DefaultExpiration)
+	return resp.Code != 60000002, nil
 }
