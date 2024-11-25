@@ -21,7 +21,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// Create application with options
 	err = wails.Run(&options.App{
 		Title:  "BiliShareMall",
 		Width:  1024,
