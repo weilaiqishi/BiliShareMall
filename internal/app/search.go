@@ -7,6 +7,7 @@ import (
 	"github.com/mikumifa/BiliShareMall/internal/util"
 	"github.com/patrickmn/go-cache"
 	"github.com/rs/zerolog/log"
+	"time"
 )
 
 type C2CItemListVO struct {
@@ -99,5 +100,6 @@ func (a *App) CheckItemStatus(id int64, cookiesStr string) (bool, error) {
 	var resp domain.CheckResponse
 	err = client.SendRequest(http.POST, "https://mall.bilibili.com/magic-c/c2c/order/info?platform=h5", data, &resp)
 	a.c.Set(fmt.Sprintf("check:%d", id), resp.Code != 60000002, cache.DefaultExpiration)
+	time.Sleep(1 * time.Second)
 	return resp.Code != 60000002, nil
 }
