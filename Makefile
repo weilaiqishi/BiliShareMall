@@ -17,7 +17,12 @@ tidy:
 
 .PHONY: build
 build:
-	 wails build  -nsis -tags fts5 -windowsconsole -debug
+	 wails build  -nsis -tags fts5
+
+.PHONY: debug
+debug:
+	wails build  -nsis -tags fts5 -windowsconsole -debug
+
 .PHONY: autotag
 autotag:
 	@bash -c "bin/autotag"
