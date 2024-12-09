@@ -10,7 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         build: [
-          { name: BiliShareMall_windows_amd64, platform: windows/amd64, os: windows-latest,end: ".exe" }
+          { name: BiliShareMall_windows, platform: windows/amd64, os: windows-latest,end: ".exe" }
+          { name: BiliShareMall_macos, platform: windows/darwin/universal, os: macos-latest,end: "" }
+
         ]
     runs-on: ${{ matrix.build.os }}
     steps:

@@ -3,8 +3,10 @@ package dao
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/mattn/go-sqlite3"
 	_ "github.com/mattn/go-sqlite3"
+	"runtime"
 )
 
 type Database struct {
@@ -12,10 +14,20 @@ type Database struct {
 }
 
 func NewDatabase(dbPath string) (*Database, error) {
+
+	var extension string
+	switch runtime.GOOS {
+	case "darwin": // macOS
+		extension = "dict/libsimple-osx-x64/libsimple"
+	case "windows":
+		extension = "dict/libsimple-windows-x64/simple"
+	default:
+		return nil, fmt.Errorf("unsupported platform: %s", runtime.GOOS)
+	}
 	sql.Register("sqlite3_simple",
 		&sqlite3.SQLiteDriver{
 			Extensions: []string{
-				"dict/libsimple-windows-x64/simple",
+				extension,
 			},
 		})
 

@@ -19,6 +19,9 @@ tidy:
 build:
 	 wails build  -nsis -tags fts5
 
+.PHONY: build-skip
+build:
+	 wails build  -nsis -tags fts5 -s
 .PHONY: debug
 debug:
 	wails build  -nsis -tags fts5 -windowsconsole -debug

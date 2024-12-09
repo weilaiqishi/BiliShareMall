@@ -98,6 +98,7 @@ func Test_list(t *testing.T) {
 
 }
 
+// 只适用于window -tags fts5
 func Test_simple_list(t *testing.T) {
 	util.PrettyLogger()
 	sql.Register("sqlite3_simple",

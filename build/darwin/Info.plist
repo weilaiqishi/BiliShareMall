@@ -59,5 +59,10 @@
           {{end}}
         </array>
         {{end}}
+
+        <key>CFBundleResource</key>
+        <array>
+          <string>../../dict/</string>
+        </array>
     </dict>
 </plist>

@@ -103,7 +103,7 @@ fabric.properties
 go.work
 
 # wails
-../build/bin
+build/bin/
 node_modules
 frontend/dist
 !simple.dll
