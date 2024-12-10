@@ -15,21 +15,21 @@ jobs:
           - os: windows-latest
             GOOS: windows
             GOARCH: amd64
-#          - os: windows-latest
-#            GOOS: windows
-#            GOARCH: arm64
-#          - os: windows-latest
-#            GOOS: windows
-#            GOARCH: 386
+          #          - os: windows-latest
+          #            GOOS: windows
+          #            GOARCH: arm64
+          #          - os: windows-latest
+          #            GOOS: windows
+          #            GOARCH: 386
           - os: macos-latest
             GOOS: darwin
             GOARCH: amd64
           - os: macos-latest
             GOOS: darwin
             GOARCH: arm64
-#          - os: ubuntu-latest
-#            GOOS: linux
-#            GOARCH: amd64
+          #          - os: ubuntu-latest
+          #            GOOS: linux
+          #            GOARCH: amd64
           # - os: ubuntu-latest
           #   GOOS: linux
           #   GOARCH: arm64
@@ -61,12 +61,12 @@ jobs:
           cd frontend && pnpm install
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-#      # Dependencies: GNU/Linux
-#      - name: Update system and dependencies
-#        if: runner.os == 'Linux'
-#        run: |
-#          sudo apt-get update
-#          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev
+      #      # Dependencies: GNU/Linux
+      #      - name: Update system and dependencies
+      #        if: runner.os == 'Linux'
+      #        run: |
+      #          sudo apt-get update
+      #          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev
 
       # Hide dock bar icon: macOS
       - name: Update system and dependencies
@@ -110,13 +110,13 @@ jobs:
           cd ./build/bin
           Compress-Archive -Path ${{ env.APP_NAME }}-${{ matrix.build.GOARCH }}-installer.exe -DestinationPath ${{ env.ZIP_FILE }}
 
-#      # Compress: GNU/Linux
-#      - name: Create a compressed file for GNU/Linux
-#        if: runner.os == 'Linux'
-#        run: |
-#          cd ./build/bin
-#          mv ${{ env.APP_NAME }}.exe ${{ env.APP_NAME }}
-#          zip ${{ env.ZIP_FILE }} ${{ env.APP_NAME }}
+      #      # Compress: GNU/Linux
+      #      - name: Create a compressed file for GNU/Linux
+      #        if: runner.os == 'Linux'
+      #        run: |
+      #          cd ./build/bin
+      #          mv ${{ env.APP_NAME }}.exe ${{ env.APP_NAME }}
+      #          zip ${{ env.ZIP_FILE }} ${{ env.APP_NAME }}
 
       # Artifact
       # - name: Upload Artifact ${{ env.ZIP_FILE }}
@@ -138,3 +138,5 @@ jobs:
           prerelease: false
           body: |
             Auto-generated release from GitHub Actions.
+            macos下载BiliShareMall-darwin-amd64/arm64.zip 
+            "BiliShareMall” cannot be opened because it is from an unidentified developer" 解决：https://blog.csdn.net/weixin_35757704/article/details/131182912
