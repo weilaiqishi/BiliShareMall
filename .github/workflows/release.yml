@@ -82,10 +82,20 @@ jobs:
 
       # Build
       - name: Build for ${{ matrix.build.GOOS }}-${{ matrix.build.GOARCH }}
+        if: runner.os == 'windows'
         env:
           GOOS: ${{ matrix.build.GOOS }}
           GOARCH: ${{ matrix.build.GOARCH }}
         run: ~/go/bin/wails build -m -s -trimpath -skipbindings -devtools -nsis -tags fts5 -o ${{ env.APP_NAME }}.exe
+
+      # Build
+      - name: Build for ${{ matrix.build.GOOS }}-${{ matrix.build.GOARCH }}
+        if: runner.os == 'macOS'
+        env:
+          GOOS: ${{ matrix.build.GOOS }}
+          GOARCH: ${{ matrix.build.GOARCH }}
+        run: ~/go/bin/wails build -m -s -trimpath -skipbindings -devtools -tags fts5 -o ${{ env.APP_NAME }}.exe
+
 
       # Compress: macOS
       - name: Create a compressed file for macOS
@@ -103,13 +113,13 @@ jobs:
           cd ./build/bin
           Compress-Archive -Path ${{ env.APP_NAME }}-${{ matrix.build.GOARCH }}-installer.exe -DestinationPath ${{ env.ZIP_FILE }}
 
-      # Compress: GNU/Linux
-      - name: Create a compressed file for GNU/Linux
-        if: runner.os == 'Linux'
-        run: |
-          cd ./build/bin
-          mv ${{ env.APP_NAME }}.exe ${{ env.APP_NAME }}
-          zip ${{ env.ZIP_FILE }} ${{ env.APP_NAME }}
+#      # Compress: GNU/Linux
+#      - name: Create a compressed file for GNU/Linux
+#        if: runner.os == 'Linux'
+#        run: |
+#          cd ./build/bin
+#          mv ${{ env.APP_NAME }}.exe ${{ env.APP_NAME }}
+#          zip ${{ env.ZIP_FILE }} ${{ env.APP_NAME }}
 
       # Artifact
       # - name: Upload Artifact ${{ env.ZIP_FILE }}
