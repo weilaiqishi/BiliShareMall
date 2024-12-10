@@ -28,7 +28,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-pnpm-lock.yaml
 package-lock.json
 yarn.lock
 
