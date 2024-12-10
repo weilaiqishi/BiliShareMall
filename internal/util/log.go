@@ -25,7 +25,7 @@ func PrettyLogger() {
 
 func FileLogger() error {
 	runLogFile, err := os.OpenFile(
-		"app.log",
+		GetPath("app.log"),
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
 		0664,
 	)

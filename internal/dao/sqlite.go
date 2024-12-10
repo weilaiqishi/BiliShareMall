@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/mattn/go-sqlite3"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/mikumifa/BiliShareMall/internal/util"
 	"runtime"
 )
 
@@ -18,8 +19,8 @@ func NewDatabase(dbPath string) (*Database, error) {
 	var extension string
 	switch runtime.GOOS {
 	case "darwin": // macOS
-		extension = "dict/libsimple-osx-x64/libsimple"
-	case "windows":
+		extension = util.GetPath("dict/libsimple-osx-x64/libsimple")
+	case "windows": //windows
 		extension = "dict/libsimple-windows-x64/simple"
 	default:
 		return nil, fmt.Errorf("unsupported platform: %s", runtime.GOOS)

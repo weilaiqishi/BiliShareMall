@@ -4,15 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/mikumifa/BiliShareMall/internal/dao"
+	"github.com/mikumifa/BiliShareMall/internal/util"
 	cache "github.com/patrickmn/go-cache"
 	"github.com/rs/zerolog/log"
 	"os"
 	"time"
-)
-
-const (
-	DBPATH   = "bsm.db"
-	INIT_SQL = "dict/init.sql"
 )
 
 // App struct
@@ -32,11 +28,11 @@ func NewApp() *App {
 func (a *App) Startup(ctx context.Context) {
 	a.ctx = ctx
 	var err error
-	a.d, err = dao.NewDatabase(DBPATH)
+	a.d, err = dao.NewDatabase(util.GetPath("bsm.db"))
 	if err != nil {
 		panic(err)
 	}
-	content, err := os.ReadFile(INIT_SQL)
+	content, err := os.ReadFile(util.GetPath("dict/init.sql"))
 	if err != nil {
 		panic(err)
 	}

@@ -17,15 +17,19 @@ tidy:
 
 .PHONY: build
 build:
-	 wails build  -nsis -tags fts5
+	 wails build  -nsis -m -s -trimpath -skipbindings -devtools -tags  fts5
 
 .PHONY: build-macos
 build:
-	 wails build  -nsis -tags fts5
+	 wails build -m -s -trimpath -skipbindings -devtools -tags  fts5  -windowsconsole -debug
 .PHONY: debug
 debug:
-	wails build  -nsis -tags fts5 -windowsconsole -debug
+	wails build  -m -s -trimpath -skipbindings -devtools -tags  fts5  -windowsconsole -debug
 
 .PHONY: autotag
 autotag:
 	@bash -c "bin/autotag"
+
+.PHONY: dict
+dict:
+	go-bindata -o internal/domain/dict.go ./dict
