@@ -94,7 +94,6 @@ jobs:
           GOARCH: ${{ matrix.build.GOARCH }}
         run: ~/go/bin/wails build -m -s -trimpath -skipbindings -devtools -tags fts5 -o ${{ env.APP_NAME }}.exe
 
-
       # Compress: macOS
       - name: Create a compressed file for macOS
         if: runner.os == 'macOS'
