@@ -64,7 +64,8 @@ func TestMailListResponse(t *testing.T) {
 	d, _ := dao.NewDatabase("bsm.db")
 	content, err := os.ReadFile("init.sql")
 	if err != nil {
-		panic(err)
+		log.Error().Err(err).Msg("Init")
+		return
 	}
 	err = d.Init(string(content))
 	if err != nil {

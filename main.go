@@ -21,7 +21,8 @@ func InitEnv() {
 
 	exePath, err := os.Executable()
 	if err != nil {
-		panic(err)
+		log.Error().Err(err).Msg("Init")
+		return
 	}
 
 	for _, v := range os.Args {
@@ -52,7 +53,8 @@ func main() {
 	log.Info().Msg("Creating newApp")
 	err := FileLogger()
 	if err != nil {
-		panic(err)
+		log.Error().Err(err).Msg("Init")
+		return
 	}
 	err = wails.Run(&options.App{
 		Title:  "BiliShareMall",
