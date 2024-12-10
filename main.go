@@ -53,8 +53,7 @@ func main() {
 	log.Info().Msg("Creating newApp")
 	err := FileLogger()
 	if err != nil {
-		log.Error().Err(err).Msg("Init")
-		return
+		log.Panic()
 	}
 	err = wails.Run(&options.App{
 		Title:  "BiliShareMall",

@@ -19,9 +19,6 @@ tidy:
 build:
 	 wails build  -nsis -m -s -trimpath -skipbindings -devtools -tags  fts5
 
-.PHONY: build-macos
-build:
-	 wails build -m -s -trimpath -skipbindings -devtools -tags  fts5  -windowsconsole -debug
 .PHONY: debug
 debug:
 	wails build  -m -s -trimpath -skipbindings -devtools -tags  fts5  -windowsconsole -debug

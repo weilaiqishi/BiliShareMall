@@ -28,18 +28,20 @@ func NewApp() *App {
 func (a *App) Startup(ctx context.Context) {
 	a.ctx = ctx
 	var err error
-	a.d, err = dao.NewDatabase(util.GetPath("bsm.db"))
+	a.d, err = dao.NewDatabase(util.GetPath("data/bsm.db"))
 	if err != nil {
-		panic(err)
+		log.Error().Err(err).Msg("NewApp Error")
+		log.Panic()
 	}
 	content, err := os.ReadFile(util.GetPath("dict/init.sql"))
 	if err != nil {
-		panic(err)
+		log.Error().Err(err).Msg("NewApp Error")
+		log.Panic()
 	}
 	err = a.d.Init(string(content))
 	if err != nil {
 		log.Error().Err(err).Msg("NewApp Error")
-		panic(err)
+		log.Panic()
 	}
 	// 设置超时时间和清理时间
 	a.c = cache.New(5*time.Minute, 10*time.Minute)
