@@ -2,10 +2,8 @@ name: Build GUI.for.SingBox
 
 on:
   push:
-    branches:
-      - main
-#    tags:
-#      - "v*"
+    tags:
+      - "v*"
 
 jobs:
   Build:
@@ -80,7 +78,7 @@ jobs:
       - name: Build Frontend
         run: cd frontend && pnpm build
 
-      # Build
+      # Build windows
       - name: Build for ${{ matrix.build.GOOS }}-${{ matrix.build.GOARCH }}
         if: runner.os == 'windows'
         env:
@@ -88,7 +86,7 @@ jobs:
           GOARCH: ${{ matrix.build.GOARCH }}
         run: ~/go/bin/wails build -m -s -trimpath -skipbindings -devtools -nsis -tags fts5 -o ${{ env.APP_NAME }}.exe
 
-      # Build
+      # Build macos
       - name: Build for ${{ matrix.build.GOOS }}-${{ matrix.build.GOARCH }}
         if: runner.os == 'macOS'
         env:
@@ -103,7 +101,7 @@ jobs:
         run: |
           cd ./build/bin
           # The compiled product name of macos is always "${{ env.APP_NAME }}.app"
-          cp -r dict/ build/bin/${{ env.APP_NAME }}.app/Contents/MacOS/dict
+          cp -r ../../dict/ ${{ env.APP_NAME }}.app/Contents/MacOS/dict
           zip -q -r ${{ env.ZIP_FILE }} ${{ env.APP_NAME }}.app
 
       # Compress: Windows
