@@ -45,7 +45,6 @@ func (a *App) Startup(ctx context.Context) {
 	}
 	// 设置超时时间和清理时间
 	a.c = cache.New(5*time.Minute, 10*time.Minute)
-	go a.scrapyRunTimeWork()
 }
 
 // Greet returns a greeting for the given name

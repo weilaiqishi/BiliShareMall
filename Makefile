@@ -22,7 +22,9 @@ build:
 .PHONY: debug
 debug:
 	wails build  -m -s -trimpath -skipbindings -devtools -tags  fts5  -windowsconsole -debug
-
+.PHONY: macos
+macos:
+	cp -r dict/ build/bin/BiliShareMall.app/Contents/MacOS/dict
 .PHONY: autotag
 autotag:
 	@bash -c "bin/autotag"

@@ -90,6 +90,9 @@ function handleClose(idx: number) {
     });
 }
 function handleRun(idx: number) {
+  if (nowIdx.value === idx) {
+    message.warning(`已启动`);
+  }
   loadingBar.start();
   StartTask(scrapyList.value[idx].id, getToken())
     .then(() => {

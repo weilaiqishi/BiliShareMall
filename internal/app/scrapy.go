@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"github.com/mikumifa/BiliShareMall/internal/dao"
 	"github.com/mikumifa/BiliShareMall/internal/domain"
@@ -14,11 +15,10 @@ import (
 type TaskRequest struct {
 	taskId  int
 	cookies string
+	cancel  context.CancelFunc
 }
 
-var taskIdChan = make(chan TaskRequest)
-var doneChan = make(chan struct{})
-var taskRequest TaskRequest
+var nowRunTask TaskRequest
 
 func (a *App) ReadAllScrapyItems() []dao.ScrapyItem {
 	items, err := a.d.ReadAllScrapyItems()
@@ -51,80 +51,71 @@ func (a *App) CreateScrapyItem(item dao.ScrapyItem) int64 {
 	log.Info().Any("item", item).Msg("create scrapy item")
 	return id
 }
-func (a *App) StartTask(taskId int, cookies string) error {
-	//预先检查，提前按报错
-	taskIdChan <- TaskRequest{
-		taskId:  taskId,
-		cookies: cookies,
-	}
-	return nil
-}
 
-func (a *App) DoneTask(taskId int) error {
-	if taskId != taskRequest.taskId {
-		log.Error().Int("nowRun", taskRequest.taskId).Int("needStop", taskId).Msg("task not running")
-		return fmt.Errorf("task not running")
+// 更具taskId一直执行
+func (a *App) scrapyLoop(taskId int, ctx context.Context) {
+	scrapyItem, err := a.d.ReadScrapyItem(taskId)
+	if err != nil {
+		//TODO: failed message
+		runtime.EventsEmit(a.ctx, "scrapy_failed", scrapyItem.Id)
+		return
 	}
-	doneChan <- struct{}{}
-	return nil
-}
-func (a *App) GetNowRunTaskId() int {
-	return taskRequest.taskId
-}
-func (a *App) scrapyRunTimeWork() {
-	log.Info().Msg("scrapy runtime started")
 	for {
 		select {
-		case <-doneChan:
-			log.Info().Msg("scrapyRunTimeWork stopped")
+		case <-ctx.Done():
+			log.Info().Any("scrapyItem", scrapyItem).Msg("scrapyRunTimeWork canceled")
 			return
-		case taskRequest = <-taskIdChan:
-			scrapyItem, err := a.d.ReadScrapyItem(taskRequest.taskId)
+		default:
+			nowRunTask.taskId = taskId
+			err := a.scrapyTask(&scrapyItem)
 			if err != nil {
-				log.Error().Err(err).Msg("read scrapy item failed")
-				continue
+				log.Error().Err(err).Msg("scrapyRunTimeWork failed")
+				time.Sleep(3 * time.Second)
+				return
 			}
-			func() {
-				for {
-					select {
-					case taskRequest = <-taskIdChan:
-						scrapyItem, err = a.d.ReadScrapyItem(taskRequest.taskId)
-						if err != nil {
-							log.Error().Err(err).Msg("read scrapy item failed")
-							runtime.EventsEmit(a.ctx, "scrapy_failed", scrapyItem.Id)
-							return
-						}
-						continue //下一次id修改
-					case <-doneChan:
-						return
-					default:
-						err = a.scrapyTask(&scrapyItem, taskRequest.cookies)
-						if err != nil {
-							log.Error().Err(err).Msg("scrapyRunTimeWork failed")
-							//runtime.EventsEmit(a.ctx, "scrapy_failed", scrapyItem.Id)
-							time.Sleep(3 * time.Second)
-							return
-						}
-						if scrapyItem.NextToken == nil {
-							log.Info().Msg("scrapyRunTimeWork finished")
-							runtime.EventsEmit(a.ctx, "scrapy_finished", scrapyItem.Id)
-							return
-						}
-						time.Sleep(3 * time.Second)
-					}
-				}
-			}()
+			if scrapyItem.NextToken == nil {
+				log.Info().Msg("scrapyRunTimeWork finished")
+				runtime.EventsEmit(a.ctx, "scrapy_finished", scrapyItem.Id)
+				return
+			}
+			time.Sleep(3 * time.Second)
 		}
 	}
 }
 
+func (a *App) StartTask(taskId int, cookies string) error {
+	//cancel task before
+	if nowRunTask.cancel != nil {
+		log.Info().Any("nowRunTask", nowRunTask).Msg("scrapyRunTimeWork canceled")
+		nowRunTask.cancel()
+	}
+	//continue next task
+	ctx, cancel := context.WithCancel(context.Background())
+	// cancel have ben executed
+	nowRunTask = TaskRequest{taskId: taskId, cookies: cookies, cancel: cancel}
+	go a.scrapyLoop(taskId, ctx)
+	return nil
+}
+
+func (a *App) DoneTask(taskId int) error {
+	if taskId != nowRunTask.taskId {
+		log.Error().Int("nowRun", nowRunTask.taskId).Int("needStop", taskId).Msg("task not running")
+		return fmt.Errorf("task not running")
+	}
+	nowRunTask.cancel()
+	return nil
+}
+func (a *App) GetNowRunTaskId() int {
+	return nowRunTask.taskId
+}
+
 // ScrapyTask 爬取一次，更新ScrapyItem的token，并更新数据库
-func (a *App) scrapyTask(item *dao.ScrapyItem, cookiesStr string) error {
+func (a *App) scrapyTask(item *dao.ScrapyItem) error {
 	client, err := http.NewBiliClient()
 	if err != nil {
 		return err
 	}
-	client.StoreHeader("cookie", cookiesStr)
+	client.StoreHeader("cookie", nowRunTask.cookies)
 	toRangeStrFunc := func(x, y float64) string {
 		return fmt.Sprintf("%d-%d", int(x), int(y))
 	}
@@ -150,6 +141,7 @@ func (a *App) scrapyTask(item *dao.ScrapyItem, cookiesStr string) error {
 	if err != nil {
 		return err
 	}
+	//发送当前更新信息的item
 	runtime.EventsEmit(a.ctx, "updateScrapyItem", item)
 	return nil
 }

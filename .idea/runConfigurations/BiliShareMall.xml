@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BiliShareMall" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="BiliShareMail" />
+    <working_directory value="$PROJECT_DIR$" />
+    <go_parameters value="-tags &quot;dev,fts5&quot; -gcflags &quot;all=-N -l&quot;" />
+    <kind value="DIRECTORY" />
+    <package value="github.com/mikumifa/BiliShareMall" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/main.go" />
+    <output_directory value="$PROJECT_DIR$/build/bin" />
+    <method v="2" />
+  </configuration>
+</component>
