@@ -8,6 +8,7 @@ import (
 	"github.com/mikumifa/BiliShareMall/internal/http"
 	"github.com/rs/zerolog/log"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"sync"
 	"time"
 )
 
@@ -18,6 +19,7 @@ type TaskRequest struct {
 	cancel  context.CancelFunc
 }
 
+var wg sync.WaitGroup
 var nowRunTask TaskRequest
 
 func (a *App) ReadAllScrapyItems() []dao.ScrapyItem {
@@ -64,6 +66,7 @@ func (a *App) scrapyLoop(taskId int, ctx context.Context) {
 		select {
 		case <-ctx.Done():
 			log.Info().Any("scrapyItem", scrapyItem).Msg("scrapyRunTimeWork canceled")
+			wg.Done()
 			return
 		default:
 			nowRunTask.taskId = taskId
@@ -89,10 +92,13 @@ func (a *App) StartTask(taskId int, cookies string) error {
 		log.Info().Any("nowRunTask", nowRunTask).Msg("scrapyRunTimeWork canceled")
 		nowRunTask.cancel()
 	}
+	wg.Wait()
+	//no race because scrapyLoop have down
 	//continue next task
 	ctx, cancel := context.WithCancel(context.Background())
 	// cancel have ben executed
 	nowRunTask = TaskRequest{taskId: taskId, cookies: cookies, cancel: cancel}
+	wg.Add(1)
 	go a.scrapyLoop(taskId, ctx)
 	return nil
 }

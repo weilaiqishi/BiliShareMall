@@ -5,7 +5,7 @@ APP_NAME="Chapar"
 .PHONY: run,embed
 run:
 	@echo "Running..."
-	wails dev -loglevel Info -tags fts5
+	wails dev -loglevel Info -tags fts5 -race
 
 .PHONY: install_deps
 embed:
