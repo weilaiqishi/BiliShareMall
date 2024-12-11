@@ -99,7 +99,8 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 			&item.Uface,
 			&item.Uname,
 		); err != nil {
-			return nil, 0, err
+			//have deleted
+			continue
 		}
 		items = append(items, item)
 	}

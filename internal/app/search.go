@@ -38,6 +38,7 @@ func (a *App) ListC2CItem(page, pageSize int, filterName string, sortOption int,
 		Msg("Listing C2C items with parameters")
 	items, total, err := a.d.ReadCSCItems(page, pageSize, filterName, sortOption, util.TimestampToTime(startTime), util.TimestampToTime(endTime), fromPrice, toPrice)
 	if err != nil {
+		log.Error().Err(err).Msg("Failed to list items")
 		return C2CItemListVO{}, err
 	}
 	result := make([]C2CItemVO, 0)
@@ -66,7 +67,7 @@ func (a *App) ListC2CItem(page, pageSize int, filterName string, sortOption int,
 func (a *App) RemoveErrorItem(items []C2CItemVO, cookieStr string) bool {
 	remove := false
 	for _, item := range items {
-		canBuy, err := a.CheckItemStatus(item.C2CItemsID, cookieStr)
+		canBuy, err := a.checkItemStatus(item.C2CItemsID, cookieStr)
 		if err != nil {
 			log.Printf("Failed to check item %d: %v", item.C2CItemsID, err)
 			continue
@@ -85,7 +86,7 @@ func (a *App) RemoveErrorItem(items []C2CItemVO, cookieStr string) bool {
 	return remove
 }
 
-func (a *App) CheckItemStatus(id int64, cookiesStr string) (bool, error) {
+func (a *App) checkItemStatus(id int64, cookiesStr string) (bool, error) {
 	if result, found := a.c.Get(fmt.Sprintf("check:%d", id)); found {
 		return result.(bool), nil
 	}

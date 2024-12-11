@@ -104,6 +104,7 @@ go.work
 
 # wails
 build/bin/
+build/bin/dict
 node_modules
 frontend/dist
 main_local_test.go
