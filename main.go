@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	app "github.com/mikumifa/BiliShareMall/internal/app"
 	. "github.com/mikumifa/BiliShareMall/internal/domain"
 	. "github.com/mikumifa/BiliShareMall/internal/util"
@@ -12,6 +13,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
 )
 
 //go:embed all:frontend/dist
@@ -33,7 +35,7 @@ func InitEnv() {
 	}
 
 	Env.BasePath = filepath.Dir(exePath)
-	Env.AppName = filepath.Base(exePath)
+	Env.AppName = strings.TrimSuffix(filepath.Base(exePath), filepath.Ext(exePath))
 
 	// step2: Create a persistent data symlink
 	if Env.OS == "darwin" {
@@ -42,6 +44,16 @@ func InitEnv() {
 		appPath := "/Users/" + user.Username + "/Library/Application Support/" + Env.AppName
 		os.MkdirAll(appPath, os.ModePerm)
 		os.Symlink(appPath, linkPath)
+	} else if Env.OS == "windows" {
+		user, _ := user.Current()
+		appPath := fmt.Sprintf("%s\\AppData\\Local\\%s", user.HomeDir, Env.AppName)
+		linkPath := Env.BasePath + "\\data"
+		os.MkdirAll(appPath, os.ModePerm)
+		os.Symlink(appPath, linkPath)
+
+	} else {
+		log.Panic().Err(err).Msg("System not support")
+		panic("System not support")
 	}
 
 }

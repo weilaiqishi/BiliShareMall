@@ -30,17 +30,17 @@ func (a *App) Startup(ctx context.Context) {
 	var err error
 	a.d, err = dao.NewDatabase(util.GetPath("data/bsm.db"))
 	if err != nil {
-		log.Error().Err(err).Msg("NewApp Error")
+		log.Panic().Err(err).Msg("data/bsm.db NewApp Error")
 		log.Panic()
 	}
 	content, err := os.ReadFile(util.GetPath("dict/init.sql"))
 	if err != nil {
-		log.Error().Err(err).Msg("NewApp Error")
+		log.Panic().Err(err).Msg("dict/init.sql NewApp Error")
 		log.Panic()
 	}
 	err = a.d.Init(string(content))
 	if err != nil {
-		log.Error().Err(err).Msg("NewApp Error")
+		log.Panic().Err(err).Msg("database init NewApp Error")
 		log.Panic()
 	}
 	// 设置超时时间和清理时间

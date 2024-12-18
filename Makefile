@@ -17,14 +17,12 @@ tidy:
 
 .PHONY: build
 build:
-	 wails build  -nsis -m -s -trimpath -skipbindings -devtools -tags  fts5
+	 wails build  -nsis -tags fts5
 
 .PHONY: debug
 debug:
-	wails build  -m -s -trimpath -skipbindings -devtools -tags  fts5  -windowsconsole -debug
-.PHONY: macos
-macos:
-	cp -r dict/ build/bin/BiliShareMall.app/Contents/MacOS/dict
+	wails build  -nsis -tags fts5 -windowsconsole -debug
+
 .PHONY: autotag
 autotag:
 	@bash -c "bin/autotag"
