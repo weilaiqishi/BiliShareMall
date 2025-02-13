@@ -7,6 +7,6 @@ func TimestampToTime(t int64) *time.Time {
 	if t <= 0 {
 		return nil
 	}
-	unix := time.Unix(t, 0)
+	unix := time.Unix(t/1000, 0).UTC()
 	return &unix
 }

@@ -136,7 +136,7 @@ onMounted(() => {
         </NSpace>
       </template>
       <NCollapse default-expanded-names="3">
-        <NCollapseItem title="时间">
+        <NCollapseItem title="爬取时间">
           <NDatePicker v-model:value="timeRange" type="datetimerange" clearable />
           <template #header-extra>
             <NSpace>
