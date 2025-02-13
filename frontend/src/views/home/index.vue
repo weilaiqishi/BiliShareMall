@@ -88,10 +88,10 @@ const pagination = ref({
 // 数据初始化
 const data = ref<app.C2CItemVO[]>([]);
 
-function search() {
+function search(firstPage: boolean = false) {
   loading.value = true;
   ListC2CItem(
-    pagination.value.page,
+    firstPage ? 1 : pagination.value.page,
     pagination.value.pageSize,
     searchText.value,
     sortOpt.value,
@@ -103,7 +103,7 @@ function search() {
     getToken()
   )
     .then(result => {
-      pagination.value.page = result.currentPage;
+      pagination.value.page = firstPage ? 1 : pagination.value.page;
       data.value = result.items;
       pagination.value.pageCount = result.totalPages;
       loading.value = false;
@@ -127,7 +127,7 @@ onMounted(() => {
               <icon-uil-search class="text-15px text-#c2c2c2" />
             </template>
           </NInput>
-          <NButton @click="search">
+          <NButton @click="() => search(true)">
             <template #icon>
               <Search></Search>
             </template>
