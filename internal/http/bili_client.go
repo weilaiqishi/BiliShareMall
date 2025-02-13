@@ -60,9 +60,9 @@ func (c *BiliClient) SendRequest(method, url string, data map[string]interface{}
 		return fmt.Errorf("request failed: %w", err)
 	}
 	resp, err := io.ReadAll(res.Body)
-	log.Info().Str("text", string(resp)).Msg("response text")
 	err = json.Unmarshal(resp, respObjRef)
 	if err != nil {
+		log.Error().Str("text", string(resp)).Msg("error response text")
 		return fmt.Errorf("failed to read response: %w", err)
 	}
 	return nil

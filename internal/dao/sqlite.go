@@ -44,7 +44,7 @@ func (d *Database) Init(initSql string) error {
 	return err
 }
 func (d *Database) UpdateVersion(versionId int) (err error) {
-	_, err = d.Db.Exec("INSERT INTO version (id, version, updated_at) VALUES (1, ?, CURRENT_TIMESTAMP)", versionId)
+	_, err = d.Db.Exec("UPDATE version SET version = ?, updated_at = CURRENT_TIMESTAMP WHERE id = 1", versionId)
 	return err
 }
 

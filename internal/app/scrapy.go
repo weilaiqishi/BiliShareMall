@@ -56,24 +56,25 @@ func (a *App) CreateScrapyItem(item dao.ScrapyItem) int64 {
 
 // 更具taskId一直执行
 func (a *App) scrapyLoop(taskId int, ctx context.Context) {
+	//结束时候done一下
+	defer wg.Done()
 	scrapyItem, err := a.d.ReadScrapyItem(taskId)
 	if err != nil {
 		//TODO: failed message
-		runtime.EventsEmit(a.ctx, "scrapy_failed", scrapyItem.Id)
+		runtime.EventsEmit(a.ctx, "scrapyItem_get_failed", scrapyItem.Id)
 		return
 	}
 	for {
 		select {
 		case <-ctx.Done():
 			log.Info().Any("scrapyItem", scrapyItem).Msg("scrapyRunTimeWork canceled")
-			wg.Done()
 			return
 		default:
 			nowRunTask.taskId = taskId
 			err := a.scrapyTask(&scrapyItem)
 			if err != nil {
 				log.Error().Err(err).Msg("scrapyRunTimeWork failed")
-				time.Sleep(3 * time.Second)
+				runtime.EventsEmit(a.ctx, "scrapy_failed", scrapyItem.Id)
 				return
 			}
 			if scrapyItem.NextToken == nil {
@@ -133,10 +134,16 @@ func (a *App) scrapyTask(item *dao.ScrapyItem) error {
 	}
 	var resp domain.MailListResponse
 	err = client.SendRequest(http.POST, "https://mall.bilibili.com/mall-magic-c/internet/c2c/v2/list", data, &resp)
-	log.Info().Any("resp", resp).Msg("list")
 	if err != nil {
 		return err
 	}
+	if resp.Code == 429 {
+		runtime.EventsEmit(a.ctx, "scrapy_wait", 5)
+		log.Warn().Msg("sleep 5s")
+		time.Sleep(5 * time.Second)
+		return nil
+	}
+	log.Info().Msg("scrapy one page")
 	//update nextToken and increaseNumber and  nums ,then save to DB
 	item.NextToken = resp.Data.NextID
 	increaseNumber := a.d.SaveMailListToDB(&resp)

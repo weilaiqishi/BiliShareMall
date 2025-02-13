@@ -44,6 +44,9 @@ func (a *App) Startup(ctx context.Context) {
 	}
 	//更新version
 	err = a.d.UpdateVersion(DatabaseVersion)
+	if err != nil {
+		log.Panic().Err(err).Msg("UpdateVersion  Error")
+	}
 	// 设置超时时间和清理时间
 	a.c = cache.New(5*time.Minute, 10*time.Minute)
 }

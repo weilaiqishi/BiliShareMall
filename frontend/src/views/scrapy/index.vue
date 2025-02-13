@@ -68,8 +68,7 @@ function addScrapy() {
     priceRange: priceRange.value.slice(),
     rateRange: rateRange.value.slice(),
     product: seleteProduct.value!,
-    order: ordersNameMap[seleteOrder.value!],
-    productName: producesNameMap[seleteProduct.value!],
+    order: seleteOrder.value!,
     nums: 0,
     increaseNumber: 0,
     nextToken: ''
@@ -149,6 +148,7 @@ EventsOn('updateScrapyItem', c => {
   nowIdx.value = idx;
 });
 EventsOn('scrapy_failed', c => {
+  message.error(`任务失败，可能是由于风控，请稍后再试`);
   const idx = c as number;
   const now = new Date();
   failedTimeHash.value[idx] = now;
@@ -159,6 +159,15 @@ EventsOn('scrapy_finished', c => {
   const now = new Date();
   finishTimeHash.value[idx] = now;
   nowIdx.value = -1;
+});
+
+EventsOn('scrapy_wait', c => {
+  const second = c as number;
+  message.warning(`出现风控，等待${second}秒`);
+});
+
+EventsOn('scrapyItem_get_failed', _ => {
+  message.warning(`当前爬取配置有问题`);
 });
 onMounted(async () => {
   loadingBar.start();
@@ -230,6 +239,8 @@ onMounted(async () => {
       <NEmpty v-if="nowIdx === -1" description="暂无"></NEmpty>
       <div v-if="nowIdx !== -1">
         <NSpace justify="space-around" size="large">
+          <NStatistic label="类型" :value="producesNameMap[scrapyList[nowIdx].product]"></NStatistic>
+          <NStatistic label="爬取顺序" :value="ordersNameMap[scrapyList[nowIdx].order]"></NStatistic>
           <NStatistic
             label="折扣"
             :value="`${scrapyList[nowIdx].rateRange[0]}~${scrapyList[nowIdx].rateRange[1]}`"
@@ -263,7 +274,7 @@ onMounted(async () => {
       v-for="(scrapy, idx) in scrapyList"
       :key="idx"
       :value="idx"
-      :title="`${scrapy.productName}`"
+      :title="`${producesNameMap[scrapy.product]} ${ordersNameMap[scrapy.order]}`"
       closable
       @close="() => handleClose(idx)"
     >
