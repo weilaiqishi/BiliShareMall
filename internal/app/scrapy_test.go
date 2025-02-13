@@ -13,7 +13,7 @@ func Test_ScrapyOne(t *testing.T) {
 	url := "https://mall.bilibili.com/mall-magic-c/internet/c2c/v2/list"
 	method := "POST"
 
-	payload := strings.NewReader(`{"categoryFilter":"2312","discountFilters":["50-100"],"nextId":null,"priceRange":["10000-20000"],"sortType":"TIME_DESC"}`)
+	payload := strings.NewReader(`{"categoryFilter":"2312","discountFilters":["50-100"],"nextId":null,"priceFilters":["10000-20000"],"sortType":"TIME_DESC"}`)
 
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, payload)
