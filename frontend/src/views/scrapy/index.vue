@@ -17,6 +17,7 @@ import { EventsOn } from '~/wailsjs/runtime/runtime';
 const message = useMessage();
 const priceRange = ref([100, 200]);
 const rateRange = ref([50, 100]);
+const seleteOrder = ref('TIME_DESC');
 const loadingBar = useLoadingBar();
 interface TimeHash {
   [key: number]: Date | undefined; // 键是数字，值是 Date 对象
@@ -25,6 +26,11 @@ const finishTimeHash: Ref<TimeHash> = ref<TimeHash>({});
 const failedTimeHash: Ref<TimeHash> = ref<TimeHash>({});
 
 interface Product {
+  value: string;
+  /** The token */
+  label: string;
+}
+interface Order {
   value: string;
   /** The token */
   label: string;
@@ -38,8 +44,18 @@ const products = ref<Product[]>([
   { value: '2273', label: '3C' },
   { value: 'fudai_cate_id', label: '福袋' }
 ]);
+const orders = ref<Order[]>([
+  { value: 'TIME_DESC', label: '时间降序' },
+  { value: 'PRICE_ASC', label: '价格升序' },
+  { value: 'PRICE_DESC', label: '价格降序' }
+]);
 const producesNameMap = products.value.reduce<Record<string, string>>((acc, product) => {
   acc[product.value] = product.label;
+  return acc;
+}, {});
+
+const ordersNameMap = orders.value.reduce<Record<string, string>>((acc, order) => {
+  acc[order.value] = order.label;
   return acc;
 }, {});
 const seleteProduct = ref('2312');
@@ -52,6 +68,7 @@ function addScrapy() {
     priceRange: priceRange.value.slice(),
     rateRange: rateRange.value.slice(),
     product: seleteProduct.value!,
+    order: ordersNameMap[seleteOrder.value!],
     productName: producesNameMap[seleteProduct.value!],
     nums: 0,
     increaseNumber: 0,
@@ -196,6 +213,14 @@ onMounted(async () => {
               </NRadioGroup>
             </NFlex>
             <template #header-extra>选择类型： {{ producesNameMap[seleteProduct ?? '无'] ?? '无' }}</template>
+          </NCollapseItem>
+          <NCollapseItem title="顺序" name="3">
+            <NFlex>
+              <NRadioGroup v-model:value="seleteOrder" name="productType">
+                <NRadioButton v-for="order in orders" :key="order.value" :value="order.value" :label="order.label" />
+              </NRadioGroup>
+            </NFlex>
+            <template #header-extra>顺序： {{ ordersNameMap[seleteOrder ?? '无'] ?? '无' }}</template>
           </NCollapseItem>
         </NCollapse>
       </NSpace>

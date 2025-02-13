@@ -95,6 +95,7 @@ export namespace dao {
 	    product: string;
 	    productName: string;
 	    nums: number;
+	    order: string;
 	    increaseNumber: number;
 	    nextToken?: string;
 	    // Go type: time
@@ -112,6 +113,7 @@ export namespace dao {
 	        this.product = source["product"];
 	        this.productName = source["productName"];
 	        this.nums = source["nums"];
+	        this.order = source["order"];
 	        this.increaseNumber = source["increaseNumber"];
 	        this.nextToken = source["nextToken"];
 	        this.createTime = this.convertValues(source["createTime"], null);

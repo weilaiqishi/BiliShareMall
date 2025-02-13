@@ -125,7 +125,7 @@ func (a *App) scrapyTask(item *dao.ScrapyItem) error {
 	toRangeStrFunc := func(x, y float64) string {
 		return fmt.Sprintf("%d-%d", int(x), int(y))
 	}
-	data := map[string]interface{}{"sortType": "TIME_DESC",
+	data := map[string]interface{}{"sortType": item.Order,
 		"nextId":          item.NextToken,
 		"priceFilters":    []string{toRangeStrFunc(item.PriceRange[0]*100, item.PriceRange[1]*100)},
 		"discountFilters": []string{toRangeStrFunc(item.RateRange[0], item.RateRange[1])},

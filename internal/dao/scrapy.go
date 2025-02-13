@@ -15,6 +15,7 @@ type ScrapyItem struct {
 	Product        string    `json:"product"`
 	ProductName    string    `json:"productName"`
 	Nums           int       `json:"nums"`
+	Order          string    `json:"order"`
 	IncreaseNumber int       `json:"increaseNumber"`
 	NextToken      *string   `json:"nextToken"`
 	CreateTime     time.Time `json:"createTime"`
@@ -25,9 +26,9 @@ func (d *Database) CreateScrapyItem(item ScrapyItem) (int64, error) {
 
 	priceRangeJSON, _ := json.Marshal(item.PriceRange)
 	rateRangeJSON, _ := json.Marshal(item.RateRange)
-	result, err := d.db.ExecContext(context.Background(),
-		"INSERT INTO scrapy_items (price_range, rate_range, product, product_name, nums, increase_number, next_token, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-		priceRangeJSON, rateRangeJSON, item.Product, item.ProductName, item.Nums, item.IncreaseNumber, item.NextToken, item.CreateTime)
+	result, err := d.Db.ExecContext(context.Background(),
+		"INSERT INTO scrapy_items (price_range, rate_range, product, product_name, nums, increase_number, next_token, create_time,`order`) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)",
+		priceRangeJSON, rateRangeJSON, item.Product, item.ProductName, item.Nums, item.IncreaseNumber, item.NextToken, item.CreateTime, item.Order)
 	if err != nil {
 		return -1, err
 	}
@@ -37,7 +38,7 @@ func (d *Database) UpdateScrapyItem(item *ScrapyItem) (int64, error) {
 
 	priceRangeJSON, _ := json.Marshal(item.PriceRange)
 	rateRangeJSON, _ := json.Marshal(item.RateRange)
-	result, err := d.db.ExecContext(context.Background(),
+	result, err := d.Db.ExecContext(context.Background(),
 		"UPDATE scrapy_items SET price_range = ?, rate_range = ?, product = ?, product_name = ?, nums = ?, increase_number = ?, next_token = ?, create_time = ? WHERE id = ?",
 		priceRangeJSON, rateRangeJSON, item.Product, item.ProductName, item.Nums, item.IncreaseNumber, item.NextToken, item.CreateTime, item.Id)
 	if err != nil {
@@ -50,7 +51,7 @@ func (d *Database) UpdateScrapyItem(item *ScrapyItem) (int64, error) {
 func (d *Database) ReadScrapyItem(id int) (ScrapyItem, error) {
 	var item ScrapyItem
 	var priceRangeJSON, rateRangeJSON string
-	err := d.db.QueryRowContext(context.Background(), "SELECT price_range, rate_range, product, product_name, nums, increase_number, next_token, create_time FROM scrapy_items WHERE id = ?", id).Scan(&priceRangeJSON, &rateRangeJSON, &item.Product, &item.ProductName, &item.Nums, &item.IncreaseNumber, &item.NextToken, &item.CreateTime)
+	err := d.Db.QueryRowContext(context.Background(), "SELECT price_range, rate_range, product, product_name, nums, increase_number, next_token, create_time,`order` FROM scrapy_items WHERE id = ?", id).Scan(&priceRangeJSON, &rateRangeJSON, &item.Product, &item.ProductName, &item.Nums, &item.IncreaseNumber, &item.NextToken, &item.CreateTime, &item.Order)
 	item.Id = int64(id)
 	if err != nil {
 		return item, err
@@ -69,13 +70,13 @@ func (d *Database) ReadScrapyItem(id int) (ScrapyItem, error) {
 
 // DeleteScrapyItem ScrapyItem
 func (d *Database) DeleteScrapyItem(id int) error {
-	_, err := d.db.ExecContext(context.Background(), "DELETE FROM scrapy_items WHERE id = ?", id)
+	_, err := d.Db.ExecContext(context.Background(), "DELETE FROM scrapy_items WHERE id = ?", id)
 	return err
 }
 
 // ReadAllScrapyItems 读取所有项
 func (d *Database) ReadAllScrapyItems() ([]ScrapyItem, error) {
-	rows, err := d.db.QueryContext(context.Background(), "SELECT id, price_range, rate_range, product, product_name, nums, increase_number, next_token, create_time FROM scrapy_items")
+	rows, err := d.Db.QueryContext(context.Background(), "SELECT id, price_range, rate_range, product, product_name, nums, increase_number, next_token, create_time,`order` FROM scrapy_items")
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +85,7 @@ func (d *Database) ReadAllScrapyItems() ([]ScrapyItem, error) {
 	for rows.Next() {
 		var item ScrapyItem
 		var priceRangeJSON, rateRangeJSON string
-		if err := rows.Scan(&item.Id, &priceRangeJSON, &rateRangeJSON, &item.Product, &item.ProductName, &item.Nums, &item.IncreaseNumber, &item.NextToken, &item.CreateTime); err != nil {
+		if err := rows.Scan(&item.Id, &priceRangeJSON, &rateRangeJSON, &item.Product, &item.ProductName, &item.Nums, &item.IncreaseNumber, &item.NextToken, &item.CreateTime, &item.Order); err != nil {
 			return nil, err
 		}
 		err := json.Unmarshal([]byte(priceRangeJSON), &item.PriceRange)
@@ -119,7 +120,7 @@ type CSCItem struct {
 }
 
 func (d *Database) CreateCSCItem(item *CSCItem) (int64, error) {
-	result, err := d.db.ExecContext(context.Background(),
+	result, err := d.Db.ExecContext(context.Background(),
 		"INSERT or IGNORE  INTO c2c_items (c2c_items_id, type, c2c_items_name, total_items_count, price, show_price, show_market_price, uid, payment_time, is_my_publish, uface, uname) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		item.C2CItemsID, item.Type, item.C2CItemsName, item.TotalItemsCount, item.Price, item.ShowPrice, item.ShowMarketPrice, item.UID, item.PaymentTime, item.IsMyPublish, item.Uface, item.Uname)
 	if err != nil {
@@ -127,6 +128,7 @@ func (d *Database) CreateCSCItem(item *CSCItem) (int64, error) {
 	}
 	return result.RowsAffected()
 }
+
 func (d *Database) SaveMailListToDB(response *domain.MailListResponse) int64 {
 	sum := int64(0)
 	for _, item := range response.Data.Data {

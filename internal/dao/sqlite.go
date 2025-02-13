@@ -11,7 +11,7 @@ import (
 )
 
 type Database struct {
-	db *sql.DB
+	Db *sql.DB
 }
 
 func NewDatabase(dbPath string) (*Database, error) {
@@ -36,14 +36,23 @@ func NewDatabase(dbPath string) (*Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Database{db: db}, nil
+	return &Database{Db: db}, nil
 }
 
 func (d *Database) Init(initSql string) error {
-	_, err := d.db.ExecContext(context.Background(), initSql)
+	_, err := d.Db.ExecContext(context.Background(), initSql)
+	return err
+}
+func (d *Database) UpdateVersion(versionId int) (err error) {
+	_, err = d.Db.Exec("INSERT INTO version (id, version, updated_at) VALUES (1, ?, CURRENT_TIMESTAMP)", versionId)
 	return err
 }
 
+func (d *Database) GetVersion() (version int, err error) {
+	row := d.Db.QueryRow("SELECT version FROM version WHERE id = 1")
+	err = row.Scan(&version)
+	return version, err
+}
 func (d *Database) Close() error {
-	return d.db.Close()
+	return d.Db.Close()
 }

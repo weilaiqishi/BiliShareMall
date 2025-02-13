@@ -8,8 +8,21 @@ CREATE TABLE IF NOT EXISTS scrapy_items
     nums            INTEGER,
     increase_number INTEGER,
     next_token      TEXT,
-    create_time     DATETIME
+    create_time     DATETIME,
+    `order`         TEXT
 );
+
+CREATE TABLE IF NOT EXISTS version
+(
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    version    INTEGER NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT OR
+REPLACE
+INTO version (id, version, updated_at)
+VALUES (1, 1, CURRENT_TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS c2c_items
 (

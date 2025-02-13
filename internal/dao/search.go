@@ -66,7 +66,7 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 
 	// 查询总记录数
 	var totalCount int
-	err := d.db.QueryRowContext(context.Background(), countStart+query, args...).Scan(&totalCount)
+	err := d.Db.QueryRowContext(context.Background(), countStart+query, args...).Scan(&totalCount)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -75,7 +75,7 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 	args = append(args, pageSize, offset)
 	query += " LIMIT ? OFFSET ?"
 	// 执行查询
-	rows, err := d.db.QueryContext(context.Background(), queryStart+query, args...)
+	rows, err := d.Db.QueryContext(context.Background(), queryStart+query, args...)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -113,14 +113,14 @@ func (d *Database) ReadCSCItems(page, pageSize int, filterName string, sortOptio
 
 // DeleteCSCItem 删除商品记录
 func (d *Database) DeleteCSCItem(c2cItemsID int64) error {
-	_, err := d.db.ExecContext(context.Background(),
+	_, err := d.Db.ExecContext(context.Background(),
 		"DELETE FROM c2c_items WHERE c2c_items_id = ?", c2cItemsID)
 	return err
 }
 
 // GetPagedItems 分页查询商品
 func (d *Database) GetPagedItems(limit, offset int) ([]CSCItem, error) {
-	rows, err := d.db.QueryContext(context.Background(),
+	rows, err := d.Db.QueryContext(context.Background(),
 		"SELECT c2c_items_id, type, c2c_items_name, total_items_count, price, show_price, show_market_price, uid, payment_time, is_my_publish, uface, uname FROM c2c_items LIMIT ? OFFSET ?",
 		limit, offset)
 	if err != nil {

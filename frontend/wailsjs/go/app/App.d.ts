@@ -3,8 +3,6 @@
 import {dao} from '../models';
 import {app} from '../models';
 
-export function CheckItemStatus(arg1:number,arg2:string):Promise<boolean>;
-
 export function CreateScrapyItem(arg1:dao.ScrapyItem):Promise<number>;
 
 export function DeleteScrapyItem(arg1:number):Promise<void>;
@@ -14,8 +12,6 @@ export function DoneTask(arg1:number):Promise<void>;
 export function GetLoginKeyAndUrl():Promise<app.LoginInfo>;
 
 export function GetNowRunTaskId():Promise<number>;
-
-export function Greet(arg1:string):Promise<string>;
 
 export function ListC2CItem(arg1:number,arg2:number,arg3:string,arg4:number,arg5:number,arg6:number,arg7:number,arg8:number,arg9:boolean,arg10:string):Promise<app.C2CItemListVO>;
 
