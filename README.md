@@ -19,9 +19,9 @@
 下载最新的release文件 (根据系统的版本下载) [下载链接](https://github.com/mikumifa/BiliShareMall/releases)
 installer.exe结尾的
 
-## 使用说明书
+## 注意
 
-Coming soon
+最近b战改了一个东西，实际的搜索只能用用他的范围去搜，用其他范围直接就空了，也就是像以前那样严格限定价格范围和折扣范围来扫货的方法已经不存在了，设置范围请按照b站的几种
 
 ## 项目问题
 
