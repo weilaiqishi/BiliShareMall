@@ -15,7 +15,6 @@ declare module 'vue' {
     ExceptionBase: typeof import('./../components/common/exception-base.vue')['default']
     FullScreen: typeof import('./../components/common/full-screen.vue')['default']
     IconAntDesignEnterOutlined: typeof import('~icons/ant-design/enter-outlined')['default']
-    IconAntDesignReloadOutlined: typeof import('~icons/ant-design/reload-outlined')['default']
     IconIcRoundPlus: typeof import('~icons/ic/round-plus')['default']
     IconLocalLogo: typeof import('~icons/local/logo')['default']
     IconMdiArrowDownThin: typeof import('~icons/mdi/arrow-down-thin')['default']
