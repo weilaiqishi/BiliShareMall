@@ -19,6 +19,8 @@ export function ReadAllScrapyItems():Promise<Array<dao.ScrapyItem>>;
 
 export function RemoveErrorItem(arg1:Array<app.C2CItemVO>,arg2:string):Promise<boolean>;
 
+export function SearchItemsV2(arg1:string,arg2:string):Promise<app.SearchV2Response>;
+
 export function StartTask(arg1:number,arg2:string):Promise<void>;
 
 export function VerifyLogin(arg1:string):Promise<app.VerifyLoginResponse>;

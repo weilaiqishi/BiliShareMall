@@ -1,0 +1,6 @@
+{
+  "semi": false,
+  "rules": {
+    "style/semi": "off"
+  }
+}

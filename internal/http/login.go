@@ -3,11 +3,12 @@ package http
 import (
 	"encoding/json"
 	"errors"
-	"github.com/rs/zerolog/log"
-	gjson "github.com/tidwall/gjson"
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/rs/zerolog/log"
+	gjson "github.com/tidwall/gjson"
 )
 
 const user_agent = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36 Edg/97.0.1072.69`
@@ -43,7 +44,7 @@ func VerifyLogin(loginKey string) (string, error) {
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
 	data := gjson.ParseBytes(body)
-	log.Info().Msg("check login")
+	log.Info().Msg("check login" + data.String())
 	if data.Get("data.url").String() != "" {
 		var sb strings.Builder
 		buvid3, err := getBuvid3()

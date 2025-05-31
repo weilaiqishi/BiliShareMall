@@ -1,3 +1,5 @@
+npx @agentdeskai/browser-tools-server@latest
+
 <div align="center">
   <a href="https://github.com/mikumifa/BiliShareMall" target="_blank">
     <img width="200" src="build/appicon.png" alt="logo">

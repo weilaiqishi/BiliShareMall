@@ -1,13 +1,15 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/mikumifa/BiliShareMall/internal/domain"
 	"github.com/mikumifa/BiliShareMall/internal/http"
 	"github.com/mikumifa/BiliShareMall/internal/util"
 	"github.com/patrickmn/go-cache"
 	"github.com/rs/zerolog/log"
-	"time"
 )
 
 type C2CItemListVO struct {
@@ -103,4 +105,65 @@ func (a *App) checkItemStatus(id int64, cookiesStr string) (bool, error) {
 	a.c.Set(fmt.Sprintf("check:%d", id), resp.Code != 60000002, cache.DefaultExpiration)
 	time.Sleep(1 * time.Second)
 	return resp.Code != 60000002, nil
+}
+
+// SearchV2Request represents the request body for the /mall/noah/search/v2 API.
+type SearchV2Request struct {
+	Keyword string `json:"keyword"`
+	// Add other fields as needed based on API documentation or captured requests
+	TermQueries   []struct{} `json:"term_queries"`   // Example placeholder
+	RecommendList []struct{} `json:"recommend_list"` // Example placeholder
+}
+
+// SearchV2Response represents the response structure for the /mall/noah/search/v2 API.
+type SearchV2Response struct {
+	Code    int          `json:"code"`
+	Message string       `json:"message"`
+	TTL     int          `json:"ttl"`
+	Data    SearchV2Data `json:"data"`
+}
+
+// SearchV2Data represents the data field in the SearchV2Response.
+type SearchV2Data struct {
+	ItemCount   int `json:"itemCount"`
+	TicketCount int `json:"ticketCount"`
+	// Add other fields as needed based on API documentation or captured requests
+	// For example, a list of items or tickets
+}
+
+// SearchItemsV2 calls the /mall/noah/search/v2 API to search for items.
+func (a *App) SearchItemsV2(keyword string, cookieStr string) (*SearchV2Response, error) {
+	log.Info().Str("keyword", keyword).Msg("Searching items using /mall/noah/search/v2")
+
+	client, err := http.NewBiliClient()
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to create BiliClient")
+		return nil, fmt.Errorf("failed to create BiliClient: %w", err)
+	}
+	client.StoreHeader("cookie", cookieStr)
+
+	requestBody := SearchV2Request{
+		Keyword: keyword,
+		// Add other necessary fields based on actual API request
+		TermQueries:   []struct{}{}, // Placeholder, refine based on API
+		RecommendList: []struct{}{}, // Placeholder, refine based on API
+	}
+
+	url := "https://mall.bilibili.com/mall/noah/search/v2"
+
+	// Convert requestBody to map[string]interface{} for SendRequest
+	requestBodyMap := make(map[string]interface{})
+	requestBodyBytes, _ := json.Marshal(requestBody)
+	json.Unmarshal(requestBodyBytes, &requestBodyMap)
+
+	var searchResp SearchV2Response
+	err = client.SendRequest("POST", url, requestBodyMap, &searchResp)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to send search/v2 request")
+		return nil, fmt.Errorf("failed to send search/v2 request: %w", err)
+	}
+
+	log.Info().Int("itemCount", searchResp.Data.ItemCount).Int("ticketCount", searchResp.Data.TicketCount).Msg("Search /mall/noah/search/v2 successful")
+
+	return &searchResp, nil
 }

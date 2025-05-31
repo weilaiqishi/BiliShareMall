@@ -4,10 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"runtime"
+
 	"github.com/mattn/go-sqlite3"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/mikumifa/BiliShareMall/internal/util"
-	"runtime"
 )
 
 type Database struct {

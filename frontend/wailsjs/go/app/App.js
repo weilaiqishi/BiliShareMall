@@ -34,6 +34,10 @@ export function RemoveErrorItem(arg1, arg2) {
   return window['go']['app']['App']['RemoveErrorItem'](arg1, arg2);
 }
 
+export function SearchItemsV2(arg1, arg2) {
+  return window['go']['app']['App']['SearchItemsV2'](arg1, arg2);
+}
+
 export function StartTask(arg1, arg2) {
   return window['go']['app']['App']['StartTask'](arg1, arg2);
 }
