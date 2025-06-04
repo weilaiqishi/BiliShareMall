@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import { loginRouter } from './routes/login'
 import { healthRouter } from './routes/health'
+import { searchRouter } from './routes/search'
 
 const app = express()
 const port = 3000
@@ -19,6 +20,9 @@ app.use('/api', healthRouter)
 
 // 登录相关路由
 app.use('/api', loginRouter)
+
+// 搜索相关路由
+app.use('/api', searchRouter)
 
 app.listen(port, () => {
   console.log(`服务器运行在 http://localhost:${port}`)

@@ -112,21 +112,6 @@ async function initRoute(to: RouteLocationNormalized): Promise<RouteLocationRaw 
   if (routeStore.isInitAuthRoute && !isNotFoundRoute) {
     return null;
   }
-  // it is captured by the "not-found" route, then check whether the route exists
-  if (routeStore.isInitAuthRoute && isNotFoundRoute) {
-    const exist = await routeStore.getIsAuthRouteExist(to.path as RoutePath);
-    const noPermissionRoute: RouteKey = '403';
-
-    if (exist) {
-      const location: RouteLocationRaw = {
-        name: noPermissionRoute
-      };
-
-      return location;
-    }
-
-    return null;
-  }
 
   // if the auth route is not initialized, then initialize the auth route
   const isLogin = Boolean(localStg.get('cookies'));

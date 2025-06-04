@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@types/cors": "^2.8.18",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "es-toolkit": "^1.38.0"
   }
 }

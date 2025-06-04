@@ -3,16 +3,17 @@ import { type Ref, onMounted, ref } from 'vue';
 import { useLoadingBar, useMessage } from 'naive-ui';
 import { Play, StopSharp } from '@vicons/ionicons5';
 import ScopeChoose from '@/views/scrapy/modules/scope-choose.vue';
-import {
-  CreateScrapyItem,
-  DeleteScrapyItem,
-  DoneTask,
-  GetNowRunTaskId,
-  ReadAllScrapyItems,
-  StartTask
-} from '~/wailsjs/go/app/App';
+// import {
+//   CreateScrapyItem,
+//   DeleteScrapyItem,
+//   DoneTask,
+//   GetNowRunTaskId,
+//   ReadAllScrapyItems,
+//   StartTask
+// } from '~/wailsjs/go/app/App';
 import { dao } from '~/wailsjs/go/models';
 import { getToken } from '@/store/modules/auth/shared';
+import axios from 'axios';
 import { EventsOn } from '~/wailsjs/runtime/runtime';
 const message = useMessage();
 const priceRange = ref([100, 200]);
@@ -73,16 +74,54 @@ function addScrapy() {
     increaseNumber: 0,
     nextToken: ''
   });
-  CreateScrapyItem(item).then(id => {
-    if (id === -1) {
-      message.error('添加失败');
-      return;
+  // CreateScrapyItem(item).then(id => {
+  //   if (id === -1) {
+  //     message.error('添加失败');
+  //     return;
+  //   }
+  //   item.id = id;
+  //   getAllItems().then(value => {
+  //     scrapyList.value = value.slice();
+  //     message.success('添加成功');
+  //   });
+  // });
+}
+
+function searchCategory() {
+  axios.post('http://localhost:3000/api/search/category', {
+    cookieStr: getToken(),
+    "keyword": "",
+    "filters": "",
+    "priceFlow": "",
+    "priceCeil": "",
+    "sortType": "pubtime",
+    "sortOrder": "",
+    "pageIndex": 1,
+    "userId": "",
+    "state": "",
+    "scene": "",
+    "termQueries": [
+        {
+            "field": "category",
+            "values": [
+                "2_175"
+            ]
+        }
+    ],
+    "rangeQueries": [],
+    "extra": []
+}, {
+    headers: {
+      'Content-Type': 'application/json'
     }
-    item.id = id;
-    getAllItems().then(value => {
-      scrapyList.value = value.slice();
-      message.success('添加成功');
-    });
+  })
+  .then(response => {
+    console.log('Search successful:', response.data);
+    message.success('搜索成功');
+  })
+  .catch(error => {
+    console.error('Search failed:', error);
+    message.error('搜索失败');
   });
 }
 
@@ -92,18 +131,18 @@ function handleClose(idx: number) {
     return;
   }
   loadingBar.start();
-  DeleteScrapyItem(scrapyList.value[idx].id)
-    .then(() => {
-      getAllItems().then(value => {
-        scrapyList.value = value.slice();
-        loadingBar.finish();
-        message.success(`删除成功`);
-      });
-    })
-    .catch(() => {
-      loadingBar.error();
-      message.error(`删除失败`);
-    });
+  // DeleteScrapyItem(scrapyList.value[idx].id)
+  //   .then(() => {
+  //     getAllItems().then(value => {
+  //       scrapyList.value = value.slice();
+  //       loadingBar.finish();
+  //       message.success(`删除成功`);
+  //     });
+  //   })
+  //   .catch(() => {
+  //     loadingBar.error();
+  //     message.error(`删除失败`);
+  //   });
 }
 function handleRun(idx: number) {
   if (nowIdx.value === idx) {
@@ -111,73 +150,73 @@ function handleRun(idx: number) {
     return;
   }
   loadingBar.start();
-  StartTask(scrapyList.value[idx].id, getToken())
-    .then(() => {
-      nowIdx.value = idx;
-      loadingBar.finish();
-      message.success(`启动成功`);
-    })
-    .catch(() => {
-      loadingBar.error();
-      message.error(`启动失败`);
-    });
+  // StartTask(scrapyList.value[idx].id, getToken())
+  //   .then(() => {
+  //     nowIdx.value = idx;
+  //     loadingBar.finish();
+  //     message.success(`启动成功`);
+  //   })
+  //   .catch(() => {
+  //     loadingBar.error();
+  //     message.error(`启动失败`);
+  //   });
 }
 
 function handldStop(idx: number) {
   loadingBar.start();
-  DoneTask(idx)
-    .then(() => {
-      nowIdx.value = -1;
-      loadingBar.finish();
-      message.success(`已停止`);
-    })
-    .catch(() => {
-      loadingBar.error();
-      message.error(`停止失败`);
-    });
+  // DoneTask(idx)
+  //   .then(() => {
+  //     nowIdx.value = -1;
+  //     loadingBar.finish();
+  //     message.success(`已停止`);
+  //   })
+  //   .catch(() => {
+  //     loadingBar.error();
+  //     message.error(`停止失败`);
+  //   });
 }
 
 async function getAllItems() {
-  const result = await ReadAllScrapyItems();
-  return result.slice(); // Return a shallow copy of the result
+  // const result = await ReadAllScrapyItems();
+  // return result.slice(); // Return a shallow copy of the result
 }
-EventsOn('updateScrapyItem', c => {
-  const item = c as dao.ScrapyItem;
-  const idx = scrapyList.value.findIndex(it => it.id === item.id);
-  scrapyList.value[idx] = c;
-  nowIdx.value = idx;
-});
-EventsOn('scrapy_failed', c => {
-  message.error(`任务失败，可能是由于风控，请稍后再试`);
-  const idx = c as number;
-  const now = new Date();
-  failedTimeHash.value[idx] = now;
-  nowIdx.value = -1;
-});
-EventsOn('scrapy_finished', c => {
-  const idx = c as number;
-  const now = new Date();
-  finishTimeHash.value[idx] = now;
-  nowIdx.value = -1;
-});
+// EventsOn('updateScrapyItem', c => {
+//   const item = c as dao.ScrapyItem;
+//   const idx = scrapyList.value.findIndex(it => it.id === item.id);
+//   scrapyList.value[idx] = c;
+//   nowIdx.value = idx;
+// });
+// EventsOn('scrapy_failed', c => {
+//   message.error(`任务失败，可能是由于风控，请稍后再试`);
+//   const idx = c as number;
+//   const now = new Date();
+//   failedTimeHash.value[idx] = now;
+//   nowIdx.value = -1;
+// });
+// EventsOn('scrapy_finished', c => {
+//   const idx = c as number;
+//   const now = new Date();
+//   finishTimeHash.value[idx] = now;
+//   nowIdx.value = -1;
+// });
 
-EventsOn('scrapy_wait', c => {
-  const second = c as number;
-  message.warning(`出现风控，等待${second}秒`);
-});
+// EventsOn('scrapy_wait', c => {
+//   const second = c as number;
+//   message.warning(`出现风控，等待${second}秒`);
+// });
 
-EventsOn('scrapyItem_get_failed', _ => {
-  message.warning(`当前爬取配置有问题`);
-});
+// EventsOn('scrapyItem_get_failed', _ => {
+//   message.warning(`当前爬取配置有问题`);
+// });
 onMounted(async () => {
   loadingBar.start();
-  scrapyList.value = await getAllItems();
-  const nowRunTaskId = await GetNowRunTaskId();
-  scrapyList.value.forEach((item, index) => {
-    if (item.id === nowRunTaskId) {
-      nowIdx.value = index;
-    }
-  });
+  // scrapyList.value = await getAllItems();
+  // const nowRunTaskId = await GetNowRunTaskId();
+  // scrapyList.value.forEach((item, index) => {
+  //   if (item.id === nowRunTaskId) {
+  //     nowIdx.value = index;
+  //   }
+  // });
   loadingBar.finish();
 });
 </script>
@@ -186,6 +225,12 @@ onMounted(async () => {
   <NSpace vertical size="large">
     <NCard class="card-wrapper" title="添加爬取类型">
       <template #header-extra>
+        <NButton @click="searchCategory">
+          <template #icon>
+            <icon-ic-round-plus />
+          </template>
+          搜索
+        </NButton>
         <NButton @click="addScrapy">
           <template #icon>
             <icon-ic-round-plus />

@@ -6,8 +6,6 @@ import { setupRouter } from './router';
 import { setupI18n } from './locales';
 import App from './App.vue';
 
-console.log(1133)
-
 async function setupApp() {
   setupLoading();
 
