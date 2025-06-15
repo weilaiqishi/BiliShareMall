@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { searchCategoryV2 } from '../services/search';
-import { SearchCategoryRequestBody } from '@types/search_category_request';
+import { SearchCategoryRequestBody } from '../../../types/search_category_request';
+
 
 export const searchCategory = async (req: Request<any, any, SearchCategoryRequestBody & { cookieStr: string; }>, res: Response) => {
     try {
