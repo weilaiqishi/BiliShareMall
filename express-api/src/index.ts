@@ -3,7 +3,7 @@ import cors from 'cors'
 import { loginRouter } from './routes/login'
 import { healthRouter } from './routes/health'
 import { searchRouter } from './routes/search'
-import { sqliteRouter } from './routes/sqlite'
+import scrapyRoutes from './routes/scrapyRoutes'
 import { initializeDatabase } from './services/sqlite'
 
 const app = express()
@@ -29,8 +29,8 @@ app.use('/api', loginRouter)
 // 搜索相关路由
 app.use('/api', searchRouter)
 
-// SQLite 相关路由
-app.use('/api', sqliteRouter)
+// Scrapy 相关路由
+app.use('/api/scrapy', scrapyRoutes)
 
 app.listen(port, () => {
   console.log(`服务器运行在 http://localhost:${port}`)

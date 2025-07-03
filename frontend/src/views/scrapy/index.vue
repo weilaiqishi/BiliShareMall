@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import { type Ref, onMounted, ref } from 'vue';
+import { type Ref, computed, onMounted, onUnmounted, ref } from 'vue';
 import { useLoadingBar, useMessage } from 'naive-ui';
 import { Play, StopSharp } from '@vicons/ionicons5';
-import ScopeChoose from '@/views/scrapy/modules/scope-choose.vue';
-// import {
-//   CreateScrapyItem,
-//   DeleteScrapyItem,
-//   DoneTask,
-//   GetNowRunTaskId,
-//   ReadAllScrapyItems,
-//   StartTask
-// } from '~/wailsjs/go/app/App';
-import { dao } from '~/wailsjs/go/models';
-import { getToken } from '@/store/modules/auth/shared';
 import axios from 'axios';
-import { EventsOn } from '~/wailsjs/runtime/runtime';
+
+import ScopeChoose from '@/views/scrapy/modules/scope-choose.vue';
+
+import { getToken } from '@/store/modules/auth/shared';
+import { ScrapyItem } from '../../../../types/scrapy';
+import ScrapyItemInfo from './scrapyItemInfo.vue'
+
 const message = useMessage();
 const priceRange = ref([100, 200]);
 const rateRange = ref([50, 100]);
@@ -37,7 +32,12 @@ interface Order {
   label: string;
 }
 const nowIdx = ref<number>(-1);
-const scrapyList = ref<dao.ScrapyItem[]>([]);
+const currentScrapy = computed(() => {
+  alert(nowIdx.value)
+  return scrapyList.value.find(item => item.ID === nowIdx.value)
+})
+
+const scrapyList = ref<ScrapyItem[]>([]);
 const products = ref<Product[]>([
   { value: '2_175', label: '景品' },
   { value: '2_142', label: '比例手办' },
@@ -98,36 +98,74 @@ function addScrapy() {
     message.error('类型不能为空');
     return;
   }
-  const item = dao.ScrapyItem.createFrom({
-    priceRange: priceRange.value.slice(),
-    rateRange: rateRange.value.slice(),
-    product: seleteProduct.value!,
-    order: seleteOrder.value!,
-    nums: 0,
-    increaseNumber: 0,
-    nextToken: ''
-  });
-  // CreateScrapyItem(item).then(id => {
-  //   if (id === -1) {
-  //     message.error('添加失败');
-  //     return;
-  //   }
-  //   item.id = id;
-  //   getAllItems().then(value => {
-  //     scrapyList.value = value.slice();
-  //     message.success('添加成功');
-  //   });
-  // });
+  const searchParams = {
+    "keyword": keyword.value,
+    "filters": "",
+    "priceFlow": String(priceRange.value[0]) || "",
+    "priceCeil": String(priceRange.value[1]) || "",
+    "sortType": "pubtime",
+    "sortOrder": "",
+    "pageIndex": 1,
+    "userId": "",
+    "state": "",
+    "scene": "",
+    "termQueries": [
+      {
+        "field": "category",
+        "values": [
+          seleteProduct.value
+        ]
+      }
+    ],
+    "rangeQueries": [],
+    "extra": [],
+
+    seleteProduct: seleteProduct.value,
+    seleteOrder: seleteOrder.value,
+  }
+  switch (seleteOrder.value) {
+    case 'price_asc':
+      searchParams.sortType = 'price';
+      searchParams.sortOrder = 'asc'
+      break;
+    case 'price_desc':
+      searchParams.sortType = 'price';
+      searchParams.sortOrder = 'desc'
+      break;
+    default: {
+      searchParams.sortType = seleteOrder.value;
+      break;
+    }
+  }
+  const newItem: Pick<ScrapyItem, "Name" | "Cookie" | "searchParams"> = {
+    Name: scrapyName.value,
+    Cookie: getToken(),
+    searchParams: searchParams
+  };
+
+  axios.post('http://localhost:3000/api/scrapy/items', newItem)
+    .then(response => {
+      if (response.status === 200) {
+        message.success('添加成功');
+        getAllItems();
+      } else {
+        message.error('添加失败');
+      }
+    })
+    .catch(error => {
+      console.error('Add scrapy item failed:', error);
+      message.error('添加失败');
+    });
 }
 
+const scrapyName = ref("");
 const keyword = ref("");
 function searchCategory() {
   const searchParams = {
-    cookieStr: getToken(),
     "keyword": keyword.value,
     "filters": "",
-    "priceFlow": priceRange.value[0] || "",
-    "priceCeil": priceRange.value[1] || "",
+    "priceFlow": String(priceRange.value[0]) || "",
+    "priceCeil": String(priceRange.value[1]) || "",
     "sortType": "pubtime",
     "sortOrder": "",
     "pageIndex": 1,
@@ -155,7 +193,7 @@ function searchCategory() {
       searchParams.sortOrder = 'desc'
       break;
     default: {
-      searchParams.sortType = 'seleteOrder.value';
+      searchParams.sortType = seleteOrder.value;
       break;
     }
   }
@@ -175,98 +213,119 @@ function searchCategory() {
 }
 
 function handleClose(idx: number) {
-  if (nowIdx.value !== -1) {
+  if (nowIdx.value > 0) {
     message.warning(`请先关闭爬虫`);
     return;
   }
   loadingBar.start();
-  // DeleteScrapyItem(scrapyList.value[idx].id)
-  //   .then(() => {
-  //     getAllItems().then(value => {
-  //       scrapyList.value = value.slice();
-  //       loadingBar.finish();
-  //       message.success(`删除成功`);
-  //     });
-  //   })
-  //   .catch(() => {
-  //     loadingBar.error();
-  //     message.error(`删除失败`);
-  //   });
+  axios.delete(`http://localhost:3000/api/scrapy/items/${scrapyList.value[idx].ID}`)
+    .then(response => {
+      if (response.status === 200) {
+        message.success(`删除成功`);
+        getAllItems();
+      } else {
+        message.error(`删除失败`);
+      }
+    })
+    .catch(error => {
+      console.error('Delete scrapy item failed:', error);
+      message.error(`删除失败`);
+    })
+    .finally(() => {
+      loadingBar.finish();
+    });
 }
 function handleRun(idx: number) {
-  if (nowIdx.value === idx) {
+  if (nowIdx.value === scrapyList.value[idx].ID) {
     message.warning(`已启动`);
     return;
   }
   loadingBar.start();
-  // StartTask(scrapyList.value[idx].id, getToken())
-  //   .then(() => {
-  //     nowIdx.value = idx;
-  //     loadingBar.finish();
-  //     message.success(`启动成功`);
-  //   })
-  //   .catch(() => {
-  //     loadingBar.error();
-  //     message.error(`启动失败`);
-  //   });
+  axios.post('http://localhost:3000/api/scrapy/run', {
+    taskId: scrapyList.value[idx].ID,
+    cookie: getToken()
+  })
+    .then(response => {
+      if (response.status === 200) {
+        message.success(`爬虫任务 ${scrapyList.value[idx].ID} 已启动`);
+        nowIdx.value = scrapyList.value[idx].ID;
+        getAllItems();
+      } else {
+        message.error(`启动失败`);
+      }
+    })
+    .catch(error => {
+      console.error('Start scrapy task failed:', error);
+      message.error(`启动失败`);
+    })
+    .finally(() => {
+      loadingBar.finish();
+    });
 }
 
-function handldStop(idx: number) {
+function handleStop() {
   loadingBar.start();
-  // DoneTask(idx)
-  //   .then(() => {
-  //     nowIdx.value = -1;
-  //     loadingBar.finish();
-  //     message.success(`已停止`);
-  //   })
-  //   .catch(() => {
-  //     loadingBar.error();
-  //     message.error(`停止失败`);
-  //   });
+  axios.post('http://localhost:3000/api/scrapy/stop', {
+    taskId: nowIdx.value
+  })
+    .then(response => {
+      if (response.status === 200) {
+        message.success(`爬虫任务 ${nowIdx.value} 已停止`);
+        nowIdx.value = -1;
+        getAllItems();
+      } else {
+        message.error(`停止失败`);
+      }
+    })
+    .catch(error => {
+      console.error('Stop scrapy task failed:', error);
+      message.error(`停止失败`);
+    })
+    .finally(() => {
+      loadingBar.finish();
+    });
 }
 
-async function getAllItems() {
-  // const result = await ReadAllScrapyItems();
-  // return result.slice(); // Return a shallow copy of the result
+function getAllItems() {
+  axios.get('http://localhost:3000/api/scrapy/items')
+    .then(response => {
+      if (response.status === 200) {
+        scrapyList.value = response.data;
+      } else {
+        message.error('获取爬虫列表失败');
+      }
+    })
+    .catch(error => {
+      console.error('Get scrapy items failed:', error);
+      message.error('获取爬虫列表失败');
+    });
 }
-// EventsOn('updateScrapyItem', c => {
-//   const item = c as dao.ScrapyItem;
-//   const idx = scrapyList.value.findIndex(it => it.id === item.id);
-//   scrapyList.value[idx] = c;
-//   nowIdx.value = idx;
-// });
-// EventsOn('scrapy_failed', c => {
-//   message.error(`任务失败，可能是由于风控，请稍后再试`);
-//   const idx = c as number;
-//   const now = new Date();
-//   failedTimeHash.value[idx] = now;
-//   nowIdx.value = -1;
-// });
-// EventsOn('scrapy_finished', c => {
-//   const idx = c as number;
-//   const now = new Date();
-//   finishTimeHash.value[idx] = now;
-//   nowIdx.value = -1;
-// });
 
-// EventsOn('scrapy_wait', c => {
-//   const second = c as number;
-//   message.warning(`出现风控，等待${second}秒`);
-// });
+function pollNowRunningTask() {
+  axios.get('http://localhost:3000/api/scrapy/running-task')
+    .then(response => {
+      if (response.status === 200) {
+        nowIdx.value = response.data.taskId;
+      } else {
+        message.error('获取当前运行任务失败');
+      }
+    })
+    .catch(error => {
+      console.error('Get now running task failed:', error);
+      message.error('获取当前运行任务失败');
+    });
+}
 
-// EventsOn('scrapyItem_get_failed', _ => {
-//   message.warning(`当前爬取配置有问题`);
-// });
-onMounted(async () => {
-  loadingBar.start();
-  // scrapyList.value = await getAllItems();
-  // const nowRunTaskId = await GetNowRunTaskId();
-  // scrapyList.value.forEach((item, index) => {
-  //   if (item.id === nowRunTaskId) {
-  //     nowIdx.value = index;
-  //   }
-  // });
-  loadingBar.finish();
+let intervalId: any
+onMounted(() => {
+  getAllItems();
+  intervalId = setInterval(pollNowRunningTask, 3000);
+});
+
+onUnmounted(() => {
+  if (intervalId) {
+    clearInterval(intervalId);
+  }
 });
 </script>
 
@@ -287,7 +346,11 @@ onMounted(async () => {
           添加
         </NButton>
       </template>
+
       <NSpace vertical size="large">
+        <NFormItem label="爬虫名">
+          <NInput v-model:value="scrapyName" placeholder="请输入爬虫名" />
+        </NFormItem>
         <NCollapse default-expanded-names="3">
           <NCollapseItem title="关键词">
             <NInput v-model:value="keyword" placeholder="请输入关键词" />
@@ -324,19 +387,11 @@ onMounted(async () => {
     </NCard>
 
     <NCard class="running-card" title="当前运行">
-      <NEmpty v-if="nowIdx === -1" description="暂无"></NEmpty>
-      <div v-if="nowIdx !== -1">
+      <NEmpty v-if="currentScrapy" description="暂无"></NEmpty>
+      <div v-if="currentScrapy">
         <NSpace justify="space-around" size="large">
-          <NStatistic label="类型" :value="producesNameMap[scrapyList[nowIdx].product]"></NStatistic>
-          <NStatistic label="爬取顺序" :value="ordersNameMap[scrapyList[nowIdx].order]"></NStatistic>
-          <NStatistic label="折扣" :value="`${scrapyList[nowIdx].rateRange[0]}~${scrapyList[nowIdx].rateRange[1]}`"
-            :tabular-nums="true"></NStatistic>
-          <NStatistic label="价格" :value="`${scrapyList[nowIdx].priceRange[0]}~${scrapyList[nowIdx].priceRange[1]}`"
-            :tabular-nums="true"></NStatistic>
-          <NStatistic label="爬取次数" :value="scrapyList[nowIdx].nums"></NStatistic>
-          <NStatistic label="增加数目" :value="scrapyList[nowIdx].increaseNumber"></NStatistic>
-          <NButton class="custom-button" strong ghost circle round size="large"
-            @click="() => handldStop(scrapyList[nowIdx].id)">
+          <ScrapyItemInfo :scrapy="currentScrapy"></ScrapyItemInfo>
+          <NButton class="custom-button" strong ghost circle round size="large" @click="() => handleStop()">
             <template #icon>
               <NIcon>
                 <StopSharp />
@@ -347,23 +402,17 @@ onMounted(async () => {
       </div>
     </NCard>
 
-    <NCard v-for="(scrapy, idx) in scrapyList" :key="idx" :value="idx"
-      :title="`${producesNameMap[scrapy.product]} ${ordersNameMap[scrapy.order]}`" closable
+    <NCard v-for="(scrapy, idx) in scrapyList" :key="scrapy.ID" :value="idx" :title="scrapy.Name" closable
       @close="() => handleClose(idx)">
       <NSpace vertical size="large">
-        <NAlert v-if="finishTimeHash[scrapyList[idx].id]" title="执行完成" type="success">
-          完成时间：{{ finishTimeHash[scrapyList[idx].id] }}
+        <NAlert v-if="finishTimeHash[scrapy.ID]" title="执行完成" type="success">
+          完成时间：{{ finishTimeHash[scrapy.ID] }}
         </NAlert>
-        <NAlert v-if="failedTimeHash[scrapyList[idx].id]" title="执行失败" type="error">
-          错误时间：{{ failedTimeHash[scrapyList[idx].id] }}
+        <NAlert v-if="failedTimeHash[scrapy.ID]" title="执行失败" type="error">
+          错误时间：{{ failedTimeHash[scrapy.ID] }}
         </NAlert>
         <NSpace justify="space-around" size="large">
-          <NStatistic label="折扣" :value="`${scrapy.rateRange[0]}~${scrapy.rateRange[1]}`" :tabular-nums="true">
-          </NStatistic>
-          <NStatistic label="价格" :value="`${scrapy.priceRange[0]}~${scrapy.priceRange[1]}`" :tabular-nums="true">
-          </NStatistic>
-          <NStatistic label="爬取次数" :value="scrapy.nums"></NStatistic>
-          <NStatistic label="增加数目" :value="scrapy.increaseNumber"></NStatistic>
+          <ScrapyItemInfo :scrapy="scrapy"></ScrapyItemInfo>
           <NButton class="custom-button" strong ghost circle round size="large" @click="() => handleRun(idx)">
             <template #icon>
               <NIcon>
@@ -376,7 +425,7 @@ onMounted(async () => {
 
       <template #header-extra>
         <NFlex>
-          <NTime class="custom-time" :time="new Date(scrapy.createTime)" />
+          <NTime class="custom-time" :time="new Date(scrapy.CreateTime)" />
         </NFlex>
       </template>
     </NCard>

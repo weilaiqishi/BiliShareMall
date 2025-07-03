@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "lint": "oxlint"
+    "runBuild": "node dist/index.js",
+    "lint": "oxlint --fix"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +27,7 @@
     "@types/cors": "^2.8.18",
     "better-sqlite3": "^11.0.0",
     "cors": "^2.8.5",
-    "es-toolkit": "^1.38.0"
+    "es-toolkit": "^1.38.0",
+    "zod": "^3.25.67"
   }
 }

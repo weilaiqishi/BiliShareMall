@@ -1,3 +1,6 @@
+import { SearchCategoryGoodsItem } from "./search_category_request";
+
+
 // https://mall.bilibili.com/mall/noah/search/category/v2
 
 const body = {
@@ -502,5 +505,217 @@ const res = {
         "recPopup": null,
         "mhTabAb": "g3",
         "wordCard": null
+    }
+}
+
+const 比例手办: SearchCategoryGoodsItem = {
+    "itemsId": 11057684,
+    "bizType": "hyg",
+    "itemsType": 1,
+    "name": "Ensoutoys 原创 K Pring原画 Dongtan Style 东滩 1/6比例手办",
+    "price": "299",
+    "itemsImg": "https://i0.hdslb.com/bfs/mall/mall/48/56/4856c1a3745c08200d51330f6b7de85b.png",
+    "selfSold": true,
+    "tag": "0_7",
+    "marketingTag": "",
+    "recommendTag": "",
+    "soldOut": "0",
+    "like": 45463,
+    "brief": "",
+    "properties": "",
+    "preDepositPrice": "0",
+    "maxPreDepositPrice": "0",
+    "saleType": 0,
+    "payType": 0,
+    "coin": "0",
+    "pricePrefix": "定金",
+    "priceSymbol": "¥",
+    "priceDesc": [
+        "44.85"
+    ],
+    "extraInfo": "{\"LogID\":\"0af350e5ff6002db7df033657f6866ae_11057684\",\"CandiItemInfo\":{\"ItemId\":11057684,\"LogReRankInfo\":{\"Behavior\":\"[]\",\"MHRankSubSku\":\"[]\"},\"LogUpRankInfo\":{\"ModelFusion\":{}},\"LogPreRankInfo\":{\"ModelFusion\":{}},\"LogRecallInfo\":{\"SourceId\":\"900000\",\"ExtInfo\":{\"HasIdMappingResult\":\"false\",\"IsIdMappingRecall\":\"false\",\"MojinRecallScore\":\"0\",\"id_mapping\":\"null\",\"isIpMatch\":\"0\"}}},\"ReqMD5\":\"615bf53ab8780a24040debd74cb2d17a\",\"HitCache\":\"0\",\"CacheId\":null,\"SaleType\":0,\"SubSaleType\":0,\"RequestScn\":\"category\",\"Downgrade\":false,\"SortType\":\"totalrank\",\"AbTestTag\":\"\",\"TrackId\":\"\"}",
+    "ipRightName": "原创,原创,原创",
+    "ipRightId": 0,
+    "brandName": "Ensoutoys",
+    "brandId": 293,
+    "presaleDeliveryTimeStr": null,
+    "preSale": null,
+    "remain": null,
+    "presaleStartOrderTime": null,
+    "tags": {
+        "promotionTagV2": null,
+        "promotionTagNames": null,
+        "marketingTagNames": [
+            "满额权益"
+        ],
+        "saleTypeTagNames": [],
+        "typeAndLimitTagName": "余量预售",
+        "itemTagNames": [],
+        "recommendTagNames": [
+            "UP评测"
+        ],
+        "attributeTagNames": [],
+        "rankAndSellPointTagNames": null,
+        "blindBoxHideTypeNames": null,
+        "titleTagNames": [
+            "余量预售"
+        ],
+        "ticketTag": null,
+        "starBoxSalePoints": [
+            "独家特典"
+        ],
+        "exclusiveSalePoints": [
+            "//i0.hdslb.com/bfs/mall/mall/29/d3/29d32051b56e06a7307bddc88102ac69.png"
+        ],
+        "otherSalePoints": [],
+        "serviceTagNames": [],
+        "tagsSort": [
+            "adTagNames",
+            "promotionTagV2",
+            "promotionTagNames",
+            "marketingTagNames",
+            "serviceRightsTags",
+            "recommendTagNames",
+            "otherSalePoints",
+            "saleTypeTagNames",
+            "attributeTagNames",
+            "serviceTagNames"
+        ],
+        "adTagNames": [
+            "自营"
+        ],
+        "serviceRightsTags": []
+    },
+    "feedTag": {
+        "frontTag": [
+            {
+                "tagType": 1,
+                "backImgUrl": "",
+                "backImgWidth": 0,
+                "backImgHeight": 0,
+                "title": "余量预售",
+                "cornerRadius": 0,
+                "useBoard": 0,
+                "boardDayColor1": "",
+                "boardDayColor2": "",
+                "boardNightColor1": "",
+                "boardNightColor2": "",
+                "backDayColor1": "",
+                "backDayColor2": "",
+                "backNightColor1": "",
+                "backNightColor2": "",
+                "titleDayColor1": "ff18191C",
+                "titleDayColor2": "ff18191C",
+                "titleNightColor1": "ffE7E9EB",
+                "titleNightColor2": "ffE7E9EB",
+                "location": "front"
+            }
+        ],
+        "underTag": [
+            {
+                "tagType": 3,
+                "backImgUrl": "",
+                "backImgWidth": 0,
+                "backImgHeight": 0,
+                "title": "自营",
+                "cornerRadius": 4,
+                "useBoard": 0,
+                "boardDayColor1": "",
+                "boardDayColor2": "",
+                "boardNightColor1": "",
+                "boardNightColor2": "",
+                "backDayColor1": "ffFF6699",
+                "backDayColor2": "ffFF6699",
+                "backNightColor1": "ffD44E7D",
+                "backNightColor2": "ffD44E7D",
+                "titleDayColor1": "ffFFFFFF",
+                "titleDayColor2": "ffFFFFFF",
+                "titleNightColor1": "ffFFFFFF",
+                "titleNightColor2": "ffFFFFFF",
+                "location": "under"
+            },
+            {
+                "tagType": 3,
+                "backImgUrl": "",
+                "backImgWidth": 0,
+                "backImgHeight": 0,
+                "title": "满额权益",
+                "cornerRadius": 4,
+                "useBoard": 0,
+                "boardDayColor1": "",
+                "boardDayColor2": "",
+                "boardNightColor1": "",
+                "boardNightColor2": "",
+                "backDayColor1": "b3FFECF1",
+                "backDayColor2": "b3FFECF1",
+                "backNightColor1": "ff2F1A22",
+                "backNightColor2": "ff2F1A22",
+                "titleDayColor1": "ffFF6699",
+                "titleDayColor2": "ffFF6699",
+                "titleNightColor1": "ffD44E7D",
+                "titleNightColor2": "ffD44E7D",
+                "location": "under"
+            },
+            {
+                "tagType": 3,
+                "backImgUrl": "",
+                "backImgWidth": 0,
+                "backImgHeight": 0,
+                "title": "独家特典",
+                "cornerRadius": 4,
+                "useBoard": 0,
+                "boardDayColor1": "",
+                "boardDayColor2": "",
+                "boardNightColor1": "",
+                "boardNightColor2": "",
+                "backDayColor1": "1a8D9CF9",
+                "backDayColor2": "1aAF60FF",
+                "backNightColor1": "218D9CF9",
+                "backNightColor2": "21AF60FF",
+                "titleDayColor1": "ff9296FB",
+                "titleDayColor2": "ffAE65FF",
+                "titleNightColor1": "ff777AC8",
+                "titleNightColor2": "ff8C55CB",
+                "location": "under"
+            }
+        ]
+    },
+    "tagPrefix": [
+        "[全款预售]"
+    ],
+    "preDepositVO": null,
+    "advState": {
+        "preSale": true,
+        "remain": 22549017,
+        "presaleStartOrderTime": 1737460800,
+        "depositType": 0,
+        "deposit": "44.85",
+        "maxDeposit": "44.85",
+        "activityDeposit": "",
+        "state": null
+    },
+    "subSkuList": null,
+    "atmosList": [
+        null
+    ],
+    "jumpUrl": "bilibili://mall/web?url=https%3A%2F%2Fmall.bilibili.com%2Fdetail.html%3Ffrom%3Dshop_search%26loadingShow%3D1%26noTitleBar%3D1%26saleType%3D0%26shopId%3D2233%26track_id%3D%23noReffer%3Dtrue%26itemsId%3D11057684",
+    "jumpUrlH5": "https://mall.bilibili.com/detail.html?from=shop_search&loadingShow=1&noTitleBar=1&saleType=0&shopId=2233&track_id=#noReffer=true&itemsId=11057684",
+    "jumpLinkType": 0,
+    "themeId": 0,
+    "pubtime": 1736335796,
+    "blindRotation": null,
+    "living": false,
+    "merchantInfo": null,
+    "itemAttrs": null,
+    "bannerText": "",
+    "type": "",
+    "interest": "",
+    "imageList": null,
+    "topSubSku": null,
+    "isNewCustom": false,
+    "blindCardUrl": "",
+    "reportParams": {
+        "track_id": "",
+        "trail": "65.{\"psId\":62889,\"v2\":\"AWEbfkntnInvCDc55O0h-LlRQh8U-YH74sI\"}"
     }
 }

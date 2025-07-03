@@ -13,7 +13,7 @@
     "dev": "vite --mode test",
     "dev:prod": "vite --mode prod",
     "gen-route": "sa gen-route",
-    "lint": "eslint . --fix",
+    "lint": "oxlint --fix",
     "preview": "vite preview",
     "release": "sa release",
     "update-pkg": "sa update-pkg"

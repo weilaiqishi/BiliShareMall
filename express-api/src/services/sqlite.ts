@@ -13,17 +13,15 @@ export function initializeDatabase() {
 
         // Create tables if they don't exist
         db.exec(`
-            CREATE TABLE IF NOT EXISTS scrapy_items (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                price_range TEXT,
-                rate_range TEXT,
-                product TEXT,
-                product_name TEXT,
-                nums INTEGER,
-                increase_number INTEGER,
-                next_token TEXT,
-                create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-                'order' TEXT
+            CREATE TABLE IF NOT EXISTS scrapyItems (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                Name TEXT,
+                Cookie TEXT,
+                NextToken INTEGER,
+                Status INTEGER,
+                CreateTime INTEGER,
+                UpdateTime INTEGER,
+                searchParams TEXT
             );
 
             CREATE TABLE IF NOT EXISTS c2c_items (
@@ -127,11 +125,6 @@ export function insertScrapyItem(item: any) {
     return info.lastInsertRowid;
 }
 
-export function getScrapyItems() {
-    const stmt = db.prepare('SELECT * FROM scrapy_items');
-    return stmt.all();
-}
-
 export function insertC2CItem(item: any) {
     const stmt = db.prepare(`
         INSERT OR IGNORE INTO c2c_items (
@@ -174,7 +167,7 @@ export function insertSearchGoodsItems(items: SearchCategoryGoodsItem[]) {
         'themeId', 'pubtime', 'blindRotation', 'living', 'merchantInfo', 'itemAttrs',
         'bannerText', 'type', 'interest', 'imageList', 'topSubSku', 'isNewCustom', 'blindCardUrl', 'create_time'
     ]
-    console.log('insertSearchGoodsItems', items.length, keys.length)
+    console.log('insertSearchGoodsItems', items.length)
     const stmt = db.prepare(`
         INSERT OR REPLACE INTO search_goods_items (
             ${keys.join(',')}
