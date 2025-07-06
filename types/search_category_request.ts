@@ -21,10 +21,7 @@ export interface SearchCategoryGoodsItem { // 商品列表
     name: string; // 商品名称
     price: string; // 商品价格
     itemsImg: string; // 商品图片 URL
-    actMaterial: { // 活动素材
-        cardBgImg: string; // 卡片背景图片 URL
-        rightIconImg: string; // 右侧图标图片 URL
-    };
+    actMaterial: any; // 活动素材
     selfSold: boolean; // 是否自营
     tag: string; // 标签
     marketingTag: string; // 营销标签
@@ -32,7 +29,7 @@ export interface SearchCategoryGoodsItem { // 商品列表
     soldOut: string; // 是否售罄
     like: number; // 点赞数
     brief: string; // 简介
-    properties: string; // 属性
+    properties: any; // 属性
     preDepositPrice: string; // 预售定金价格
     maxPreDepositPrice: string; // 最大预售定金价格
     saleType: number; // 销售类型
@@ -40,8 +37,8 @@ export interface SearchCategoryGoodsItem { // 商品列表
     coin: string; // 硬币
     pricePrefix: string; // 价格前缀
     priceSymbol: string; // 价格符号
-    priceDesc: string[]; // 价格描述
-    extraInfo: string; // 额外信息
+    priceDesc: any; // 价格描述
+    extraInfo: any; // 额外信息
     ipRightName: string; // IP版权名称
     ipRightId: number; // IP版权ID
     brandName: string; // 品牌名称
@@ -50,78 +47,13 @@ export interface SearchCategoryGoodsItem { // 商品列表
     preSale: any | null; // 预售信息，根据实际情况定义更具体的类型
     remain: any | null; // 剩余数量，根据实际情况定义更具体的类型
     presaleStartOrderTime: any | null; // 预售开始订购时间，根据实际情况定义更具体的类型
-    tags: { // 标签信息
-        promotionTagV2: any | null; // 促销标签V2
-        promotionTagNames: any | null; // 促销标签名称
-        marketingTagNames: string[]; // 营销标签名称
-        saleTypeTagNames: any[]; // 销售类型标签名称
-        typeAndLimitTagName: string; // 类型和限制标签名称
-        itemTagNames: any[]; // 商品标签名称
-        recommendTagNames: any | null; // 推荐标签名称
-        attributeTagNames: string[]; // 属性标签名称
-        rankAndSellPointTagNames: any | null; // 排名和卖点标签名称
-        blindBoxHideTypeNames: any | null; // 盲盒隐藏类型名称
-        titleTagNames: string[]; // 标题标签名称
-        ticketTag: any | null; // 票务标签
-        starBoxSalePoints: string[]; // 星盒卖点
-        exclusiveSalePoints: string[]; // 独家销售点，通常为图片URL数组
-        otherSalePoints: any[]; // 其他卖点
-        serviceTagNames: string[]; // 服务标签名称
-        tagsSort: string[]; // 标签排序
-        adTagNames: string[]; // 广告标签名称
-        serviceRightsTags: any[]; // 服务权益标签
-    };
-    feedTag: { // Feed标签
-        frontTag: Array<{ // 前置标签
-            tagType: number; // 标签类型
-            backImgUrl: string; // 背景图片 URL
-            backImgWidth: number; // 背景图片宽度
-            backImgHeight: number; // 背景图片高度
-            title: string; // 标题
-            cornerRadius: number; // 圆角半径
-            useBoard: number; // 是否使用边框
-            boardDayColor1: string; // 边框日间颜色1
-            boardDayColor2: string; // 边框日间颜色2
-            boardNightColor1: string; // 边框夜间颜色1
-            boardNightColor2: string; // 边框夜间颜色2
-            backDayColor1: string; // 背景日间颜色1
-            backDayColor2: string; // 背景日间颜色2
-            backNightColor1: string; // 背景夜间颜色1
-            backNightColor2: string; // 背景夜间颜色2
-            titleDayColor1: string; // 标题日间颜色1
-            titleDayColor2: string; // 标题日间颜色2
-            titleNightColor1: string; // 标题夜间颜色1
-            titleNightColor2: string; // 标题夜间颜色2
-            location: string; // 位置
-        }>;
-        underTag: Array<{ // 后置标签
-            tagType: number; // 标签类型
-            backImgUrl: string; // 背景图片 URL
-            backImgWidth: number; // 背景图片宽度
-            backImgHeight: number; // 背景图片高度
-            title: string; // 标题
-            cornerRadius: number; // 圆角半径
-            useBoard: number; // 是否使用边框
-            boardDayColor1: string; // 边框日间颜色1
-            boardDayColor2: string; // 边框日间颜色2
-            boardNightColor1: string; // 边框夜间颜色1
-            boardNightColor2: string; // 边框夜间颜色2
-            backDayColor1: string; // 背景日间颜色1
-            backDayColor2: string; // 背景日间颜色2
-            backNightColor1: string; // 背景夜间颜色1
-            backNightColor2: string; // 背景夜间颜色2
-            titleDayColor1: string; // 标题日间颜色1
-            titleDayColor2: string; // 标题日间颜色2
-            titleNightColor1: string; // 标题夜间颜色1
-            titleNightColor2: string; // 标题夜间颜色2
-            location: string; // 位置
-        }>;
-    };
+    tags: any; // 标签信息
+    feedTag: any; // Feed标签
     tagPrefix: any | null; // 标签前缀
-    preDepositVO: any | null; // 预售定金VO
+    preDepositVO: any; // 预售定金VO
     advState: any | null; // 广告状态
-    subSkuList: any | null; // 子SKU列表
-    atmosList: (any | null)[]; // Atmos列表
+    subSkuList: any; // 子SKU列表
+    atmosList: any; // Atmos列表
     jumpUrl: string; // 跳转 URL
     jumpUrlH5: string; // H5跳转 URL
     jumpLinkType: number; // 跳转链接类型
@@ -129,13 +61,13 @@ export interface SearchCategoryGoodsItem { // 商品列表
     pubtime: number; // 发布时间
     blindRotation: any | null; // 盲盒旋转
     living: boolean; // 是否直播中
-    merchantInfo: any | null; // 商户信息
-    itemAttrs: any | null; // 商品属性
-    bannerText: string; // Banner文本
+    merchantInfo: any; // 商户信息
+    itemAttrs: any; // 商品属性
+    bannerText: any; // Banner文本
     type: string; // 类型
     interest: string; // 兴趣
-    imageList: any | null; // 图片列表
-    topSubSku: any | null; // 顶部子SKU
+    imageList: any; // 图片列表
+    topSubSku: any; // 顶部子SKU
     isNewCustom: boolean; // 是否新用户
     blindCardUrl: string; // 盲盒卡片 URL
 }

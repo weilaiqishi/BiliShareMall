@@ -6,9 +6,11 @@ import { omit, pick } from 'es-toolkit';
 import { SearchCategoryRequestBody, SearchCategoryGoodsItem } from '../../../types/search_category_request';
 import { ScrapyItem } from '../../../types/scrapy';
 import { insertSearchGoodsItems } from './sqlite';
+import { db } from './sqlite'; // 导入共享的 db 实例
 
-const dbPath = path.join(__dirname, '../../../data/bsm.db');
-const db = new Database(dbPath); // 确保 db 实例已连接
+// 删除原有的 db 初始化代码
+// const dbPath = path.join(__dirname, '../../../data/bsm.db');
+// const db = new Database(dbPath); // 确保 db 实例已连接
 
 const baseUrl = 'https://mall.bilibili.com';
 

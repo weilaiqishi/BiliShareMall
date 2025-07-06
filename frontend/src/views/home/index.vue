@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { Search } from '@vicons/ionicons5';
 import { useClipboard } from '@vueuse/core';
-import { NButton, useMessage } from 'naive-ui';
+import { NButton, NImage, PaginationProps, useMessage } from 'naive-ui';
 import { h, onMounted, ref } from 'vue';
-import { ListC2CItem } from '~/wailsjs/go/app/App';
-import type { app } from '~/wailsjs/go/models';
+
+import { SearchCategoryGoodsItem } from '../../../../types/search_category_request';
+import { SearchGoodsItemsParams, PaginatedResult } from '../../../../express-api/src/services/goods';
+
 import { getToken } from '@/store/modules/auth/shared';
+import axios from 'axios';
 const loading = ref(false);
 const message = useMessage();
 const searchText = ref('');
@@ -18,8 +21,8 @@ interface SortWay {
 
 const { copy, isSupported } = useClipboard();
 
-async function handleCopy(item: app.C2CItemVO) {
-  const copy_str = `https://mall.bilibili.com/neul-next/index.html?page=magic-market_detail&noTitleBar=1&itemsId=${item.c2cItemsId}`;
+async function handleCopy(item: SearchCategoryGoodsItem) {
+  const copy_str = item.jumpUrlH5;
   if (!isSupported) {
     message.error(`复制失败，请自行复制链接：${copy_str}`);
     return;
@@ -36,21 +39,16 @@ const sortways = ref<SortWay[]>([
 
 const columns = [
   {
-    title: 'ID',
-    key: 'c2cItemsId',
+    title: 'itemsId',
+    key: 'itemsId',
     width: 140
   },
   {
     title: '名称',
-    key: 'c2cItemsName',
+    key: 'name',
     ellipsis: {
       tooltip: true
     }
-  },
-  {
-    title: '总数量',
-    key: 'totalItemsCount',
-    width: 100
   },
   {
     title: '价格',
@@ -58,9 +56,25 @@ const columns = [
     width: 100
   },
   {
+    title: '图片',
+    key: 'itemsImg',
+    width: 100,
+    height: 100,
+    render(row: SearchCategoryGoodsItem) {
+      return h(
+        NImage,
+        {
+          width: "100",
+          height: "100",
+          src: row.itemsImg,
+        },
+      );
+    },
+  },
+  {
     title: '链接',
-    key: 'c2cItemsId',
-    render(row: app.C2CItemVO) {
+    key: 'itemsId',
+    render(row: SearchCategoryGoodsItem) {
       return h(
         NButton,
         {
@@ -73,42 +87,44 @@ const columns = [
     width: 80
   }
 ];
-const timeRange = ref<[number, number]>([1183135260000, Date.now()]);
-const timeRangeEnable = ref(false);
 const priceRangeEnable = ref(false);
 const used = ref(false);
 
 const priceRange = ref([0, 9999]);
 const sortOpt = ref(1);
-const pagination = ref({
+const pagination = ref<PaginationProps>({
   page: 1,
-  pageCount: 1,
-  pageSize: 10
+  pageSize: 10,
+  pageCount: 1
 });
 // 数据初始化
-const data = ref<app.C2CItemVO[]>([]);
+const data = ref<SearchCategoryGoodsItem[]>([]);
 
 function search(firstPage: boolean = false) {
   loading.value = true;
-  ListC2CItem(
-    firstPage ? 1 : pagination.value.page,
-    pagination.value.pageSize,
-    searchText.value,
-    sortOpt.value,
-    timeRangeEnable.value ? timeRange.value[0] : -1,
-    timeRangeEnable.value ? timeRange.value[1] : -1,
-    priceRangeEnable.value ? priceRange.value[0] : -1,
-    priceRangeEnable.value ? priceRange.value[1] : -1,
-    used.value,
-    getToken()
-  )
-    .then(result => {
-      pagination.value.page = firstPage ? 1 : pagination.value.page;
-      data.value = result.items;
-      pagination.value.pageCount = result.totalPages;
-      loading.value = false;
+  axios.get<PaginatedResult<SearchCategoryGoodsItem>>('http://localhost:3000/api/goods/items', {
+    params: {
+      name: searchText.value,
+      priceFlow: priceRangeEnable.value ? priceRange.value[0] : undefined,
+      priceCeil: priceRangeEnable.value ? priceRange.value[1] : undefined,
+      page: firstPage ? 1 : pagination.value.page,
+      pageSize: pagination.value.pageSize,
+    } as SearchGoodsItemsParams
+  })
+    .then(response => {
+      if (response.status === 200) {
+        data.value = response.data.data;
+        pagination.value.page = firstPage ? 1 : pagination.value.page;
+        pagination.value.pageCount = Math.ceil(response.data.total / pagination.value.pageSize!);
+        loading.value = false;
+        console.log(data.value)
+      } else {
+        console.log('请求失败', response.data);
+        message.error('查询商品列表失败');
+      }
     })
-    .catch(_err => {
+    .catch(error => {
+      console.log('请求失败', error);
       message.error('请求失败');
     });
 }
@@ -136,14 +152,6 @@ onMounted(() => {
         </NSpace>
       </template>
       <NCollapse default-expanded-names="3">
-        <NCollapseItem title="爬取时间">
-          <NDatePicker v-model:value="timeRange" type="datetimerange" clearable />
-          <template #header-extra>
-            <NSpace>
-              <NSwitch v-model:value="timeRangeEnable" />
-            </NSpace>
-          </template>
-        </NCollapseItem>
         <NCollapseItem title="价格">
           <NFlex>
             <NInputNumber v-model:value="priceRange[0]" :precision="2">
@@ -160,46 +168,19 @@ onMounted(() => {
         <NCollapseItem title="排序" name="3">
           <NFlex>
             <NRadioGroup v-model:value="sortOpt" name="productType">
-              <NRadioButton
-                v-for="product in sortways"
-                :key="product.value"
-                :value="product.value"
-                :label="product.label"
-              />
+              <NRadioButton v-for="product in sortways" :key="product.value" :value="product.value"
+                :label="product.label" />
             </NRadioGroup>
           </NFlex>
         </NCollapseItem>
-        <NCollapseItem title="过滤下架商品">
-          <NAlert title="注意" type="info">
-            1. 开启这个开关后，每一次搜索都会检验商品在当前时间是否可以购买。
-            <br />
-            2. 这个操作会减慢速度，因为会挨个检查是否可以购买
-            <br />
-            3. 检测到过期的商品都会删除
-            <br />
-            4. 为了防止检测过于频繁，5分钟内商品不会重复检测。但是这样会导致极少数情况下商品下架的情况
-          </NAlert>
-          <template #header-extra>
-            <NSpace>
-              <NSwitch v-model:value="used"></NSwitch>
-            </NSpace>
-          </template>
-        </NCollapseItem>
       </NCollapse>
     </NCard>
-    <NDataTable
-      remote
-      :data="data"
-      :columns="columns"
-      :loading="loading"
-      :pagination="pagination"
-      @update:page="
-        page => {
-          pagination.page = page;
-          search();
-        }
-      "
-    />
+    <NDataTable remote :data="data" :columns="columns" :loading="loading" :pagination="pagination" @update:page="
+      page => {
+        pagination.page = page;
+        search();
+      }
+    " />
   </NFlex>
 </template>
 

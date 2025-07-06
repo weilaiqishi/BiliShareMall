@@ -1,10 +1,10 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 
-import { SearchCategoryRequestBody, SearchCategoryResponse, SearchCategoryGoodsItem } from '../../../types/search_category_request';
+import { SearchCategoryGoodsItem } from '../../../types/search_category_request';
 
 const dbPath = path.join(__dirname, '../../../data/bsm.db');
-let db: Database.Database;
+export let db: Database.Database;
 
 export function initializeDatabase() {
     try {
@@ -103,56 +103,6 @@ export function initializeDatabase() {
         console.error('Error connecting to SQLite or creating tables:', error);
         throw error;
     }
-}
-
-export function insertScrapyItem(item: any) {
-    const stmt = db.prepare(`
-        INSERT INTO scrapy_items (
-            price_range, rate_range, product, product_name, nums, 
-            increase_number, next_token, 'order'
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    const info = stmt.run(
-        JSON.stringify(item.priceRange),
-        JSON.stringify(item.rateRange),
-        item.product,
-        item.productName,
-        item.nums,
-        item.increaseNumber,
-        item.nextToken,
-        item.order
-    );
-    return info.lastInsertRowid;
-}
-
-export function insertC2CItem(item: any) {
-    const stmt = db.prepare(`
-        INSERT OR IGNORE INTO c2c_items (
-            c2c_items_id, type, c2c_items_name, total_items_count, price,
-            show_price, show_market_price, uid, payment_time, is_my_publish,
-            uface, uname
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    const info = stmt.run(
-        item.c2cItemsId,
-        item.type,
-        item.c2cItemsName,
-        item.totalItemsCount,
-        item.price,
-        item.showPrice,
-        item.showMarketPrice,
-        item.uid,
-        item.paymentTime,
-        item.isMyPublish,
-        item.uface,
-        item.uname
-    );
-    return info.changes;
-}
-
-export function getC2CItems() {
-    const stmt = db.prepare('SELECT * FROM c2c_items');
-    return stmt.all();
 }
 
 export function insertSearchGoodsItems(items: SearchCategoryGoodsItem[]) {
