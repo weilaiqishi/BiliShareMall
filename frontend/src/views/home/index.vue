@@ -5,10 +5,8 @@ import { NButton, NImage, PaginationProps, useMessage } from 'naive-ui'
 import { h, onMounted, ref } from 'vue'
 
 import { SearchCategoryGoodsItem } from '../../../../types/search_category_request'
-import {
-  SearchGoodsItemsParams,
-  PaginatedResult,
-} from '../../../../express-api/src/services/goods'
+import { SearchGoodsItemsParams } from '../../../../types/goods'
+import { PaginatedResult } from '../../../../types/page'
 
 import { getToken } from '@/store/modules/auth/shared'
 import axios from 'axios'

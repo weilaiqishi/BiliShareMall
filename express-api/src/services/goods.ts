@@ -1,21 +1,8 @@
 // ... existing code ...
 import { SearchCategoryGoodsItem } from '../../../types/search_category_request'
+import { SearchGoodsItemsParams } from '../../../types/goods'
+import { PaginatedResult } from '../../../types/page'
 import { db } from './sqlite' // 导入 db 实例
-
-export interface SearchGoodsItemsParams {
-  name?: string
-  priceFlow?: number
-  priceCeil?: number
-  page: number
-  pageSize: number
-}
-
-export interface PaginatedResult<T> {
-  data: T[]
-  total: number
-  page: number
-  pageSize: number
-}
 
 export function searchGoodsItems(
   params: SearchGoodsItemsParams,
