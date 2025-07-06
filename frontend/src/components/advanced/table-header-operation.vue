@@ -1,40 +1,40 @@
 <script setup lang="ts">
-import { $t } from '@/locales';
+import { $t } from '@/locales'
 
 defineOptions({
-  name: 'TableHeaderOperation'
-});
+  name: 'TableHeaderOperation',
+})
 
 interface Props {
-  itemAlign?: NaiveUI.Align;
-  disabledDelete?: boolean;
-  loading?: boolean;
+  itemAlign?: NaiveUI.Align
+  disabledDelete?: boolean
+  loading?: boolean
 }
 
-defineProps<Props>();
+defineProps<Props>()
 
 interface Emits {
-  (e: 'add'): void;
-  (e: 'delete'): void;
-  (e: 'refresh'): void;
+  (e: 'add'): void
+  (e: 'delete'): void
+  (e: 'refresh'): void
 }
 
-const emit = defineEmits<Emits>();
+const emit = defineEmits<Emits>()
 
 const columns = defineModel<NaiveUI.TableColumnCheck[]>('columns', {
-  default: () => []
-});
+  default: () => [],
+})
 
 function add() {
-  emit('add');
+  emit('add')
 }
 
 function batchDelete() {
-  emit('delete');
+  emit('delete')
 }
 
 function refresh() {
-  emit('refresh');
+  emit('refresh')
 }
 </script>
 
@@ -62,7 +62,10 @@ function refresh() {
     </slot>
     <NButton size="small" @click="refresh">
       <template #icon>
-        <icon-mdi-refresh class="text-icon" :class="{ 'animate-spin': loading }" />
+        <icon-mdi-refresh
+          class="text-icon"
+          :class="{ 'animate-spin': loading }"
+        />
       </template>
       {{ $t('common.refresh') }}
     </NButton>

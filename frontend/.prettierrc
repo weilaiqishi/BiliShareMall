@@ -1,0 +1,5 @@
+{
+  "plugins": ["@prettier/plugin-hermes"],
+  "semi": false,
+  "singleQuote": true
+}

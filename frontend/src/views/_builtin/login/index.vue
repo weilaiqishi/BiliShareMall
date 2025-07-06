@@ -1,35 +1,42 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { getPaletteColorByNumber, mixColor } from '@sa/color';
-import { $t } from '@/locales';
-import { useAppStore } from '@/store/modules/app';
-import { useThemeStore } from '@/store/modules/theme';
-import BiliQrlogin from '@/views/_builtin/login/modules/bili-qrlogin.vue';
+import { computed } from 'vue'
+import { getPaletteColorByNumber, mixColor } from '@sa/color'
+import { $t } from '@/locales'
+import { useAppStore } from '@/store/modules/app'
+import { useThemeStore } from '@/store/modules/theme'
+import BiliQrlogin from '@/views/_builtin/login/modules/bili-qrlogin.vue'
 
-const appStore = useAppStore();
-const themeStore = useThemeStore();
+const appStore = useAppStore()
+const themeStore = useThemeStore()
 
 const bgThemeColor = computed(() =>
-  themeStore.darkMode ? getPaletteColorByNumber(themeStore.themeColor, 600) : themeStore.themeColor
-);
+  themeStore.darkMode
+    ? getPaletteColorByNumber(themeStore.themeColor, 600)
+    : themeStore.themeColor,
+)
 
 const bgColor = computed(() => {
-  const COLOR_WHITE = '#ffffff';
+  const COLOR_WHITE = '#ffffff'
 
-  const ratio = themeStore.darkMode ? 0.5 : 0.2;
+  const ratio = themeStore.darkMode ? 0.5 : 0.2
 
-  return mixColor(COLOR_WHITE, themeStore.themeColor, ratio);
-});
+  return mixColor(COLOR_WHITE, themeStore.themeColor, ratio)
+})
 </script>
 
 <template>
-  <div class="relative size-full flex-center overflow-hidden" :style="{ backgroundColor: bgColor }">
+  <div
+    class="relative size-full flex-center overflow-hidden"
+    :style="{ backgroundColor: bgColor }"
+  >
     <WaveBg :theme-color="bgThemeColor" />
     <NCard :bordered="false" class="relative z-4 w-auto rd-12px">
       <div class="w-400px lt-sm:w-300px">
         <header class="flex-y-center justify-between">
           <SystemLogo class="text-64px text-primary lt-sm:text-48px" />
-          <h3 class="text-28px text-primary font-500 lt-sm:text-22px">{{ $t('system.title') }}</h3>
+          <h3 class="text-28px text-primary font-500 lt-sm:text-22px">
+            {{ $t('system.title') }}
+          </h3>
           <div class="i-flex-col">
             <ThemeSchemaSwitch
               :theme-schema="themeStore.themeScheme"
@@ -47,7 +54,11 @@ const bgColor = computed(() => {
         </header>
         <main class="pt-24px">
           <div class="pt-24px">
-            <Transition :name="themeStore.page.animateMode" mode="out-in" appear>
+            <Transition
+              :name="themeStore.page.animateMode"
+              mode="out-in"
+              appear
+            >
               <BiliQrlogin></BiliQrlogin>
             </Transition>
           </div>

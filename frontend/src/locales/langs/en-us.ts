@@ -2,9 +2,10 @@ const local: App.I18n.Schema = {
   system: {
     title: 'BiliShareMall',
     updateTitle: 'System Version Update Notification',
-    updateContent: 'A new version of the system has been detected. Do you want to refresh the page immediately?',
+    updateContent:
+      'A new version of the system has been detected. Do you want to refresh the page immediately?',
     updateConfirm: 'Refresh immediately',
-    updateCancel: 'Later'
+    updateCancel: 'Later',
   },
   common: {
     action: 'Action',
@@ -46,8 +47,8 @@ const local: App.I18n.Schema = {
     userCenter: 'User Center',
     yesOrNo: {
       yes: 'Yes',
-      no: 'No'
-    }
+      no: 'No',
+    },
   },
   request: {
     logout: 'Logout user after request failed',
@@ -55,14 +56,14 @@ const local: App.I18n.Schema = {
     logoutWithModal: 'Pop up modal after request failed and then log out user',
     logoutWithModalMsg: 'User status is invalid, please log in again',
     refreshToken: 'The requested token has expired, refresh the token',
-    tokenExpired: 'The requested token has expired'
+    tokenExpired: 'The requested token has expired',
   },
   theme: {
     themeSchema: {
       title: 'Theme Schema',
       light: 'Light',
       dark: 'Dark',
-      auto: 'Follow System'
+      auto: 'Follow System',
     },
     grayscale: 'Grayscale',
     colourWeakness: 'Colour Weakness',
@@ -72,7 +73,8 @@ const local: App.I18n.Schema = {
       horizontal: 'Horizontal Menu Mode',
       'vertical-mix': 'Vertical Mix Menu Mode',
       'horizontal-mix': 'Horizontal Mix menu Mode',
-      reverseHorizontalMix: 'Reverse first level menus and child level menus position'
+      reverseHorizontalMix:
+        'Reverse first level menus and child level menus position',
     },
     recommendColor: 'Apply Recommended Color Algorithm',
     recommendColorDesc: 'The recommended color algorithm refers to',
@@ -83,12 +85,12 @@ const local: App.I18n.Schema = {
       success: 'Success',
       warning: 'Warning',
       error: 'Error',
-      followPrimary: 'Follow Primary'
+      followPrimary: 'Follow Primary',
     },
     scrollMode: {
       title: 'Scroll Mode',
       wrapper: 'Wrapper',
-      content: 'Content'
+      content: 'Content',
     },
     page: {
       animate: 'Page Animate',
@@ -100,16 +102,16 @@ const local: App.I18n.Schema = {
         'fade-scale': 'Fade Scale',
         'zoom-fade': 'Zoom Fade',
         'zoom-out': 'Zoom Out',
-        none: 'None'
-      }
+        none: 'None',
+      },
     },
     fixedHeaderAndTab: 'Fixed Header And Tab',
     header: {
       height: 'Header Height',
       breadcrumb: {
         visible: 'Breadcrumb Visible',
-        showIcon: 'Breadcrumb Icon Visible'
-      }
+        showIcon: 'Breadcrumb Icon Visible',
+      },
     },
     tab: {
       visible: 'Tab Visible',
@@ -118,8 +120,8 @@ const local: App.I18n.Schema = {
       mode: {
         title: 'Tab Mode',
         chrome: 'Chrome',
-        button: 'Button'
-      }
+        button: 'Button',
+      },
     },
     sider: {
       inverted: 'Dark Sider',
@@ -127,31 +129,32 @@ const local: App.I18n.Schema = {
       collapsedWidth: 'Sider Collapsed Width',
       mixWidth: 'Mix Sider Width',
       mixCollapsedWidth: 'Mix Sider Collapse Width',
-      mixChildMenuWidth: 'Mix Child Menu Width'
+      mixChildMenuWidth: 'Mix Child Menu Width',
     },
     footer: {
       visible: 'Footer Visible',
       fixed: 'Fixed Footer',
       height: 'Footer Height',
-      right: 'Right Footer'
+      right: 'Right Footer',
     },
     watermark: {
       visible: 'Watermark Full Screen Visible',
-      text: 'Watermark Text'
+      text: 'Watermark Text',
     },
     themeDrawerTitle: 'Theme Configuration',
     pageFunTitle: 'Page Function',
     resetCacheStrategy: {
       title: 'Reset Cache Strategy',
       close: 'Close Page',
-      refresh: 'Refresh Page'
+      refresh: 'Refresh Page',
     },
     configOperation: {
       copyConfig: 'Copy Config',
-      copySuccessMsg: 'Copy Success, Please replace the variable "themeSettings" in "src/theme/settings.ts"',
+      copySuccessMsg:
+        'Copy Success, Please replace the variable "themeSettings" in "src/theme/settings.ts"',
       resetConfig: 'Reset Config',
-      resetSuccessMsg: 'Reset Success'
-    }
+      resetSuccessMsg: 'Reset Success',
+    },
   },
   route: {
     login: 'Login',
@@ -160,7 +163,7 @@ const local: App.I18n.Schema = {
     500: 'Server Error',
     'iframe-page': 'Iframe',
     home: 'Home',
-    scrapy: 'scrapy'
+    scrapy: 'scrapy',
   },
   page: {
     login: {
@@ -176,16 +179,17 @@ const local: App.I18n.Schema = {
         back: 'Back',
         validateSuccess: 'Verification passed',
         loginSuccess: 'Login successfully',
-        welcomeBack: 'Welcome back, {userName} !'
+        welcomeBack: 'Welcome back, {userName} !',
       },
       biliQrlogin: {
-        title: 'Bind WeChat'
-      }
+        title: 'Bind WeChat',
+      },
     },
     home: {
       branchDesc:
         'For the convenience of everyone in developing and updating the merge, we have streamlined the code of the main branch, only retaining the homepage menu, and the rest of the content has been moved to the example branch for maintenance. The preview address displays the content of the example branch.',
-      greeting: 'Good morning, {userName}, today is another day full of vitality!',
+      greeting:
+        'Good morning, {userName}, today is another day full of vitality!',
       weatherDesc: 'Today is cloudy to clear, 20℃ - 25℃!',
       projectCount: 'Project Count',
       todo: 'Todo',
@@ -203,48 +207,53 @@ const local: App.I18n.Schema = {
       projectNews: {
         title: 'Project News',
         moreNews: 'More News',
-        desc1: 'Soybean created the open source project soybean-admin on May 28, 2021!',
-        desc2: 'Yanbowe submitted a bug to soybean-admin, the multi-tab bar will not adapt.',
-        desc3: 'Soybean is ready to do sufficient preparation for the release of soybean-admin!',
-        desc4: 'Soybean is busy writing project documentation for soybean-admin!',
-        desc5: 'Soybean just wrote some of the workbench pages casually, and it was enough to see!'
+        desc1:
+          'Soybean created the open source project soybean-admin on May 28, 2021!',
+        desc2:
+          'Yanbowe submitted a bug to soybean-admin, the multi-tab bar will not adapt.',
+        desc3:
+          'Soybean is ready to do sufficient preparation for the release of soybean-admin!',
+        desc4:
+          'Soybean is busy writing project documentation for soybean-admin!',
+        desc5:
+          'Soybean just wrote some of the workbench pages casually, and it was enough to see!',
       },
-      creativity: 'Creativity'
-    }
+      creativity: 'Creativity',
+    },
   },
   form: {
     required: 'Cannot be empty',
     userName: {
       required: 'Please enter user name',
-      invalid: 'User name format is incorrect'
+      invalid: 'User name format is incorrect',
     },
     phone: {
       required: 'Please enter phone number',
-      invalid: 'Phone number format is incorrect'
+      invalid: 'Phone number format is incorrect',
     },
     pwd: {
       required: 'Please enter password',
-      invalid: '6-18 characters, including letters, numbers, and underscores'
+      invalid: '6-18 characters, including letters, numbers, and underscores',
     },
     confirmPwd: {
       required: 'Please enter password again',
-      invalid: 'The two passwords are inconsistent'
+      invalid: 'The two passwords are inconsistent',
     },
     code: {
       required: 'Please enter verification code',
-      invalid: 'Verification code format is incorrect'
+      invalid: 'Verification code format is incorrect',
     },
     email: {
       required: 'Please enter email',
-      invalid: 'Email format is incorrect'
-    }
+      invalid: 'Email format is incorrect',
+    },
   },
   dropdown: {
     closeCurrent: 'Close Current',
     closeOther: 'Close Other',
     closeLeft: 'Close Left',
     closeRight: 'Close Right',
-    closeAll: 'Close All'
+    closeAll: 'Close All',
   },
   icon: {
     themeConfig: 'Theme Configuration',
@@ -256,11 +265,11 @@ const local: App.I18n.Schema = {
     collapse: 'Collapse Menu',
     expand: 'Expand Menu',
     pin: 'Pin',
-    unpin: 'Unpin'
+    unpin: 'Unpin',
   },
   datatable: {
-    itemCount: 'Total {total} items'
-  }
-};
+    itemCount: 'Total {total} items',
+  },
+}
 
-export default local;
+export default local

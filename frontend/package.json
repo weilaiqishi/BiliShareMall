@@ -13,7 +13,7 @@
     "dev": "vite --mode test",
     "dev:prod": "vite --mode prod",
     "gen-route": "sa gen-route",
-    "lint": "oxlint --fix",
+    "lint": "prettier --write .",
     "preview": "vite preview",
     "release": "sa release",
     "update-pkg": "sa update-pkg"
@@ -44,6 +44,7 @@
   "devDependencies": {
     "@elegant-router/vue": "0.3.8",
     "@iconify/json": "2.2.263",
+    "@prettier/plugin-hermes": "^0.0.3",
     "@sa/scripts": "workspace:*",
     "@sa/uno-preset": "workspace:*",
     "@soybeanjs/eslint-config": "1.4.2",
@@ -62,6 +63,7 @@
     "eslint-plugin-vue": "9.29.1",
     "lint-staged": "15.2.10",
     "oxlint": "^0.16.12",
+    "prettier": "^3.6.2",
     "sass": "1.80.4",
     "tsx": "4.19.1",
     "typescript": "5.6.3",

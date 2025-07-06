@@ -14,10 +14,12 @@ const port = 3000
 initializeDatabase()
 
 // 启用 CORS
-app.use(cors({
-  origin: '*', // Vite 开发服务器默认端口
-  credentials: true
-}))
+app.use(
+  cors({
+    origin: '*', // Vite 开发服务器默认端口
+    credentials: true,
+  }),
+)
 
 app.use(express.json())
 

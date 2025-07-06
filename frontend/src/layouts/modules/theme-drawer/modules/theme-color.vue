@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useThemeStore } from '@/store/modules/theme';
-import { $t } from '@/locales';
-import SettingItem from '../components/setting-item.vue';
+import { useThemeStore } from '@/store/modules/theme'
+import { $t } from '@/locales'
+import SettingItem from '../components/setting-item.vue'
 
 defineOptions({
-  name: 'ThemeColor'
-});
+  name: 'ThemeColor',
+})
 
-const themeStore = useThemeStore();
+const themeStore = useThemeStore()
 
 function handleUpdateColor(color: string, key: App.Theme.ThemeColorKey) {
-  themeStore.updateThemeColors(key, color);
+  themeStore.updateThemeColors(key, color)
 }
 
 const swatches: string[] = [
@@ -29,8 +29,8 @@ const swatches: string[] = [
   '#eab308',
   '#84cc16',
   '#22c55e',
-  '#10b981'
-];
+  '#10b981',
+]
 </script>
 
 <template>
@@ -57,7 +57,11 @@ const swatches: string[] = [
         </NButton>
       </p>
     </NTooltip>
-    <SettingItem v-for="(_, key) in themeStore.themeColors" :key="key" :label="$t(`theme.themeColor.${key}`)">
+    <SettingItem
+      v-for="(_, key) in themeStore.themeColors"
+      :key="key"
+      :label="$t(`theme.themeColor.${key}`)"
+    >
       <template v-if="key === 'info'" #suffix>
         <NCheckbox v-model:checked="themeStore.isInfoFollowPrimary">
           {{ $t('theme.themeColor.followPrimary') }}

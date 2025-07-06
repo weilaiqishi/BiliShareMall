@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { onActivated, onMounted } from 'vue';
+import { onActivated, onMounted } from 'vue'
 
 interface Props {
-  url: string;
+  url: string
 }
 
-defineProps<Props>();
+defineProps<Props>()
 
 onMounted(() => {
-  console.log('mounted');
-});
+  console.log('mounted')
+})
 
 onActivated(() => {
-  console.log('activated');
-});
+  console.log('activated')
+})
 </script>
 
 <template>

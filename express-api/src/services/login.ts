@@ -3,17 +3,20 @@ import axios from 'axios'
 const baseUrl = 'https://passport.bilibili.com'
 
 export async function getLoginKeyAndUrl(userAgent: string) {
-  const response = await axios.get(`${baseUrl}/x/passport-login/web/qrcode/generate`, {
-    headers: {
-      'User-Agent': userAgent
-    }
-  })
+  const response = await axios.get(
+    `${baseUrl}/x/passport-login/web/qrcode/generate`,
+    {
+      headers: {
+        'User-Agent': userAgent,
+      },
+    },
+  )
   const { code, data } = response.data
 
   if (code === 0 && data) {
     return {
       key: data.qrcode_key,
-      url: data.url
+      url: data.url,
     }
   }
 
@@ -21,12 +24,15 @@ export async function getLoginKeyAndUrl(userAgent: string) {
 }
 
 export async function verifyLogin(key: string, userAgent: string) {
-  const response = await axios.get(`${baseUrl}/x/passport-login/web/qrcode/poll`, {
-    params: { qrcode_key: key },
-    headers: {
-      'User-Agent': userAgent
-    }
-  })
+  const response = await axios.get(
+    `${baseUrl}/x/passport-login/web/qrcode/poll`,
+    {
+      params: { qrcode_key: key },
+      headers: {
+        'User-Agent': userAgent,
+      },
+    },
+  )
   const { code, data } = response.data
   console.log('verifyLogin -> response.data -> ', response.data)
 
@@ -51,7 +57,7 @@ export async function verifyLogin(key: string, userAgent: string) {
     return {
       status: data.code,
       message: data.message,
-      cookie: cookieString
+      cookie: cookieString,
     }
   }
 

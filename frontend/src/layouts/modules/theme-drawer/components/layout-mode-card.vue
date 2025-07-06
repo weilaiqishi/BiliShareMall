@@ -1,69 +1,69 @@
 <script setup lang="ts">
-import type { PopoverPlacement } from 'naive-ui';
-import { themeLayoutModeRecord } from '@/constants/app';
-import { $t } from '@/locales';
+import type { PopoverPlacement } from 'naive-ui'
+import { themeLayoutModeRecord } from '@/constants/app'
+import { $t } from '@/locales'
 
 defineOptions({
-  name: 'LayoutModeCard'
-});
+  name: 'LayoutModeCard',
+})
 
 interface Props {
   /** Layout mode */
-  mode: UnionKey.ThemeLayoutMode;
+  mode: UnionKey.ThemeLayoutMode
   /** Disabled */
-  disabled?: boolean;
+  disabled?: boolean
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 
 interface Emits {
   /** Layout mode change */
-  (e: 'update:mode', mode: UnionKey.ThemeLayoutMode): void;
+  (e: 'update:mode', mode: UnionKey.ThemeLayoutMode): void
 }
 
-const emit = defineEmits<Emits>();
+const emit = defineEmits<Emits>()
 
 type LayoutConfig = Record<
   UnionKey.ThemeLayoutMode,
   {
-    placement: PopoverPlacement;
-    headerClass: string;
-    menuClass: string;
-    mainClass: string;
+    placement: PopoverPlacement
+    headerClass: string
+    menuClass: string
+    mainClass: string
   }
->;
+>
 
 const layoutConfig: LayoutConfig = {
   vertical: {
     placement: 'bottom',
     headerClass: '',
     menuClass: 'w-1/3 h-full',
-    mainClass: 'w-2/3 h-3/4'
+    mainClass: 'w-2/3 h-3/4',
   },
   'vertical-mix': {
     placement: 'bottom',
     headerClass: '',
     menuClass: 'w-1/4 h-full',
-    mainClass: 'w-2/3 h-3/4'
+    mainClass: 'w-2/3 h-3/4',
   },
   horizontal: {
     placement: 'bottom',
     headerClass: '',
     menuClass: 'w-full h-1/4',
-    mainClass: 'w-full h-3/4'
+    mainClass: 'w-full h-3/4',
   },
   'horizontal-mix': {
     placement: 'bottom',
     headerClass: '',
     menuClass: 'w-full h-1/4',
-    mainClass: 'w-2/3 h-3/4'
-  }
-};
+    mainClass: 'w-2/3 h-3/4',
+  },
+}
 
 function handleChangeMode(mode: UnionKey.ThemeLayoutMode) {
-  if (props.disabled) return;
+  if (props.disabled) return
 
-  emit('update:mode', mode);
+  emit('update:mode', mode)
 }
 </script>
 

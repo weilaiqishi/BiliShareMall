@@ -1,6 +1,6 @@
-import process from 'node:process';
-import { loadConfig } from 'c12';
-import type { CliOption } from '../types';
+import process from 'node:process'
+import { loadConfig } from 'c12'
+import type { CliOption } from '../types'
 
 const defaultOptions: CliOption = {
   cwd: process.cwd(),
@@ -10,7 +10,7 @@ const defaultOptions: CliOption = {
     '**/yarn.lock',
     '**/pnpm-lock.yaml',
     '**/node_modules',
-    '!node_modules/**'
+    '!node_modules/**',
   ],
   ncuCommandArgs: ['--deep', '-u'],
   changelogOptions: {},
@@ -22,18 +22,21 @@ const defaultOptions: CliOption = {
     /^(Merged (.*?)(in|into) (.*)|Merged PR (.*): (.*))/,
     /^Merge remote-tracking branch(\s*)(.*)/,
     /^Automatic merge(.*)/,
-    /^Auto-merged (.*?) into (.*)/
-  ]
-};
+    /^Auto-merged (.*?) into (.*)/,
+  ],
+}
 
-export async function loadCliOptions(overrides?: Partial<CliOption>, cwd = process.cwd()) {
+export async function loadCliOptions(
+  overrides?: Partial<CliOption>,
+  cwd = process.cwd(),
+) {
   const { config } = await loadConfig<Partial<CliOption>>({
     name: 'soybean',
     defaults: defaultOptions,
     overrides,
     cwd,
-    packageJson: true
-  });
+    packageJson: true,
+  })
 
-  return config as CliOption;
+  return config as CliOption
 }

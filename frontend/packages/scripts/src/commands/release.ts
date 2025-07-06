@@ -1,4 +1,4 @@
-import { versionBump } from 'bumpp';
+import { versionBump } from 'bumpp'
 
 export async function release(execute = 'pnpm sa changelog', push = true) {
   await versionBump({
@@ -7,6 +7,6 @@ export async function release(execute = 'pnpm sa changelog', push = true) {
     all: true,
     tag: true,
     commit: 'chore(projects): release v%s',
-    push
-  });
+    push,
+  })
 }

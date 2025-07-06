@@ -1,47 +1,47 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { VNode } from 'vue';
-import { useAuthStore } from '@/store/modules/auth';
-import { useRouterPush } from '@/hooks/common/router';
-import { useSvgIcon } from '@/hooks/common/icon';
-import { $t } from '@/locales';
+import { computed } from 'vue'
+import type { VNode } from 'vue'
+import { useAuthStore } from '@/store/modules/auth'
+import { useRouterPush } from '@/hooks/common/router'
+import { useSvgIcon } from '@/hooks/common/icon'
+import { $t } from '@/locales'
 
 defineOptions({
-  name: 'UserAvatar'
-});
+  name: 'UserAvatar',
+})
 
-const authStore = useAuthStore();
-const { routerPushByKey, toLogin } = useRouterPush();
-const { SvgIconVNode } = useSvgIcon();
+const authStore = useAuthStore()
+const { routerPushByKey, toLogin } = useRouterPush()
+const { SvgIconVNode } = useSvgIcon()
 
 function loginOrRegister() {
-  toLogin();
+  toLogin()
 }
 
-type DropdownKey = 'logout';
+type DropdownKey = 'logout'
 
 type DropdownOption =
   | {
-      key: DropdownKey;
-      label: string;
-      icon?: () => VNode;
+      key: DropdownKey
+      label: string
+      icon?: () => VNode
     }
   | {
-      type: 'divider';
-      key: string;
-    };
+      type: 'divider'
+      key: string
+    }
 
 const options = computed(() => {
   const opts: DropdownOption[] = [
     {
       label: $t('common.logout'),
       key: 'logout',
-      icon: SvgIconVNode({ icon: 'ph:sign-out', fontSize: 18 })
-    }
-  ];
+      icon: SvgIconVNode({ icon: 'ph:sign-out', fontSize: 18 }),
+    },
+  ]
 
-  return opts;
-});
+  return opts
+})
 
 function logout() {
   window.$dialog?.info({
@@ -50,17 +50,17 @@ function logout() {
     positiveText: $t('common.confirm'),
     negativeText: $t('common.cancel'),
     onPositiveClick: () => {
-      authStore.resetStore();
-    }
-  });
+      authStore.resetStore()
+    },
+  })
 }
 
 function handleDropdown(key: DropdownKey) {
   if (key === 'logout') {
-    logout();
+    logout()
   } else {
     // If your other options are jumps from other routes, they will be directly supported here
-    routerPushByKey(key);
+    routerPushByKey(key)
   }
 }
 </script>
@@ -69,7 +69,13 @@ function handleDropdown(key: DropdownKey) {
   <NButton v-if="!authStore.isLogin" quaternary @click="loginOrRegister">
     {{ $t('page.login.common.loginOrRegister') }}
   </NButton>
-  <NDropdown v-else placement="bottom" trigger="click" :options="options" @select="handleDropdown">
+  <NDropdown
+    v-else
+    placement="bottom"
+    trigger="click"
+    :options="options"
+    @select="handleDropdown"
+  >
     <div>
       <ButtonIcon>
         <SvgIcon icon="ph:user-circle" class="text-icon-large" />

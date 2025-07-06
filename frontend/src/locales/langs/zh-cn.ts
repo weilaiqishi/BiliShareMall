@@ -4,7 +4,7 @@ const local: App.I18n.Schema = {
     updateTitle: '系统版本更新通知',
     updateContent: '检测到系统有新版本发布，是否立即刷新页面？',
     updateConfirm: '立即刷新',
-    updateCancel: '稍后再说'
+    updateCancel: '稍后再说',
   },
   common: {
     action: '操作',
@@ -46,8 +46,8 @@ const local: App.I18n.Schema = {
     userCenter: '个人中心',
     yesOrNo: {
       yes: '是',
-      no: '否'
-    }
+      no: '否',
+    },
   },
   request: {
     logout: '请求失败后登出用户',
@@ -55,14 +55,14 @@ const local: App.I18n.Schema = {
     logoutWithModal: '请求失败后弹出模态框再登出用户',
     logoutWithModalMsg: '用户状态失效，请重新登录',
     refreshToken: '请求的token已过期，刷新token',
-    tokenExpired: 'token已过期'
+    tokenExpired: 'token已过期',
   },
   theme: {
     themeSchema: {
       title: '主题模式',
       light: '亮色模式',
       dark: '暗黑模式',
-      auto: '跟随系统'
+      auto: '跟随系统',
     },
     grayscale: '灰色模式',
     colourWeakness: '色弱模式',
@@ -72,7 +72,7 @@ const local: App.I18n.Schema = {
       'vertical-mix': '左侧菜单混合模式',
       horizontal: '顶部菜单模式',
       'horizontal-mix': '顶部菜单混合模式',
-      reverseHorizontalMix: '一级菜单与子级菜单位置反转'
+      reverseHorizontalMix: '一级菜单与子级菜单位置反转',
     },
     recommendColor: '应用推荐算法的颜色',
     recommendColorDesc: '推荐颜色的算法参照',
@@ -83,12 +83,12 @@ const local: App.I18n.Schema = {
       success: '成功色',
       warning: '警告色',
       error: '错误色',
-      followPrimary: '跟随主色'
+      followPrimary: '跟随主色',
     },
     scrollMode: {
       title: '滚动模式',
       wrapper: '外层滚动',
-      content: '主体滚动'
+      content: '主体滚动',
     },
     page: {
       animate: '页面切换动画',
@@ -100,16 +100,16 @@ const local: App.I18n.Schema = {
         'fade-scale': '缩放消退',
         'zoom-fade': '渐变',
         'zoom-out': '闪现',
-        none: '无'
-      }
+        none: '无',
+      },
     },
     fixedHeaderAndTab: '固定头部和标签栏',
     header: {
       height: '头部高度',
       breadcrumb: {
         visible: '显示面包屑',
-        showIcon: '显示面包屑图标'
-      }
+        showIcon: '显示面包屑图标',
+      },
     },
     tab: {
       visible: '显示标签栏',
@@ -118,8 +118,8 @@ const local: App.I18n.Schema = {
       mode: {
         title: '标签栏风格',
         chrome: '谷歌风格',
-        button: '按钮风格'
-      }
+        button: '按钮风格',
+      },
     },
     sider: {
       inverted: '深色侧边栏',
@@ -127,31 +127,32 @@ const local: App.I18n.Schema = {
       collapsedWidth: '侧边栏折叠宽度',
       mixWidth: '混合布局侧边栏宽度',
       mixCollapsedWidth: '混合布局侧边栏折叠宽度',
-      mixChildMenuWidth: '混合布局子菜单宽度'
+      mixChildMenuWidth: '混合布局子菜单宽度',
     },
     footer: {
       visible: '显示底部',
       fixed: '固定底部',
       height: '底部高度',
-      right: '底部局右'
+      right: '底部局右',
     },
     watermark: {
       visible: '显示全屏水印',
-      text: '水印文本'
+      text: '水印文本',
     },
     themeDrawerTitle: '主题配置',
     pageFunTitle: '页面功能',
     resetCacheStrategy: {
       title: '重置缓存策略',
       close: '关闭页面',
-      refresh: '刷新页面'
+      refresh: '刷新页面',
     },
     configOperation: {
       copyConfig: '复制配置',
-      copySuccessMsg: '复制成功，请替换 src/theme/settings.ts 中的变量 themeSettings',
+      copySuccessMsg:
+        '复制成功，请替换 src/theme/settings.ts 中的变量 themeSettings',
       resetConfig: '重置配置',
-      resetSuccessMsg: '重置成功'
-    }
+      resetSuccessMsg: '重置成功',
+    },
   },
   route: {
     login: '登录',
@@ -160,7 +161,7 @@ const local: App.I18n.Schema = {
     500: '服务器错误',
     'iframe-page': '外链页面',
     home: '数据库',
-    scrapy: '爬取数据'
+    scrapy: '爬取数据',
   },
   page: {
     login: {
@@ -176,11 +177,11 @@ const local: App.I18n.Schema = {
         back: '返回',
         validateSuccess: '验证成功',
         loginSuccess: '登录成功',
-        welcomeBack: '登录成功 ！'
+        welcomeBack: '登录成功 ！',
       },
       biliQrlogin: {
-        title: '扫码登录'
-      }
+        title: '扫码登录',
+      },
     },
     home: {
       branchDesc:
@@ -207,49 +208,49 @@ const local: App.I18n.Schema = {
         desc2: 'Yanbowe 向 soybean-admin 提交了一个bug，多标签栏不会自适应。',
         desc3: 'Soybean 准备为 soybean-admin 的发布做充分的准备工作!',
         desc4: 'Soybean 正在忙于为soybean-admin写项目说明文档！',
-        desc5: 'Soybean 刚才把工作台页面随便写了一些，凑合能看了！'
+        desc5: 'Soybean 刚才把工作台页面随便写了一些，凑合能看了！',
       },
-      creativity: '创意'
+      creativity: '创意',
     },
     screpy: {
       common: {
-        price: '价格'
-      }
-    }
+        price: '价格',
+      },
+    },
   },
   form: {
     required: '不能为空',
     userName: {
       required: '请输入用户名',
-      invalid: '用户名格式不正确'
+      invalid: '用户名格式不正确',
     },
     phone: {
       required: '请输入手机号',
-      invalid: '手机号格式不正确'
+      invalid: '手机号格式不正确',
     },
     pwd: {
       required: '请输入密码',
-      invalid: '密码格式不正确，6-18位字符，包含字母、数字、下划线'
+      invalid: '密码格式不正确，6-18位字符，包含字母、数字、下划线',
     },
     confirmPwd: {
       required: '请输入确认密码',
-      invalid: '两次输入密码不一致'
+      invalid: '两次输入密码不一致',
     },
     code: {
       required: '请输入验证码',
-      invalid: '验证码格式不正确'
+      invalid: '验证码格式不正确',
     },
     email: {
       required: '请输入邮箱',
-      invalid: '邮箱格式不正确'
-    }
+      invalid: '邮箱格式不正确',
+    },
   },
   dropdown: {
     closeCurrent: '关闭',
     closeOther: '关闭其它',
     closeLeft: '关闭左侧',
     closeRight: '关闭右侧',
-    closeAll: '关闭所有'
+    closeAll: '关闭所有',
   },
   icon: {
     themeConfig: '主题配置',
@@ -261,11 +262,11 @@ const local: App.I18n.Schema = {
     collapse: '折叠菜单',
     expand: '展开菜单',
     pin: '固定',
-    unpin: '取消固定'
+    unpin: '取消固定',
   },
   datatable: {
-    itemCount: '共 {total} 条'
-  }
-};
+    itemCount: '共 {total} 条',
+  },
+}
 
-export default local;
+export default local

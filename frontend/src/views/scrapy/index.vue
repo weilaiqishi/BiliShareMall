@@ -1,43 +1,43 @@
 <script setup lang="ts">
-import { type Ref, computed, onMounted, onUnmounted, ref } from 'vue';
-import { useLoadingBar, useMessage } from 'naive-ui';
-import { Play, StopSharp } from '@vicons/ionicons5';
-import axios from 'axios';
+import { type Ref, computed, onMounted, onUnmounted, ref } from 'vue'
+import { useLoadingBar, useMessage } from 'naive-ui'
+import { Play, StopSharp } from '@vicons/ionicons5'
+import axios from 'axios'
 
-import ScopeChoose from '@/views/scrapy/modules/scope-choose.vue';
+import ScopeChoose from '@/views/scrapy/modules/scope-choose.vue'
 
-import { getToken } from '@/store/modules/auth/shared';
-import { ScrapyItem } from '../../../../types/scrapy';
+import { getToken } from '@/store/modules/auth/shared'
+import { ScrapyItem } from '../../../../types/scrapy'
 import ScrapyItemInfo from './scrapyItemInfo.vue'
 
-const message = useMessage();
-const priceRange = ref([100, 200]);
-const rateRange = ref([50, 100]);
-const seleteOrder = ref('totalrank');
-const loadingBar = useLoadingBar();
+const message = useMessage()
+const priceRange = ref([100, 200])
+const rateRange = ref([50, 100])
+const seleteOrder = ref('totalrank')
+const loadingBar = useLoadingBar()
 interface TimeHash {
-  [key: number]: Date | undefined; // 键是数字，值是 Date 对象
+  [key: number]: Date | undefined // 键是数字，值是 Date 对象
 }
-const finishTimeHash: Ref<TimeHash> = ref<TimeHash>({});
-const failedTimeHash: Ref<TimeHash> = ref<TimeHash>({});
+const finishTimeHash: Ref<TimeHash> = ref<TimeHash>({})
+const failedTimeHash: Ref<TimeHash> = ref<TimeHash>({})
 
 interface Product {
-  value: string;
+  value: string
   /** The token */
-  label: string;
+  label: string
 }
 interface Order {
-  value: string;
+  value: string
   /** The token */
-  label: string;
+  label: string
 }
-const nowIdx = ref<number>(-1);
+const nowIdx = ref<number>(-1)
 const currentScrapy = computed(() => {
   alert(nowIdx.value)
-  return scrapyList.value.find(item => item.ID === nowIdx.value)
+  return scrapyList.value.find((item) => item.ID === nowIdx.value)
 })
 
-const scrapyList = ref<ScrapyItem[]>([]);
+const scrapyList = ref<ScrapyItem[]>([])
 const products = ref<Product[]>([
   { value: '2_175', label: '景品' },
   { value: '2_142', label: '比例手办' },
@@ -74,259 +74,270 @@ const products = ref<Product[]>([
   { value: '2_941', label: '积木' },
   { value: '2_874', label: '磁力赏' },
   { value: '2_876', label: '一番赏' },
-  { value: '2_939', label: '惊喜赏' }
-]);
+  { value: '2_939', label: '惊喜赏' },
+])
 const orders = ref<Order[]>([
   { value: 'totalrank', label: '综合' },
   { value: 'sale', label: '销量' },
   { value: 'pubtime', label: '新品' },
   { value: 'price_asc', label: '价格升序' },
   { value: 'price_desc', label: '价格降序' },
-]);
-const producesNameMap = products.value.reduce<Record<string, string>>((acc, product) => {
-  acc[product.value] = product.label;
-  return acc;
-}, {});
+])
+const producesNameMap = products.value.reduce<Record<string, string>>(
+  (acc, product) => {
+    acc[product.value] = product.label
+    return acc
+  },
+  {},
+)
 
-const ordersNameMap = orders.value.reduce<Record<string, string>>((acc, order) => {
-  acc[order.value] = order.label;
-  return acc;
-}, {});
-const seleteProduct = ref('2_175');
+const ordersNameMap = orders.value.reduce<Record<string, string>>(
+  (acc, order) => {
+    acc[order.value] = order.label
+    return acc
+  },
+  {},
+)
+const seleteProduct = ref('2_175')
 function addScrapy() {
   if (!seleteProduct.value) {
-    message.error('类型不能为空');
-    return;
+    message.error('类型不能为空')
+    return
   }
   const searchParams = {
-    "keyword": keyword.value,
-    "filters": "",
-    "priceFlow": String(priceRange.value[0]) || "",
-    "priceCeil": String(priceRange.value[1]) || "",
-    "sortType": "pubtime",
-    "sortOrder": "",
-    "pageIndex": 1,
-    "userId": "",
-    "state": "",
-    "scene": "",
-    "termQueries": [
+    keyword: keyword.value,
+    filters: '',
+    priceFlow: String(priceRange.value[0]) || '',
+    priceCeil: String(priceRange.value[1]) || '',
+    sortType: 'pubtime',
+    sortOrder: '',
+    pageIndex: 1,
+    userId: '',
+    state: '',
+    scene: '',
+    termQueries: [
       {
-        "field": "category",
-        "values": [
-          seleteProduct.value
-        ]
-      }
+        field: 'category',
+        values: [seleteProduct.value],
+      },
     ],
-    "rangeQueries": [],
-    "extra": [],
+    rangeQueries: [],
+    extra: [],
 
     seleteProduct: seleteProduct.value,
     seleteOrder: seleteOrder.value,
   }
   switch (seleteOrder.value) {
     case 'price_asc':
-      searchParams.sortType = 'price';
+      searchParams.sortType = 'price'
       searchParams.sortOrder = 'asc'
-      break;
+      break
     case 'price_desc':
-      searchParams.sortType = 'price';
+      searchParams.sortType = 'price'
       searchParams.sortOrder = 'desc'
-      break;
+      break
     default: {
-      searchParams.sortType = seleteOrder.value;
-      break;
+      searchParams.sortType = seleteOrder.value
+      break
     }
   }
-  const newItem: Pick<ScrapyItem, "Name" | "Cookie" | "searchParams"> = {
+  const newItem: Pick<ScrapyItem, 'Name' | 'Cookie' | 'searchParams'> = {
     Name: scrapyName.value,
     Cookie: getToken(),
-    searchParams: searchParams
-  };
+    searchParams: searchParams,
+  }
 
-  axios.post('http://localhost:3000/api/scrapy/items', newItem)
-    .then(response => {
+  axios
+    .post('http://localhost:3000/api/scrapy/items', newItem)
+    .then((response) => {
       if (response.status === 200) {
-        message.success('添加成功');
-        getAllItems();
+        message.success('添加成功')
+        getAllItems()
       } else {
-        message.error('添加失败');
+        message.error('添加失败')
       }
     })
-    .catch(error => {
-      console.error('Add scrapy item failed:', error);
-      message.error('添加失败');
-    });
+    .catch((error) => {
+      console.error('Add scrapy item failed:', error)
+      message.error('添加失败')
+    })
 }
 
-const scrapyName = ref("");
-const keyword = ref("");
+const scrapyName = ref('')
+const keyword = ref('')
 function searchCategory() {
   const searchParams = {
-    "keyword": keyword.value,
-    "filters": "",
-    "priceFlow": String(priceRange.value[0]) || "",
-    "priceCeil": String(priceRange.value[1]) || "",
-    "sortType": "pubtime",
-    "sortOrder": "",
-    "pageIndex": 1,
-    "userId": "",
-    "state": "",
-    "scene": "",
-    "termQueries": [
+    keyword: keyword.value,
+    filters: '',
+    priceFlow: String(priceRange.value[0]) || '',
+    priceCeil: String(priceRange.value[1]) || '',
+    sortType: 'pubtime',
+    sortOrder: '',
+    pageIndex: 1,
+    userId: '',
+    state: '',
+    scene: '',
+    termQueries: [
       {
-        "field": "category",
-        "values": [
-          seleteProduct.value
-        ]
-      }
+        field: 'category',
+        values: [seleteProduct.value],
+      },
     ],
-    "rangeQueries": [],
-    "extra": []
+    rangeQueries: [],
+    extra: [],
   }
   switch (seleteOrder.value) {
     case 'price_asc':
-      searchParams.sortType = 'price';
+      searchParams.sortType = 'price'
       searchParams.sortOrder = 'asc'
-      break;
+      break
     case 'price_desc':
-      searchParams.sortType = 'price';
+      searchParams.sortType = 'price'
       searchParams.sortOrder = 'desc'
-      break;
+      break
     default: {
-      searchParams.sortType = seleteOrder.value;
-      break;
+      searchParams.sortType = seleteOrder.value
+      break
     }
   }
-  axios.post('http://localhost:3000/api/search/category', searchParams, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(response => {
-      console.log('Search successful:', searchParams, response.data);
-      message.success('搜索成功');
+  axios
+    .post('http://localhost:3000/api/search/category', searchParams, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
-    .catch(error => {
-      console.error('Search failed:', searchParams, error);
-      message.error('搜索失败');
-    });
+    .then((response) => {
+      console.log('Search successful:', searchParams, response.data)
+      message.success('搜索成功')
+    })
+    .catch((error) => {
+      console.error('Search failed:', searchParams, error)
+      message.error('搜索失败')
+    })
 }
 
 function handleClose(idx: number) {
   if (nowIdx.value > 0) {
-    message.warning(`请先关闭爬虫`);
-    return;
+    message.warning(`请先关闭爬虫`)
+    return
   }
-  loadingBar.start();
-  axios.delete(`http://localhost:3000/api/scrapy/items/${scrapyList.value[idx].ID}`)
-    .then(response => {
+  loadingBar.start()
+  axios
+    .delete(
+      `http://localhost:3000/api/scrapy/items/${scrapyList.value[idx].ID}`,
+    )
+    .then((response) => {
       if (response.status === 200) {
-        message.success(`删除成功`);
-        getAllItems();
+        message.success(`删除成功`)
+        getAllItems()
       } else {
-        message.error(`删除失败`);
+        message.error(`删除失败`)
       }
     })
-    .catch(error => {
-      console.error('Delete scrapy item failed:', error);
-      message.error(`删除失败`);
+    .catch((error) => {
+      console.error('Delete scrapy item failed:', error)
+      message.error(`删除失败`)
     })
     .finally(() => {
-      loadingBar.finish();
-    });
+      loadingBar.finish()
+    })
 }
 function handleRun(idx: number) {
   if (nowIdx.value === scrapyList.value[idx].ID) {
-    message.warning(`已启动`);
-    return;
+    message.warning(`已启动`)
+    return
   }
-  loadingBar.start();
-  axios.post('http://localhost:3000/api/scrapy/run', {
-    taskId: scrapyList.value[idx].ID,
-    cookie: getToken()
-  })
-    .then(response => {
+  loadingBar.start()
+  axios
+    .post('http://localhost:3000/api/scrapy/run', {
+      taskId: scrapyList.value[idx].ID,
+      cookie: getToken(),
+    })
+    .then((response) => {
       if (response.status === 200) {
-        message.success(`爬虫任务 ${scrapyList.value[idx].ID} 已启动`);
-        nowIdx.value = scrapyList.value[idx].ID;
-        getAllItems();
+        message.success(`爬虫任务 ${scrapyList.value[idx].ID} 已启动`)
+        nowIdx.value = scrapyList.value[idx].ID
+        getAllItems()
       } else {
-        message.error(`启动失败`);
+        message.error(`启动失败`)
       }
     })
-    .catch(error => {
-      console.error('Start scrapy task failed:', error);
-      message.error(`启动失败`);
+    .catch((error) => {
+      console.error('Start scrapy task failed:', error)
+      message.error(`启动失败`)
     })
     .finally(() => {
-      loadingBar.finish();
-    });
+      loadingBar.finish()
+    })
 }
 
 function handleStop() {
-  loadingBar.start();
-  axios.post('http://localhost:3000/api/scrapy/stop', {
-    taskId: nowIdx.value
-  })
-    .then(response => {
+  loadingBar.start()
+  axios
+    .post('http://localhost:3000/api/scrapy/stop', {
+      taskId: nowIdx.value,
+    })
+    .then((response) => {
       if (response.status === 200) {
-        message.success(`爬虫任务 ${nowIdx.value} 已停止`);
-        nowIdx.value = -1;
-        getAllItems();
+        message.success(`爬虫任务 ${nowIdx.value} 已停止`)
+        nowIdx.value = -1
+        getAllItems()
       } else {
-        message.error(`停止失败`);
+        message.error(`停止失败`)
       }
     })
-    .catch(error => {
-      console.error('Stop scrapy task failed:', error);
-      message.error(`停止失败`);
+    .catch((error) => {
+      console.error('Stop scrapy task failed:', error)
+      message.error(`停止失败`)
     })
     .finally(() => {
-      loadingBar.finish();
-    });
+      loadingBar.finish()
+    })
 }
 
 function getAllItems() {
-  axios.get('http://localhost:3000/api/scrapy/items')
-    .then(response => {
+  axios
+    .get('http://localhost:3000/api/scrapy/items')
+    .then((response) => {
       if (response.status === 200) {
-        scrapyList.value = response.data;
+        scrapyList.value = response.data
       } else {
-        message.error('获取爬虫列表失败');
+        message.error('获取爬虫列表失败')
       }
     })
-    .catch(error => {
-      console.error('Get scrapy items failed:', error);
-      message.error('获取爬虫列表失败');
-    });
+    .catch((error) => {
+      console.error('Get scrapy items failed:', error)
+      message.error('获取爬虫列表失败')
+    })
 }
 
 function pollNowRunningTask() {
-  axios.get('http://localhost:3000/api/scrapy/running-task')
-    .then(response => {
+  axios
+    .get('http://localhost:3000/api/scrapy/running-task')
+    .then((response) => {
       if (response.status === 200) {
-        nowIdx.value = response.data.taskId;
+        nowIdx.value = response.data.taskId
       } else {
-        message.error('获取当前运行任务失败');
+        message.error('获取当前运行任务失败')
       }
     })
-    .catch(error => {
-      console.error('Get now running task failed:', error);
-      message.error('获取当前运行任务失败');
-    });
+    .catch((error) => {
+      console.error('Get now running task failed:', error)
+      message.error('获取当前运行任务失败')
+    })
 }
 
 let intervalId: any
 onMounted(() => {
-  getAllItems();
-  intervalId = setInterval(pollNowRunningTask, 3000);
-});
+  getAllItems()
+  intervalId = setInterval(pollNowRunningTask, 3000)
+})
 
 onUnmounted(() => {
   if (intervalId) {
-    clearInterval(intervalId);
+    clearInterval(intervalId)
   }
-});
+})
 </script>
 
 <template>
@@ -364,23 +375,41 @@ onUnmounted(() => {
                 <template #suffix>元</template>
               </NInputNumber>
             </NFlex>
-            <template #header-extra>价格范围：{{ priceRange[0] }} 到 {{ priceRange[1] }} 元</template>
+            <template #header-extra
+              >价格范围：{{ priceRange[0] }} 到 {{ priceRange[1] }} 元</template
+            >
           </NCollapseItem>
           <NCollapseItem title="类型" name="3">
             <NFlex wrap>
-              <NRadioButton v-for="product in products" :key="product.value" :value="product.value"
-                :label="product.label" @click="seleteProduct = product.value" :checked="seleteProduct === product.value"
-                size="large" />
+              <NRadioButton
+                v-for="product in products"
+                :key="product.value"
+                :value="product.value"
+                :label="product.label"
+                @click="seleteProduct = product.value"
+                :checked="seleteProduct === product.value"
+                size="large"
+              />
             </NFlex>
-            <template #header-extra>选择类型： {{ producesNameMap[seleteProduct ?? '无'] ?? '无' }}</template>
+            <template #header-extra
+              >选择类型：
+              {{ producesNameMap[seleteProduct ?? '无'] ?? '无' }}</template
+            >
           </NCollapseItem>
           <NCollapseItem title="顺序" name="3">
             <NFlex>
               <NRadioGroup v-model:value="seleteOrder" name="productType">
-                <NRadioButton v-for="order in orders" :key="order.value" :value="order.value" :label="order.label" />
+                <NRadioButton
+                  v-for="order in orders"
+                  :key="order.value"
+                  :value="order.value"
+                  :label="order.label"
+                />
               </NRadioGroup>
             </NFlex>
-            <template #header-extra>顺序： {{ ordersNameMap[seleteOrder ?? '无'] ?? '无' }}</template>
+            <template #header-extra
+              >顺序： {{ ordersNameMap[seleteOrder ?? '无'] ?? '无' }}</template
+            >
           </NCollapseItem>
         </NCollapse>
       </NSpace>
@@ -391,7 +420,15 @@ onUnmounted(() => {
       <div v-if="currentScrapy">
         <NSpace justify="space-around" size="large">
           <ScrapyItemInfo :scrapy="currentScrapy"></ScrapyItemInfo>
-          <NButton class="custom-button" strong ghost circle round size="large" @click="() => handleStop()">
+          <NButton
+            class="custom-button"
+            strong
+            ghost
+            circle
+            round
+            size="large"
+            @click="() => handleStop()"
+          >
             <template #icon>
               <NIcon>
                 <StopSharp />
@@ -402,10 +439,20 @@ onUnmounted(() => {
       </div>
     </NCard>
 
-    <NCard v-for="(scrapy, idx) in scrapyList" :key="scrapy.ID" :value="idx" :title="scrapy.Name" closable
-      @close="() => handleClose(idx)">
+    <NCard
+      v-for="(scrapy, idx) in scrapyList"
+      :key="scrapy.ID"
+      :value="idx"
+      :title="scrapy.Name"
+      closable
+      @close="() => handleClose(idx)"
+    >
       <NSpace vertical size="large">
-        <NAlert v-if="finishTimeHash[scrapy.ID]" title="执行完成" type="success">
+        <NAlert
+          v-if="finishTimeHash[scrapy.ID]"
+          title="执行完成"
+          type="success"
+        >
           完成时间：{{ finishTimeHash[scrapy.ID] }}
         </NAlert>
         <NAlert v-if="failedTimeHash[scrapy.ID]" title="执行失败" type="error">
@@ -413,7 +460,15 @@ onUnmounted(() => {
         </NAlert>
         <NSpace justify="space-around" size="large">
           <ScrapyItemInfo :scrapy="scrapy"></ScrapyItemInfo>
-          <NButton class="custom-button" strong ghost circle round size="large" @click="() => handleRun(idx)">
+          <NButton
+            class="custom-button"
+            strong
+            ghost
+            circle
+            round
+            size="large"
+            @click="() => handleRun(idx)"
+          >
             <template #icon>
               <NIcon>
                 <Play />

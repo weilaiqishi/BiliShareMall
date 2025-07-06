@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import { searchCategory } from '../controllers/search';
+import { Router } from 'express'
+import { searchCategory } from '../controllers/search'
 
-const router = Router();
+const router = Router()
 
-router.post('/search/category', searchCategory);
+router.post('/search/category', searchCategory)
 
-export const searchRouter = router;
+export const searchRouter = router

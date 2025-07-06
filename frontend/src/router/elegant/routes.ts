@@ -14,8 +14,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: '403',
       i18nKey: 'route.403',
       constant: true,
-      hideInMenu: true
-    }
+      hideInMenu: true,
+    },
   },
   {
     name: '404',
@@ -25,8 +25,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: '404',
       i18nKey: 'route.404',
       constant: true,
-      hideInMenu: true
-    }
+      hideInMenu: true,
+    },
   },
   {
     name: '500',
@@ -36,8 +36,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: '500',
       i18nKey: 'route.500',
       constant: true,
-      hideInMenu: true
-    }
+      hideInMenu: true,
+    },
   },
   {
     name: 'home',
@@ -48,8 +48,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       i18nKey: 'route.home',
       icon: 'mdi:monitor-dashboard',
       order: 1,
-      keepAlive: true
-    }
+      keepAlive: true,
+    },
   },
   {
     name: 'iframe-page',
@@ -61,8 +61,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       i18nKey: 'route.iframe-page',
       constant: true,
       hideInMenu: true,
-      keepAlive: true
-    }
+      keepAlive: true,
+    },
   },
   {
     name: 'login',
@@ -73,8 +73,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'login',
       i18nKey: 'route.login',
       constant: true,
-      hideInMenu: true
-    }
+      hideInMenu: true,
+    },
   },
   {
     name: 'scrapy',
@@ -83,7 +83,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'scrapy',
       i18nKey: 'route.scrapy',
-      keepAlive: true
-    }
-  }
-];
+      keepAlive: true,
+    },
+  },
+]

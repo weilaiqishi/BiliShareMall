@@ -1,26 +1,35 @@
-import { computed, effectScope, onScopeDispose, reactive, ref, watch } from 'vue';
-import type { Ref } from 'vue';
-import type { PaginationProps } from 'naive-ui';
-import { jsonClone } from '@sa/utils';
-import { useBoolean, useHookTable } from '@sa/hooks';
-import { useAppStore } from '@/store/modules/app';
-import { $t } from '@/locales';
+import {
+  computed,
+  effectScope,
+  onScopeDispose,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
+import type { Ref } from 'vue'
+import type { PaginationProps } from 'naive-ui'
+import { jsonClone } from '@sa/utils'
+import { useBoolean, useHookTable } from '@sa/hooks'
+import { useAppStore } from '@/store/modules/app'
+import { $t } from '@/locales'
 
-type TableData = NaiveUI.TableData;
-type GetTableData<A extends NaiveUI.TableApiFn> = NaiveUI.GetTableData<A>;
-type TableColumn<T> = NaiveUI.TableColumn<T>;
+type TableData = NaiveUI.TableData
+type GetTableData<A extends NaiveUI.TableApiFn> = NaiveUI.GetTableData<A>
+type TableColumn<T> = NaiveUI.TableColumn<T>
 
-export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTableConfig<A>) {
-  const scope = effectScope();
-  const appStore = useAppStore();
+export function useTable<A extends NaiveUI.TableApiFn>(
+  config: NaiveUI.NaiveTableConfig<A>,
+) {
+  const scope = effectScope()
+  const appStore = useAppStore()
 
-  const isMobile = computed(() => appStore.isMobile);
+  const isMobile = computed(() => appStore.isMobile)
 
-  const { apiFn, apiParams, immediate, showTotal } = config;
+  const { apiFn, apiParams, immediate, showTotal } = config
 
-  const SELECTION_KEY = '__selection__';
+  const SELECTION_KEY = '__selection__'
 
-  const EXPAND_KEY = '__expand__';
+  const EXPAND_KEY = '__expand__'
 
   const {
     loading,
@@ -32,88 +41,94 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     getData,
     searchParams,
     updateSearchParams,
-    resetSearchParams
-  } = useHookTable<A, GetTableData<A>, TableColumn<NaiveUI.TableDataWithIndex<GetTableData<A>>>>({
+    resetSearchParams,
+  } = useHookTable<
+    A,
+    GetTableData<A>,
+    TableColumn<NaiveUI.TableDataWithIndex<GetTableData<A>>>
+  >({
     apiFn,
     apiParams,
     columns: config.columns,
-    transformer: res => {
-      const { records = [], current = 1, size = 10, total = 0 } = res.data || {};
+    transformer: (res) => {
+      const { records = [], current = 1, size = 10, total = 0 } = res.data || {}
 
       // Ensure that the size is greater than 0, If it is less than 0, it will cause paging calculation errors.
-      const pageSize = size <= 0 ? 10 : size;
+      const pageSize = size <= 0 ? 10 : size
 
       const recordsWithIndex = records.map((item, index) => {
         return {
           ...item,
-          index: (current - 1) * pageSize + index + 1
-        };
-      });
+          index: (current - 1) * pageSize + index + 1,
+        }
+      })
 
       return {
         data: recordsWithIndex,
         pageNum: current,
         pageSize,
-        total
-      };
+        total,
+      }
     },
-    getColumnChecks: cols => {
-      const checks: NaiveUI.TableColumnCheck[] = [];
+    getColumnChecks: (cols) => {
+      const checks: NaiveUI.TableColumnCheck[] = []
 
-      cols.forEach(column => {
+      cols.forEach((column) => {
         if (isTableColumnHasKey(column)) {
           checks.push({
             key: column.key as string,
             title: column.title as string,
-            checked: true
-          });
+            checked: true,
+          })
         } else if (column.type === 'selection') {
           checks.push({
             key: SELECTION_KEY,
             title: $t('common.check'),
-            checked: true
-          });
+            checked: true,
+          })
         } else if (column.type === 'expand') {
           checks.push({
             key: EXPAND_KEY,
             title: $t('common.expandColumn'),
-            checked: true
-          });
+            checked: true,
+          })
         }
-      });
+      })
 
-      return checks;
+      return checks
     },
     getColumns: (cols, checks) => {
-      const columnMap = new Map<string, TableColumn<GetTableData<A>>>();
+      const columnMap = new Map<string, TableColumn<GetTableData<A>>>()
 
-      cols.forEach(column => {
+      cols.forEach((column) => {
         if (isTableColumnHasKey(column)) {
-          columnMap.set(column.key as string, column);
+          columnMap.set(column.key as string, column)
         } else if (column.type === 'selection') {
-          columnMap.set(SELECTION_KEY, column);
+          columnMap.set(SELECTION_KEY, column)
         } else if (column.type === 'expand') {
-          columnMap.set(EXPAND_KEY, column);
+          columnMap.set(EXPAND_KEY, column)
         }
-      });
+      })
 
       const filteredColumns = checks
-        .filter(item => item.checked)
-        .map(check => columnMap.get(check.key) as TableColumn<GetTableData<A>>);
+        .filter((item) => item.checked)
+        .map(
+          (check) => columnMap.get(check.key) as TableColumn<GetTableData<A>>,
+        )
 
-      return filteredColumns;
+      return filteredColumns
     },
-    onFetched: async transformed => {
-      const { pageNum, pageSize, total } = transformed;
+    onFetched: async (transformed) => {
+      const { pageNum, pageSize, total } = transformed
 
       updatePagination({
         page: pageNum,
         pageSize,
-        itemCount: total
-      });
+        itemCount: total,
+      })
     },
-    immediate
-  });
+    immediate,
+  })
 
   const pagination: PaginationProps = reactive({
     page: 1,
@@ -121,46 +136,47 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     showSizePicker: true,
     pageSizes: [10, 15, 20, 25, 30],
     onUpdatePage: async (page: number) => {
-      pagination.page = page;
+      pagination.page = page
 
       updateSearchParams({
         current: page,
-        size: pagination.pageSize!
-      });
+        size: pagination.pageSize!,
+      })
 
-      getData();
+      getData()
     },
     onUpdatePageSize: async (pageSize: number) => {
-      pagination.pageSize = pageSize;
-      pagination.page = 1;
+      pagination.pageSize = pageSize
+      pagination.page = 1
 
       updateSearchParams({
         current: pagination.page,
-        size: pageSize
-      });
+        size: pageSize,
+      })
 
-      getData();
+      getData()
     },
     ...(showTotal
       ? {
-          prefix: page => $t('datatable.itemCount', { total: page.itemCount })
+          prefix: (page) =>
+            $t('datatable.itemCount', { total: page.itemCount }),
         }
-      : {})
-  });
+      : {}),
+  })
 
   // this is for mobile, if the system does not support mobile, you can use `pagination` directly
   const mobilePagination = computed(() => {
     const p: PaginationProps = {
       ...pagination,
       pageSlot: isMobile.value ? 3 : 9,
-      prefix: !isMobile.value && showTotal ? pagination.prefix : undefined
-    };
+      prefix: !isMobile.value && showTotal ? pagination.prefix : undefined,
+    }
 
-    return p;
-  });
+    return p
+  })
 
   function updatePagination(update: Partial<PaginationProps>) {
-    Object.assign(pagination, update);
+    Object.assign(pagination, update)
   }
 
   /**
@@ -170,29 +186,29 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
    */
   async function getDataByPage(pageNum: number = 1) {
     updatePagination({
-      page: pageNum
-    });
+      page: pageNum,
+    })
 
     updateSearchParams({
       current: pageNum,
-      size: pagination.pageSize!
-    });
+      size: pagination.pageSize!,
+    })
 
-    await getData();
+    await getData()
   }
 
   scope.run(() => {
     watch(
       () => appStore.locale,
       () => {
-        reloadColumns();
-      }
-    );
-  });
+        reloadColumns()
+      },
+    )
+  })
 
   onScopeDispose(() => {
-    scope.stop();
-  });
+    scope.stop()
+  })
 
   return {
     loading,
@@ -208,48 +224,55 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     getDataByPage,
     searchParams,
     updateSearchParams,
-    resetSearchParams
-  };
+    resetSearchParams,
+  }
 }
 
-export function useTableOperate<T extends TableData = TableData>(data: Ref<T[]>, getData: () => Promise<void>) {
-  const { bool: drawerVisible, setTrue: openDrawer, setFalse: closeDrawer } = useBoolean();
+export function useTableOperate<T extends TableData = TableData>(
+  data: Ref<T[]>,
+  getData: () => Promise<void>,
+) {
+  const {
+    bool: drawerVisible,
+    setTrue: openDrawer,
+    setFalse: closeDrawer,
+  } = useBoolean()
 
-  const operateType = ref<NaiveUI.TableOperateType>('add');
+  const operateType = ref<NaiveUI.TableOperateType>('add')
 
   function handleAdd() {
-    operateType.value = 'add';
-    openDrawer();
+    operateType.value = 'add'
+    openDrawer()
   }
 
   /** the editing row data */
-  const editingData: Ref<T | null> = ref(null);
+  const editingData: Ref<T | null> = ref(null)
 
   function handleEdit(id: T['id']) {
-    operateType.value = 'edit';
-    const findItem = data.value.find(item => item.id === id) || null;
-    editingData.value = jsonClone(findItem);
+    operateType.value = 'edit'
+    const findItem = data.value.find((item) => item.id === id) || null
+    editingData.value = jsonClone(findItem)
 
-    openDrawer();
+    openDrawer()
   }
 
   /** the checked row keys of table */
-  const checkedRowKeys = ref<string[]>([]);
+  const checkedRowKeys = ref<string[]>([])
 
   /** the hook after the batch delete operation is completed */
   async function onBatchDeleted() {
-    window.$message?.success($t('common.deleteSuccess'));
+    window.$message?.success($t('common.deleteSuccess'))
 
-    checkedRowKeys.value = [];
+    checkedRowKeys.value = []
 
-    await getData();
+    await getData()
   }
 
   /** the hook after the delete operation is completed */
   async function onDeleted() {
-    window.$message?.success($t('common.deleteSuccess'));
+    window.$message?.success($t('common.deleteSuccess'))
 
-    await getData();
+    await getData()
   }
 
   return {
@@ -262,10 +285,12 @@ export function useTableOperate<T extends TableData = TableData>(data: Ref<T[]>,
     handleEdit,
     checkedRowKeys,
     onBatchDeleted,
-    onDeleted
-  };
+    onDeleted,
+  }
 }
 
-function isTableColumnHasKey<T>(column: TableColumn<T>): column is NaiveUI.TableColumnWithKey<T> {
-  return Boolean((column as NaiveUI.TableColumnWithKey<T>).key);
+function isTableColumnHasKey<T>(
+  column: TableColumn<T>,
+): column is NaiveUI.TableColumnWithKey<T> {
+  return Boolean((column as NaiveUI.TableColumnWithKey<T>).key)
 }

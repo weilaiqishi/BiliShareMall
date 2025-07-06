@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { $t } from '@/locales';
+import { $t } from '@/locales'
 
-defineOptions({ name: 'SearchFooter' });
+defineOptions({ name: 'SearchFooter' })
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import { $t } from '@/locales';
+import { $t } from '@/locales'
 
 /**
  * Transform record to option
@@ -18,11 +18,13 @@ import { $t } from '@/locales';
  *
  * @param record
  */
-export function transformRecordToOption<T extends Record<string, string>>(record: T) {
+export function transformRecordToOption<T extends Record<string, string>>(
+  record: T,
+) {
   return Object.entries(record).map(([value, label]) => ({
     value,
-    label
-  })) as CommonType.Option<keyof T>[];
+    label,
+  })) as CommonType.Option<keyof T>[]
 }
 
 /**
@@ -31,10 +33,10 @@ export function transformRecordToOption<T extends Record<string, string>>(record
  * @param options
  */
 export function translateOptions(options: CommonType.Option<string>[]) {
-  return options.map(option => ({
+  return options.map((option) => ({
     ...option,
-    label: $t(option.label as App.I18n.I18nKey)
-  }));
+    label: $t(option.label as App.I18n.I18nKey),
+  }))
 }
 
 /**
@@ -44,15 +46,15 @@ export function translateOptions(options: CommonType.Option<string>[]) {
  */
 export function toggleHtmlClass(className: string) {
   function add() {
-    document.documentElement.classList.add(className);
+    document.documentElement.classList.add(className)
   }
 
   function remove() {
-    document.documentElement.classList.remove(className);
+    document.documentElement.classList.remove(className)
   }
 
   return {
     add,
-    remove
-  };
+    remove,
+  }
 }

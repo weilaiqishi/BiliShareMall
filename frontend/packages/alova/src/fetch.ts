@@ -1,2 +1,2 @@
-import adapterFetch from 'alova/fetch';
-export default adapterFetch;
+import adapterFetch from 'alova/fetch'
+export default adapterFetch

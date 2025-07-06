@@ -1,35 +1,37 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { themeSchemaRecord } from '@/constants/app';
-import { useThemeStore } from '@/store/modules/theme';
-import { $t } from '@/locales';
-import SettingItem from '../components/setting-item.vue';
+import { computed } from 'vue'
+import { themeSchemaRecord } from '@/constants/app'
+import { useThemeStore } from '@/store/modules/theme'
+import { $t } from '@/locales'
+import SettingItem from '../components/setting-item.vue'
 
 defineOptions({
-  name: 'DarkMode'
-});
+  name: 'DarkMode',
+})
 
-const themeStore = useThemeStore();
+const themeStore = useThemeStore()
 
 const icons: Record<UnionKey.ThemeScheme, string> = {
   light: 'material-symbols:sunny',
   dark: 'material-symbols:nightlight-rounded',
-  auto: 'material-symbols:hdr-auto'
-};
+  auto: 'material-symbols:hdr-auto',
+}
 
 function handleSegmentChange(value: string | number) {
-  themeStore.setThemeScheme(value as UnionKey.ThemeScheme);
+  themeStore.setThemeScheme(value as UnionKey.ThemeScheme)
 }
 
 function handleGrayscaleChange(value: boolean) {
-  themeStore.setGrayscale(value);
+  themeStore.setGrayscale(value)
 }
 
 function handleColourWeaknessChange(value: boolean) {
-  themeStore.setColourWeakness(value);
+  themeStore.setColourWeakness(value)
 }
 
-const showSiderInverted = computed(() => !themeStore.darkMode && themeStore.layout.mode.includes('vertical'));
+const showSiderInverted = computed(
+  () => !themeStore.darkMode && themeStore.layout.mode.includes('vertical'),
+)
 </script>
 
 <template>
@@ -55,10 +57,16 @@ const showSiderInverted = computed(() => !themeStore.darkMode && themeStore.layo
       </SettingItem>
     </Transition>
     <SettingItem :label="$t('theme.grayscale')">
-      <NSwitch :value="themeStore.grayscale" @update:value="handleGrayscaleChange" />
+      <NSwitch
+        :value="themeStore.grayscale"
+        @update:value="handleGrayscaleChange"
+      />
     </SettingItem>
     <SettingItem :label="$t('theme.colourWeakness')">
-      <NSwitch :value="themeStore.colourWeakness" @update:value="handleColourWeaknessChange" />
+      <NSwitch
+        :value="themeStore.colourWeakness"
+        @update:value="handleColourWeaknessChange"
+      />
     </SettingItem>
   </div>
 </template>
