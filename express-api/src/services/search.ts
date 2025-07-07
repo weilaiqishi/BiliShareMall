@@ -5,7 +5,7 @@ import {
   SearchCategoryRequestBody,
   SearchCategoryResponse,
   SearchCategoryGoodsItem,
-} from '../../../types/search_category_request'
+} from '../../../types/goods'
 import { insertSearchGoodsItems } from './sqlite'
 
 const baseUrl = 'https://mall.bilibili.com'

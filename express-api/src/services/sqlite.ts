@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3'
 import path from 'path'
 
-import { SearchCategoryGoodsItem } from '../../../types/search_category_request'
+import { SearchCategoryGoodsItem } from '../../../types/goods'
 
 const dbPath = path.join(__dirname, '../../../data/bsm.db')
 export let db: Database.Database

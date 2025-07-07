@@ -1,4 +1,9 @@
 {
   "name": "bilisharemall-node",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "devDependencies": {
+    "@prettier/plugin-oxc": "^0.0.4",
+    "prettier": "^3.6.2"
+  },
+  "lint": "prettier --write ."
 }

@@ -6,7 +6,7 @@ import { omit, pick } from 'es-toolkit'
 import {
   SearchCategoryRequestBody,
   SearchCategoryGoodsItem,
-} from '../../../types/search_category_request'
+} from '../../../types/goods'
 import { ScrapyItem } from '../../../types/scrapy'
 import { insertSearchGoodsItems } from './sqlite'
 import { db } from './sqlite' // 导入共享的 db 实例

@@ -1,4 +1,4 @@
-import { SearchCategoryRequestBody } from "./search_category_request";
+import { SearchCategoryRequestBody } from "./goods";
 
 // 定义 ScrapyItem 接口，参照 Go 后端的 ScrapyItem 结构
 export interface ScrapyItem {

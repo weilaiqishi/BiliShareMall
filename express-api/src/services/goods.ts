@@ -1,5 +1,5 @@
 // ... existing code ...
-import { SearchCategoryGoodsItem } from '../../../types/search_category_request'
+import { SearchCategoryGoodsItem } from '../../../types/goods'
 import { SearchGoodsItemsParams } from '../../../types/goods'
 import { PaginatedResult } from '../../../types/page'
 import { db } from './sqlite' // 导入 db 实例

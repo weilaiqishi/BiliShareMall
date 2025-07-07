@@ -4,7 +4,7 @@ import { useClipboard } from '@vueuse/core'
 import { NButton, NImage, PaginationProps, useMessage } from 'naive-ui'
 import { h, onMounted, ref } from 'vue'
 
-import { SearchCategoryGoodsItem } from '../../../../types/search_category_request'
+import { SearchCategoryGoodsItem } from '../../../../types/goods'
 import { SearchGoodsItemsParams } from '../../../../types/goods'
 import { PaginatedResult } from '../../../../types/page'
 
