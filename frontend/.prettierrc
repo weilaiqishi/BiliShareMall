@@ -1,5 +1,5 @@
 {
-  "plugins": ["@prettier/plugin-hermes"],
+  "plugins": ["@prettier/plugin-oxc"],
   "semi": false,
   "singleQuote": true
 }

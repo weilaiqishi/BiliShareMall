@@ -5,5 +5,7 @@
     "@prettier/plugin-oxc": "^0.0.4",
     "prettier": "^3.6.2"
   },
-  "lint": "prettier --write ."
+  "scripts": {
+    "lint": "prettier --write ."
+  }
 }

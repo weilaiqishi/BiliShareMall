@@ -1,0 +1,25 @@
+# 忽略构建输出目录
+dist/
+build/
+
+# 忽略依赖安装目录
+node_modules/
+pnpm-lock.yaml
+
+# 忽略特定数据或配置目录
+dict/
+.trae/
+
+# 忽略日志文件
+*.log
+
+# 忽略临时文件
+*.tmp
+
+# 忽略IDE配置文件
+.vscode/
+.idea/
+
+# 忽略其他不需格式化的文件
+*.min.js
+*.min.css

@@ -13,7 +13,7 @@
 
 作为隐式马尔科夫模型(HMMSegment: Hidden Markov Model)分词所使用的词典。
 
-__对于MixSegment(混合MPSegment和HMMSegment两者)则同时使用以上两个词典__
+**对于MixSegment(混合MPSegment和HMMSegment两者)则同时使用以上两个词典**
 
 ## 关键词抽取
 
@@ -25,5 +25,3 @@ IDF(Inverse Document Frequency)
 ### stop_words.utf8
 
 停用词词典
-
-

@@ -1,28 +1,28 @@
 declare namespace LoginAPI {
   interface GetLoginQRCodeRequest {
-    userAgent: string;
+    userAgent: string
   }
 
   interface GetLoginQRCodeResponse {
-    code: number;
-    message: string;
+    code: number
+    message: string
     data: {
-      key: string;
-      url: string;
-    };
+      key: string
+      url: string
+    }
   }
 
   interface VerifyLoginStatusRequest {
-    key: string;
-    userAgent: string;
+    key: string
+    userAgent: string
   }
 
   interface VerifyLoginStatusResponse {
-    code: number;
-    message: string;
+    code: number
+    message: string
     data: {
-      status: number;
-      cookie: string;
-    };
+      status: number
+      cookie: string
+    }
   }
 }
