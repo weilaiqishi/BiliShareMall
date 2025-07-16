@@ -4,7 +4,7 @@ import { useClipboard } from '@vueuse/core'
 import { NButton, NImage, PaginationProps, useMessage } from 'naive-ui'
 import { h, onMounted, ref } from 'vue'
 
-import { SearchCategoryGoodsItem } from '../../../../types/goods'
+import { GoodsItemInfoAll, SearchCategoryGoodsItem } from '../../../../types/goods'
 import { SearchGoodsItemsParams } from '../../../../types/goods'
 import { PaginatedResult } from '../../../../types/page'
 
@@ -22,7 +22,7 @@ interface SortWay {
 
 const { copy, isSupported } = useClipboard()
 
-async function handleCopy(item: SearchCategoryGoodsItem) {
+async function handleCopy(item: GoodsItemInfoAll) {
   const copy_str = item.jumpUrlH5
   if (!isSupported) {
     message.error(`复制失败，请自行复制链接：${copy_str}`)
@@ -30,6 +30,32 @@ async function handleCopy(item: SearchCategoryGoodsItem) {
   }
   await copy(copy_str)
   message.success('复制成功！')
+}
+
+// 更新商品详情函数
+async function handleUpdateDetail(item: SearchCategoryGoodsItem) {
+  try {
+    loading.value = true
+    const params = {
+      itemsId: item.itemsId,
+      shopId: new URLSearchParams(item.jumpUrlH5).get('shopId'),
+    }
+    alert(JSON.stringify(params))
+    const response = await axios.post('http://localhost:3000/api/goods/detail/update', params)
+    
+    if (response.data.success) {
+      message.success(response.data.message || '更新商品详情成功')
+      // 刷新当前页数据
+      search(false)
+    } else {
+      message.error(response.data.error || '更新商品详情失败')
+    }
+  } catch (error: any) {
+    console.error('更新商品详情出错:', error)
+    message.error(error?.response?.data?.error || '更新商品详情时发生错误')
+  } finally {
+    loading.value = false
+  }
 }
 
 const sortways = ref<SortWay[]>([
@@ -61,7 +87,7 @@ const columns = [
     key: 'itemsImg',
     width: 100,
     height: 100,
-    render(row: SearchCategoryGoodsItem) {
+    render(row: GoodsItemInfoAll) {
       return h(NImage, {
         width: '100',
         height: '100',
@@ -70,9 +96,22 @@ const columns = [
     },
   },
   {
+    title: '图片组',
+    key: 'img',
+    width: 100,
+    height: 100,
+    render(row: GoodsItemInfoAll) {
+      return h(NImage, {
+        width: '100',
+        height: '100',
+        src: row.img?.[0],
+      })
+    },
+  },
+  {
     title: '链接',
     key: 'itemsId',
-    render(row: SearchCategoryGoodsItem) {
+    render(row: GoodsItemInfoAll) {
       return h(
         NButton,
         {
@@ -83,6 +122,23 @@ const columns = [
       )
     },
     width: 80,
+  },
+  {
+    title: '操作',
+    key: 'actions',
+    render(row: GoodsItemInfoAll) {
+      return h(
+        NButton,
+        {
+          size: 'small',
+          type: 'info',
+          onClick: () => handleUpdateDetail(row),
+          loading: loading.value
+        },
+        { default: () => '更新详情' },
+      )
+    },
+    width: 100,
   },
 ]
 const priceRangeEnable = ref(false)
@@ -96,12 +152,12 @@ const pagination = ref<PaginationProps>({
   pageCount: 1,
 })
 // 数据初始化
-const data = ref<SearchCategoryGoodsItem[]>([])
+const data = ref<GoodsItemInfoAll[]>([])
 
 function search(firstPage: boolean = false) {
   loading.value = true
   axios
-    .get<PaginatedResult<SearchCategoryGoodsItem>>(
+    .get<PaginatedResult<GoodsItemInfoAll>>(
       'http://localhost:3000/api/goods/items',
       {
         params: {
