@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { Search } from '@vicons/ionicons5'
 import { useClipboard } from '@vueuse/core'
 import { NButton, NImage, PaginationProps, useMessage } from 'naive-ui'
@@ -40,9 +40,8 @@ async function handleUpdateDetail(item: SearchCategoryGoodsItem) {
       itemsId: item.itemsId,
       shopId: new URLSearchParams(item.jumpUrlH5).get('shopId'),
     }
-    alert(JSON.stringify(params))
     const response = await axios.post('http://localhost:3000/api/goods/detail/update', params)
-    
+
     if (response.data.success) {
       message.success(response.data.message || '更新商品详情成功')
       // 刷新当前页数据
@@ -88,24 +87,31 @@ const columns = [
     width: 100,
     height: 100,
     render(row: GoodsItemInfoAll) {
-      return h(NImage, {
-        width: '100',
-        height: '100',
-        src: row.itemsImg,
-      })
+      return (<NImage width="100" height="100" src={row.itemsImg}></NImage>)
     },
   },
   {
     title: '图片组',
     key: 'img',
-    width: 100,
+    width: 400,
     height: 100,
     render(row: GoodsItemInfoAll) {
-      return h(NImage, {
-        width: '100',
-        height: '100',
-        src: row.img?.[0],
-      })
+      return (
+        <n-image-group style="overflow: auto; width: 400px; height: 100px">
+          <n-space>
+            {
+              row.img?.map((item) => (
+                <n-image
+                  lazy
+                  width="100"
+                  height="100"
+                  src={item}
+                />
+              ))
+            }
+          </n-space>
+        </n-image-group>
+      )
     },
   },
   {
@@ -198,11 +204,7 @@ onMounted(() => {
     <NCard class="card-wrapper" title="数据库">
       <template #header-extra>
         <NSpace size="large">
-          <NInput
-            v-model:value="searchText"
-            clearable
-            :placeholder="$t('common.keywordSearch')"
-          >
+          <NInput v-model:value="searchText" clearable :placeholder="$t('common.keywordSearch')">
             <template #prefix>
               <icon-uil-search class="text-15px text-#c2c2c2" />
             </template>
@@ -232,30 +234,19 @@ onMounted(() => {
         <NCollapseItem title="排序" name="3">
           <NFlex>
             <NRadioGroup v-model:value="sortOpt" name="productType">
-              <NRadioButton
-                v-for="product in sortways"
-                :key="product.value"
-                :value="product.value"
-                :label="product.label"
-              />
+              <NRadioButton v-for="product in sortways" :key="product.value" :value="product.value"
+                :label="product.label" />
             </NRadioGroup>
           </NFlex>
         </NCollapseItem>
       </NCollapse>
     </NCard>
-    <NDataTable
-      remote
-      :data="data"
-      :columns="columns"
-      :loading="loading"
-      :pagination="pagination"
-      @update:page="
-        (page) => {
-          pagination.page = page
-          search()
-        }
-      "
-    />
+    <NDataTable remote :data="data" :columns="columns" :loading="loading" :pagination="pagination" @update:page="
+      (page) => {
+        pagination.page = page
+        search()
+      }
+    " />
   </NFlex>
 </template>
 

@@ -1,12 +1,12 @@
 // ... existing code ...
-import { SearchCategoryGoodsItem } from '../../../types/goods'
+import { GoodsItemInfoAll } from '../../../types/goods'
 import { SearchGoodsItemsParams } from '../../../types/goods'
 import { PaginatedResult } from '../../../types/page'
 import { db } from './sqlite' // 导入 db 实例
 
 export function searchGoodsItems(
   params: SearchGoodsItemsParams,
-): PaginatedResult<SearchCategoryGoodsItem> {
+): PaginatedResult<GoodsItemInfoAll> {
   let query = 'SELECT * FROM search_goods_items WHERE 1=1'
   let countQuery = 'SELECT COUNT(*) FROM search_goods_items WHERE 1=1'
   const queryParams: (string | number)[] = []
@@ -49,54 +49,70 @@ export function searchGoodsItems(
   const total = result['COUNT(*)']
   const data = db
     .prepare(query)
-    .all(...queryParams) as SearchCategoryGoodsItem[]
+    .all(...queryParams) as GoodsItemInfoAll[]
 
   const parsedData = data.map((item) => {
     try {
-      if (item.actMaterial && typeof item.actMaterial === 'string') {
-        item.actMaterial = JSON.parse(item.actMaterial)
-      }
-      if (item.properties && typeof item.properties === 'string') {
-        item.properties = JSON.parse(item.properties)
-      }
-      if (item.priceDesc && typeof item.priceDesc === 'string') {
-        item.priceDesc = JSON.parse(item.priceDesc)
-      }
-      if (item.extraInfo && typeof item.extraInfo === 'string') {
-        item.extraInfo = JSON.parse(item.extraInfo)
-      }
-      if (item.tags && typeof item.tags === 'string') {
-        item.tags = JSON.parse(item.tags)
-      }
-      if (item.feedTag && typeof item.feedTag === 'string') {
-        item.feedTag = JSON.parse(item.feedTag)
-      }
-      if (item.preDepositVO && typeof item.preDepositVO === 'string') {
-        item.preDepositVO = JSON.parse(item.preDepositVO)
-      }
-      if (item.subSkuList && typeof item.subSkuList === 'string') {
-        item.subSkuList = JSON.parse(item.subSkuList)
-      }
-      if (item.atmosList && typeof item.atmosList === 'string') {
-        item.atmosList = JSON.parse(item.atmosList)
-      }
-      if (item.merchantInfo && typeof item.merchantInfo === 'string') {
-        item.merchantInfo = JSON.parse(item.merchantInfo)
-      }
-      if (item.itemAttrs && typeof item.itemAttrs === 'string') {
-        item.itemAttrs = JSON.parse(item.itemAttrs)
-      }
-      if (item.bannerText && typeof item.bannerText === 'string') {
-        item.bannerText = JSON.parse(item.bannerText)
-      }
-      if (item.imageList && typeof item.imageList === 'string') {
-        item.imageList = JSON.parse(item.imageList)
-      }
-      if (item.topSubSku && typeof item.topSubSku === 'string') {
-        item.topSubSku = JSON.parse(item.topSubSku)
-      }
+      const jsonFields: Array<keyof GoodsItemInfoAll> = [
+        'actMaterial',
+        'properties',
+        'priceDesc',
+        'extraInfo',
+        'tags',
+        'feedTag',
+        'preDepositVO',
+        'subSkuList',
+        'atmosList',
+        'merchantInfo',
+        'itemAttrs',
+        'bannerText',
+        'imageList',
+        'topSubSku',
+        'attrList',
+        'itemsDepositVO',
+        'shopVO',
+        'itemsLikeVO',
+        'activityInfoVO',
+        'mallRecExpBO',
+        'mallHomeExpBO',
+        'recExpBO',
+        'ipRightList',
+        'progressActivityInfoVO',
+        'itemsSkuListVO',
+        'commitmentTag',
+        'headAvDTO',
+        'verticalHeadAvDTO',
+        'itemsDetailTagVO',
+        'ipRoleDTO',
+        'itemsVideoVO',
+        'floorOrder',
+        'addressModuleData',
+        'activityTags',
+        'itemTags',
+        'preSale',
+        'remain',
+        'presaleStartOrderTime',
+        'tagPrefix',
+        'advState',
+        'blindRotation',
+        'img',
+        'cateLogicNameList',
+        'cateIdList'
+      ]
+
+      jsonFields.forEach((field) => {
+        if (item[field] && typeof item[field] === 'string') {
+          try {
+            // @ts-ignore
+            item[field] = JSON.parse(item[field])
+          } catch (e) {
+            console.error(`Error parsing JSON for field ${field} of item ${item.itemsId}:`, e)
+            // Optionally, set to null or keep as string if parsing fails
+          }
+        }
+      })
     } catch (e) {
-      console.error('Error parsing JSON for item:', item.itemsId, e)
+      console.error('Error processing item:', item.itemsId, e)
     }
     return item
   })

@@ -161,6 +161,49 @@ function generateCreateTableSQL(
   return `CREATE TABLE IF NOT EXISTS ${tableName} (${fieldDefinitions});`
 }
 
+/**
+ * 检查表结构并添加缺失的字段
+ * 当表结构定义更新时，使用此函数为已存在的表添加新字段
+ */
+export function updateTableSchema() {
+  try {
+    console.log('检查表结构并添加缺失的字段...')
+    
+    // 遍历所有表定义
+    for (const [tableName, fields] of Object.entries(tableFields)) {
+      // 获取表中现有的列
+      const tableInfo = db.prepare(`PRAGMA table_info(${tableName})`).all()
+      const existingColumns = tableInfo.map((col: any) => col.name)
+      
+      // 检查是否有缺失的列
+      for (const [fieldName, fieldType] of Object.entries(fields)) {
+        if (!existingColumns.includes(fieldName)) {
+          console.log(`为表 ${tableName} 添加缺失的字段: ${fieldName} ${fieldType}`)
+          
+          // 处理含有 DEFAULT CURRENT_TIMESTAMP 的字段
+          // SQLite 在 ALTER TABLE 中不支持非常量默认值
+          let modifiedFieldType = fieldType
+          if (fieldType.includes('DEFAULT CURRENT_TIMESTAMP')) {
+            modifiedFieldType = fieldType.replace('DEFAULT CURRENT_TIMESTAMP', '')
+            console.log(`  注意: 移除了非常量默认值约束 'DEFAULT CURRENT_TIMESTAMP'`)
+          }
+          
+          // 执行 ALTER TABLE 语句添加字段
+          const alterSQL = `ALTER TABLE ${tableName} ADD COLUMN ${fieldName} ${modifiedFieldType}`
+          db.exec(alterSQL)
+        }
+      }
+    }
+    
+    console.log('表结构检查完成')
+    return true
+  } catch (error) {
+    console.error('更新表结构时出错:', error)
+    return false
+  }
+}
+
+// 修改初始化函数，添加对表结构的检查
 export function initializeDatabase() {
   try {
     db = new Database(dbPath, { verbose: console.log })
@@ -174,6 +217,9 @@ export function initializeDatabase() {
     // 创建表
     db.exec(createTablesSQL)
     console.log('SQLite tables checked/created.')
+    
+    // 检查并更新表结构
+    updateTableSchema()
   } catch (error) {
     console.error('Error connecting to SQLite or creating tables:', error)
     throw error
